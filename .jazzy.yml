@@ -1,0 +1,10 @@
+output: docs
+author: gematik GmbH
+author_url: http://www.gematik.de
+exclude: /*/internal*
+module: CardReaderProviderApi
+github_url: https://build.top.local/source/git/refImpl/mobszen/iOS/CardReaderProviderApi-swift.git
+theme: jony
+xcodebuild_arguments:
+  - "-project"
+  - 'CardReaderProviderApi.xcodeproj'

@@ -1,0 +1,66 @@
+name: OpenHealthCardKit
+options:
+  bundleIdPrefix: de.gematik.ti.openhealthcard
+  deploymentTarget:
+    macOS: 10.12
+    iOS: 12.1
+settings:
+  base:
+    ### gematik_private_code_block_begin
+    DEVELOPMENT_TEAM: A9FL89PFFL
+    ### gematik_private_code_block_end
+    CODE_SIGN_IDENTITY: ""
+    SWIFT_VERSION: 5.0
+    ALWAYS_SEARCH_USER_PATHS: NO
+    FRAMEWORK_SEARCH_PATHS: "$(inherited)"
+  configs:
+    Release:
+      SWIFT_COMPILATION_MODE: wholemodule
+    Debug:
+      SWIFT_COMPILATION_MODE: incremental
+targets:
+  CardReaderProviderApi:
+    type: framework
+    platform: [iOS,macOS]
+    sources:
+      - Sources/CardReaderProviderApi
+    info:
+      path: Resources/CardReaderProviderApi_Info.plist
+    dependencies:
+      - carthage: GemCommonsKit
+    scheme:
+      testTargets:
+        - CardReaderProviderApiTests_${platform}
+      gatherCoverageData: true
+  CardReaderAccess:
+    type: framework
+    platform: [iOS,macOS]
+    sources:
+      - Sources/CardReaderAccess
+    info:
+      path: Resources/CardReaderAccess_Info.plist
+    dependencies:
+      - target: CardReaderProviderApi_${platform}
+      - carthage: GemCommonsKit
+    scheme:
+      testTargets:
+        - CardReaderAccessTests_${platform}
+      gatherCoverageData: true
+  CardReaderProviderApiTests:
+    type: bundle.unit-test
+    platform: [macOS,iOS]
+    sources:
+      - Tests/CardReaderProviderApiTests
+    dependencies:
+      - target: CardReaderProviderApi_${platform}
+      - carthage: Nimble
+  CardReaderAccessTests:
+    type: bundle.unit-test
+    platform: [macOS,iOS]
+    sources:
+      - Tests/CardReaderAccessTests
+    dependencies:
+      - target: CardReaderAccess_${platform}
+      - target: CardReaderProviderApi_${platform}
+      - carthage: Nimble
+buildImplicitDependencies: true

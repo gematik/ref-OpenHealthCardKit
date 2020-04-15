@@ -1,0 +1,8 @@
+#
+# ${GEMATIK_COPYRIGHT_STATEMENT}
+#
+
+import_from_git(
+  url: 'https://build.top.local/source/git/refImpl/mobszen/iOS/tools/FastlaneLanes.git',
+  branch: 'master'
+)
