@@ -1,0 +1,23 @@
+include::config.adoc[]
+
+== Code Samples
+
+
+Take the necessary preparatory steps for signing a challenge on the Health Card, then sign it.
+
+[source,swift]
+----
+include::{testdir}/HealthCardControlTests/Integration/HealthCardTypeExtESIGNIntegrationTest.swift[tags=signChallenge,indent=0]
+----
+
+
+Encapsulate the https://www.bsi.bund.de/DE/Publikationen/TechnischeRichtlinien/tr03110/index_htm.html[PACE protocol]
+steps for establishing a secure channel with the Health Card and expose only a simple API call .
+
+[source,swift]
+----
+include::{testdir}/HealthCardControlTests/Integration/KeyAgreementIntegrationTest.swift[tags=negotiateSessionKey,indent=0]
+----
+
+See the integration tests link:{testdir}/HealthCardControlTests/Integration[Tests/HealthCardControlTests/Integration]
+for more already implemented use cases.

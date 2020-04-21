@@ -1,0 +1,9 @@
+include::config.adoc[]
+
+== Introduction
+
+The OpenHealthCardKit module is intended for reference purposes
+when implementing a system that performs the communication between an iOS based mobile device
+and a German Health Card (elektronische Gesundheitskarte) using an NFC, Blue Tooth oder USB interface.
+
+This document describes the functionalitiy and structure of OpenHealthCardKit.

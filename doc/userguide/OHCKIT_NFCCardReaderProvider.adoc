@@ -1,0 +1,7 @@
+include::config.adoc[]
+
+[#NFCCardReaderProvider]
+=== NFCCardReaderProvider
+
+An <<OHC_KIT_CardReaderProvider.adoc#CardReaderProviderApi,CardReaderProvider>> implementation that handles the
+communication with the Apple iPhone NFC interface.

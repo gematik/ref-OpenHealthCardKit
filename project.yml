@@ -2,13 +2,10 @@ name: OpenHealthCardKit
 options:
   bundleIdPrefix: de.gematik.ti.openhealthcard
   deploymentTarget:
-    macOS: 10.12
-    iOS: 12.1
+    macOS: 10.14
+    iOS: 13.0
 settings:
   base:
-    ### gematik_private_code_block_begin
-    DEVELOPMENT_TEAM: A9FL89PFFL
-    ### gematik_private_code_block_end
     CODE_SIGN_IDENTITY: ""
     SWIFT_VERSION: 5.0
     ALWAYS_SEARCH_USER_PATHS: NO
@@ -41,7 +38,6 @@ targets:
       path: Resources/CardReaderAccess_Info.plist
     dependencies:
       - target: CardReaderProviderApi_${platform}
-      - carthage: GemCommonsKit
     scheme:
       testTargets:
         - CardReaderAccessTests_${platform}
@@ -49,6 +45,8 @@ targets:
   CardReaderProviderApiTests:
     type: bundle.unit-test
     platform: [macOS,iOS]
+    info:
+      path: Resources/CardReaderProviderApiTests_Info.plist
     sources:
       - Tests/CardReaderProviderApiTests
     dependencies:
@@ -57,10 +55,115 @@ targets:
   CardReaderAccessTests:
     type: bundle.unit-test
     platform: [macOS,iOS]
+    info:
+      path: Resources/CardReaderAccessTests_Info.plist
     sources:
       - Tests/CardReaderAccessTests
     dependencies:
       - target: CardReaderAccess_${platform}
-      - target: CardReaderProviderApi_${platform}
       - carthage: Nimble
+  HealthCardAccess:
+    type: framework
+    platform: [macOS,iOS]
+    info:
+      path: Resources/HealthCardAccess_Info.plist
+    sources:
+      - Sources/HealthCardAccess
+    dependencies:
+      - target: CardReaderAccess_${platform}
+      - target: CardReaderProviderApi_${platform}
+      - carthage: ASN1Kit
+        embed: true
+      - carthage: DataKit
+        embed: true
+    transitivelyLinkDependencies: true
+    scheme:
+      testTargets:
+        - HealthCardAccessTests_${platform}
+      gatherCoverageData: true
+  HealthCardAccessTests:
+    type: bundle.unit-test
+    platform: [macOS,iOS]
+    info:
+      path: Resources/HealthCardAccessTests_Info.plist
+    sources:
+      - path: Tests/HealthCardAccessTests
+      - path: Tests/Util
+    dependencies:
+      - target: HealthCardAccess_${platform}
+      - carthage: ObjCCommonsKit
+      - carthage: Nimble
+  HealthCardControl:
+    type: framework
+    platform: [iOS,macOS]
+    info:
+      path: Resources/HealthCardControl_Info.plist
+    sources:
+      - path: Sources/HealthCardControl
+    dependencies:
+      - target: HealthCardAccess_${platform}
+      - carthage: BigInt
+        embed: true
+    transitivelyLinkDependencies: true
+    scheme:
+      testTargets:
+        - HealthCardControlTests_${platform}
+      gatherCoverageData: true
+  HealthCardControlTests:
+    name: HealthCardControlTests_${platform}
+    type: bundle.unit-test
+    platform: [macOS,iOS]
+    info:
+      path: Resources/HealthCardControlTests_Info.plist
+    sources:
+      - path: Tests/HealthCardControlTests
+      - path: Tests/Util
+    dependencies:
+      - target: HealthCardControl_${platform}
+      - carthage: Nimble
+  NFCCardReaderProvider:
+    type: framework
+    platform: iOS
+    info:
+      path: Resources/NFCCardReaderProvider_Info.plist
+    sources:
+      - Sources/NFCCardReaderProvider
+    dependencies:
+      - target: HealthCardAccess_iOS
+      - sdk: CoreNFC.framework
+    scheme:
+      testTargets:
+        - NFCCardReaderProviderTests
+      gatherCoverageData: true
+  NFCCardReaderProviderTests:
+    type: bundle.unit-test
+    platform: iOS
+    info:
+      path: Resources/NFCCardReaderProviderTests_Info.plist
+    sources:
+      - Tests/NFCCardReaderProviderTests
+    dependencies:
+      - target: NFCCardReaderProvider
+      - carthage: Nimble
+  Documentation:
+    type: framework
+    platform: macOS
+    info:
+      path: Resources/Documentation_Info.plist
+    settings:
+      # PRODUCT_NAME becomes the Documentation/Module title
+      PRODUCT_NAME: "OpenHealthCardKit"
+      SWIFT_OBJC_BRIDGING_HEADER: ${SRCROOT}/BridgeHeader.h
+    sources:
+      - path: Sources/CardReaderAccess
+      - path: Sources/CardReaderProviderApi
+      - path: Sources/HealthCardAccess
+      - path: Sources/HealthCardControl
+      - path: Sources/NFCCardReaderProvider
+    scheme:
+    dependencies:
+      - carthage: BigInt
+      - carthage: DataKit
+      - carthage: ASN1Kit
+      - carthage: GemCommonsKit
 buildImplicitDependencies: true

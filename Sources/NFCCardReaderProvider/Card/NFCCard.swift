@@ -1,0 +1,101 @@
+//
+//  Copyright (c) 2020 gematik GmbH
+//  
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//  
+//     http://www.apache.org/licenses/LICENSE-2.0
+//  
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
+//
+
+import CardReaderProviderApi
+import CoreNFC
+import DataKit
+import Foundation
+import GemCommonsKit
+import HealthCardAccess
+
+class NFCCard: CardType {
+    var tag: NFCISO7816Tag?
+    private weak var basicChannel: NFCCardChannel?
+    private var reader: NFCCardReader?
+
+    init(isoTag tag: NFCISO7816Tag, reader: NFCCardReader) {
+        self.tag = tag
+        self.reader = reader
+    }
+
+    var atr: ATR {
+        tag?.historicalBytes ?? Data()
+    }
+
+    var `protocol`: CardProtocol {
+        return .t1
+    }
+
+    func openBasicChannel() throws -> CardChannelType {
+        if let channel = basicChannel {
+            return channel
+        }
+        guard let tag = tag else {
+            throw NFCCardReader.Error.noCardPresent.illegalState
+        }
+        let nfcChannel = NFCCardChannel(card: self, tag: tag)
+        self.basicChannel = nfcChannel
+        return nfcChannel
+    }
+
+    func openLogicChannel() throws -> CardChannelType {
+        guard let tag = tag else {
+            throw NFCCardReader.Error.noCardPresent.illegalState
+        }
+
+        let manageChannelCommandOpen = try APDU.Command(cla: 0x00, ins: 0x70, p1: 0x00, p2: 0x00, ne: 0x01)
+        let responseSuccess = 0x9000
+
+        let response = try openBasicChannel()
+                .transmit(command: manageChannelCommandOpen, writeTimeout: 0, readTimeout: 0)
+        guard response.sw == responseSuccess else {
+            throw NFCCardReader.Error.transferException(
+                    name: String(format: "openLogicalChannel failed, response code: 0x%04x", response.sw)
+            )
+        }
+        guard let rspData = response.data else {
+            throw NFCCardReader.Error.transferException(
+                    name: String(format: "openLogicalChannel failed, no channel number received")
+            )
+        }
+        return NFCCardChannel(card: self, tag: tag, channelNo: Int(rspData[0]))
+    }
+
+    func initialApplicationIdentifier() throws -> Data? {
+        guard let initialSelectedAID = tag?.initialSelectedAID else {
+            ALog("NFC tag could not deliver initialSelectedAID when expected")
+            return nil
+        }
+        return try Data(hex: initialSelectedAID)
+    }
+
+    func disconnect(reset: Bool) throws {
+        DLog("Disconnecting card ...")
+        reader?.invalidateSession()
+        reader = nil
+        tag = nil
+        basicChannel = nil
+        DLog("Card disconnected")
+    }
+
+    deinit {
+        do {
+            try disconnect(reset: false)
+        } catch let error {
+            ALog("Error while disconnecting: \(error)")
+        }
+    }
+}

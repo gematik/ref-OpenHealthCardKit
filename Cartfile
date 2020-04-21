@@ -1,3 +1,4 @@
-git "https://build.top.local/source/git/refImpl/mobszen/iOS/ref-GemCommonsKit.git" ~> 1.0
-git "https://build.top.local/source/git/refImpl/mobszen/iOS/asn1kit.git" ~> 1.0
+github "gematik/ref-GemCommonsKit" ~> 1.0
+github "gematik/asn1kit" ~> 1.0
+github "attaswift/BigInt" ~> 5.0
 github "SwiftCommon/DataKit" ~> 1.0

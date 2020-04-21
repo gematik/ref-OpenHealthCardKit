@@ -31,12 +31,13 @@ opt_in_rules:
   - empty_string
   - discouraged_optional_collection
   - closure_end_indentation
-  - file_header
 excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Package.swift
   - .build/
   - vendor/
   - Carthage/
+nesting:
+  type_level: 3
 line_length: 120
 custom_rules:
   nimble_fail_with_description:
@@ -53,10 +54,3 @@ custom_rules:
     regex: "(\/\/[[:space:]]*Created by)"
     message: "Source must not contain author"
     severity: warning
-### gematik_private_code_block_begin
-file_header:
-  required_pattern: |
-    \/\/
-    \/\/  \$\{GEMATIK_COPYRIGHT_STATEMENT\}
-    \/\/
-### gematik_private_code_block_end
