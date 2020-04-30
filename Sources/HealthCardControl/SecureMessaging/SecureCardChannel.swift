@@ -18,37 +18,36 @@ import CardReaderProviderApi
 import Foundation
 import HealthCardAccess
 
-public class SecureCardChannel: CardChannelType {
+internal class SecureCardChannel: CardChannelType {
     private let channel: CardChannelType
     private let session: SecureMessaging
 
-    public var card: CardType {
+    var card: CardType {
         return channel.card
     }
 
-    public var channelNumber: Int {
+    var channelNumber: Int {
         return channel.channelNumber
     }
 
-    public var extendedLengthSupported: Bool {
+    var extendedLengthSupported: Bool {
         return channel.extendedLengthSupported
     }
 
-    public var maxMessageLength: Int {
+    var maxMessageLength: Int {
         return channel.maxMessageLength
     }
 
-    public var maxResponseLength: Int {
+    var maxResponseLength: Int {
         return channel.maxResponseLength
     }
 
-    public init(session: SecureMessaging, card: HealthCardType) {
+    init(session: SecureMessaging, card: HealthCardType) {
         self.session = session
         self.channel = card.currentCardChannel
     }
 
-    public func transmit(command: CommandType, writeTimeout: TimeInterval, readTimeout: TimeInterval) throws ->
-            ResponseType {
+    func transmit(command: CommandType, writeTimeout: TimeInterval, readTimeout: TimeInterval) throws -> ResponseType {
         let encryptedCommand = try session.encrypt(command: command)
         let encryptedResponse = try channel.transmit(command: encryptedCommand,
                                                      writeTimeout: writeTimeout,
@@ -56,7 +55,7 @@ public class SecureCardChannel: CardChannelType {
         return try session.decrypt(response: encryptedResponse)
     }
 
-    public func close() throws {
+    func close() throws {
         session.invalidate()
         try channel.close()
     }

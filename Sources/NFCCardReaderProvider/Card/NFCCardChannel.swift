@@ -21,9 +21,8 @@ import Foundation
 import GemCommonsKit
 
 class NFCCardChannel: CardChannelType {
-    let maxMessageLength = 256
-    let maxResponseLength = 256   // TODO: to be evaluated, CoreNFC should support extended length
-    // swiftlint:disable:previous todo
+    let maxMessageLength = 4096
+    let maxResponseLength = 4096
 
     let channelNumber: Int
     var tag: NFCISO7816Tag?
@@ -72,7 +71,12 @@ class NFCCardChannel: CardChannelType {
             error = err
             semaphore.signal()
         }
-        let timeoutTime = DispatchTime.now() + DispatchTimeInterval.seconds(Int(readTimeout))
+        let timeoutTime: DispatchTime
+        if readTimeout <= 0 {
+            timeoutTime = DispatchTime.distantFuture
+        } else {
+            timeoutTime = DispatchTime.now() + DispatchTimeInterval.seconds(Int(readTimeout))
+        }
 
         if case .timedOut = semaphore.wait(timeout: timeoutTime) {
             DLog("NFC send timed out [\(sendHeader)]")

@@ -18,19 +18,23 @@ import CardReaderProviderApi
 import Foundation
 import HealthCardAccess
 
-public class SecureHealthCard: HealthCardType {
+/// `SecureHealthCardType` extends the `HealthCardType` protocol to indicate that this instance has established
+/// a secure communication channel to its underlying `CardChannelType`.
+public protocol SecureHealthCardType: HealthCardType {}
+
+class SecureHealthCard: SecureHealthCardType {
     private let card: HealthCardType
     private let channel: SecureCardChannel
 
-    public var status: HealthCardStatus {
+    var status: HealthCardStatus {
         return card.status
     }
 
-    public var currentCardChannel: CardChannelType {
+    var currentCardChannel: CardChannelType {
         return channel
     }
 
-    public init(session: SecureMessaging, card: HealthCardType) {
+    init(session: SecureMessaging, card: HealthCardType) {
         self.card = card
         self.channel = SecureCardChannel(session: session, card: card)
     }

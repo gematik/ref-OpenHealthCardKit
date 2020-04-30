@@ -32,10 +32,10 @@ extension CardType {
     ///     - can: The Channel access number for the session
     ///     - writeTimeout: time in seconds. Default: 30
     ///     - readTimeout: time in seconds. Default 30
-    /// - Returns: Executable<HealthCardType> that negotiates a secure session when scheduled to run.
+    /// - Returns: Executable<SecureHealthCardType> that negotiates a secure session when scheduled to run.
     public func openSecureSession(can: CAN, writeTimeout: TimeInterval = 30, readTimeout: TimeInterval = 30)
-                    -> Executable<HealthCardType> {
-        return Executable<HealthCardType>
+                    -> Executable<SecureHealthCardType> {
+        return Executable<SecureHealthCardType>
                 .evaluate { [self] () -> CardChannelType in
                     return try self.openBasicChannel()
                 }
@@ -43,20 +43,19 @@ extension CardType {
                     /// Read EF.Version2 and determine HealthCardPropertyType
                     channel.readCardType(writeTimeout: writeTimeout, readTimeout: readTimeout)
                             .flatMap { type in
+                                let healthCard = try HealthCard(card: self, status: .valid(cardType: type))
                                 //swiftlint:disable:next todo
-                                // TODO read protocol from EF.Access
-                                return try KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128.negotiateSessionKey(
+                                // TODO Determine the key agreement protocol by reading the info from EF.Access
+                                // As of now for all current Health Card generations, it is .idPaceEcdhGmAesCbcCmac128
+                                let keyAgreementAlgorithm = KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128
+                                return try keyAgreementAlgorithm.negotiateSessionKey(
                                                 channel: channel,
                                                 can: can,
                                                 writeTimeout: writeTimeout,
                                                 readTimeout: readTimeout
                                         )
                                         .map { sessionKey in
-                                            // TODO remove DBG line
-                                            //swiftlint:disable:previous todo
-                                            DLog("PaceKey was negotiated: [\(sessionKey)]")
-                                            let card = try HealthCard(card: self, status: .valid(cardType: type))
-                                            return SecureHealthCard(session: sessionKey, card: card)
+                                            return SecureHealthCard(session: sessionKey, card: healthCard)
                                         }
                             }
                 }

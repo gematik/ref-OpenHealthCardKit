@@ -227,15 +227,15 @@ class AES128PaceKey: SecureMessaging {
         let firstLengthByte = data[scanPosition + 1]
         if firstLengthByte > 0x80 {
             // long
-            let octetsCount = firstLengthByte & 0x7f
+            let octetsCount = Int(firstLengthByte & 0x7f)
 
             let lengthBytes = data[2..<2 + octetsCount]
             guard let unsignedLengthBytes = lengthBytes.unsignedIntValue else {
                 throw Error.encryptedResponseMalformed
             }
             decodedDataLength = Int(unsignedLengthBytes)
-            dataDo = data[scanPosition..<2 + Int(octetsCount) + decodedDataLength]
-            dataDoValue = data[scanPosition + 2 + Int(octetsCount) + 1..<2 + Int(octetsCount) + decodedDataLength]
+            dataDo = data[scanPosition..<2 + octetsCount + decodedDataLength]
+            dataDoValue = data[scanPosition + 2 + octetsCount + 1..<2 + octetsCount + decodedDataLength]
         } else {
             // short
             decodedDataLength = Int(firstLengthByte)

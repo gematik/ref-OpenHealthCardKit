@@ -72,3 +72,14 @@ public enum CardGeneration {
         return parseCardGeneration(version: versionInt)
     }
 }
+
+extension CardGeneration: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .g1: return "Gen1"
+        case .g1P: return "Gen1P"
+        case .g2: return "Gen2"
+        case .g2_1: return "Gen2.1"
+        }
+    }
+}

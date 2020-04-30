@@ -73,9 +73,7 @@ targets:
       - target: CardReaderAccess_${platform}
       - target: CardReaderProviderApi_${platform}
       - carthage: ASN1Kit
-        embed: true
       - carthage: DataKit
-        embed: true
     transitivelyLinkDependencies: true
     scheme:
       testTargets:
@@ -103,7 +101,6 @@ targets:
     dependencies:
       - target: HealthCardAccess_${platform}
       - carthage: BigInt
-        embed: true
     transitivelyLinkDependencies: true
     scheme:
       testTargets:

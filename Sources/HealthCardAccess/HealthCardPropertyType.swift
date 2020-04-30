@@ -46,3 +46,13 @@ extension HealthCardPropertyType: Equatable {
         }
     }
 }
+
+extension HealthCardPropertyType: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .egk(let generation): return "eGK \(generation)"
+        case .hba(let generation): return "HBA \(generation)"
+        case .smcb(let generation): return "SMC-B \(generation)"
+        }
+    }
+}

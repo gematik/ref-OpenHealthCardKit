@@ -33,8 +33,7 @@ extension HealthCardType {
             case .egk:
                 selectEfCardAccess = HealthCardCommand.Select.selectEf(with: EgkFileSystem.EF.cardAccess.fid)
             case .hba:
-                // TODO use EgkFileSystem.EF.cardAccess.fid when available swiftlint:disable:this todo
-                selectEfCardAccess = HealthCardCommand.Select.selectEf(with: try FileIdentifier(hex: "011C"))
+                selectEfCardAccess = HealthCardCommand.Select.selectEf(with: HbaFileSystem.EF.cardAccess.fid)
             case .smcb:
                 throw KeyAgreement.Error.efCardAccessNotAvailable
             }
