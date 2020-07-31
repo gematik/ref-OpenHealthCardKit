@@ -17,39 +17,31 @@
 import CardReaderProviderApi
 import CardSimulationTerminalTestCase
 import Foundation
-import HealthCardAccess
-@testable import HealthCardControl
+@testable import HealthCardAccess
 import Nimble
 import XCTest
 
 final class SelectCommandIntegrationTest: CardSimulationTerminalTestCase {
     func testSelectRoot() {
         expect {
-            var mTemp: HealthCardResponseType?
-            HealthCardCommand.Select.selectRoot()
-                    .execute(on: CardSimulationTerminalTestCase.healthCard)
-                    .run(on: Executor.trampoline)
-                    .on { event in
-                        mTemp = event.value
-                    }
-            return mTemp?.responseStatus
+            return try HealthCardCommand.Select.selectRoot()
+                .publisher(for: CardSimulationTerminalTestCase.healthCard)
+                .test()
+                .responseStatus
         } == ResponseStatus.success
     }
 
     func testSelectFileByAidThenSelectParentFolder() {
         expect {
-            var mTemp: HealthCardResponseType?
-            HealthCardCommand.Select.selectFile(with: EgkFileSystem.DF.GDD.aid)
-                    .execute(on: CardSimulationTerminalTestCase.healthCard)
-                    .flatMap { _ in
-                        HealthCardCommand.Select.selectRoot()
-                                .execute(on: CardSimulationTerminalTestCase.healthCard)
-                    }
-                    .run(on: Executor.trampoline)
-                    .on { event in
-                        mTemp = event.value
-                    }
-            return mTemp?.responseStatus
+            return try HealthCardCommand.Select.selectFile(with: EgkFileSystem.DF.GDD.aid)
+                .publisher(for: CardSimulationTerminalTestCase.healthCard)
+                .flatMap { _ in
+                    HealthCardCommand.Select.selectRoot()
+                        .publisher(for: CardSimulationTerminalTestCase.healthCard)
+                }
+                .eraseToAnyPublisher()
+                .test()
+                .responseStatus
         } == ResponseStatus.success
     }
 
@@ -57,17 +49,13 @@ final class SelectCommandIntegrationTest: CardSimulationTerminalTestCase {
         let cEgkAutCVCE256Count = 0x00DE
 
         expect {
-            var mTemp: HealthCardResponseType?
-            try HealthCardCommand.Read.readFileCommand(with: EgkFileSystem.EF.cEgkAutCVCE256.sfid!,
-                                                       // swiftlint:disable:previous force_unwrapping
-                                                       ne: cEgkAutCVCE256Count + 1,
-                                                       offset: 0)
-                    .execute(on: CardSimulationTerminalTestCase.healthCard, readTimeout: 30)
-                    .run(on: Executor.trampoline)
-                    .on { event in
-                        mTemp = event.value
-                    }
-            return mTemp?.responseStatus
+            return try HealthCardCommand.Read.readFileCommand(with: EgkFileSystem.EF.cEgkAutCVCE256.sfid!,
+                    // swiftlint:disable:previous force_unwrapping
+                    ne: cEgkAutCVCE256Count + 1,
+                    offset: 0)
+                .publisher(for: CardSimulationTerminalTestCase.healthCard)
+                .test()
+                .responseStatus
         } == ResponseStatus.endOfFileWarning
     }
 

@@ -15,6 +15,7 @@
 //
 
 import CardReaderProviderApi
+import Combine
 import Foundation
 import GemCommonsKit
 import HealthCardAccess
@@ -22,42 +23,52 @@ import HealthCardAccess
 /// Extensions on CardType to negotiate a PACE session key for further secure
 extension CardType {
 
-    /// Open a secure session with a Card for further scheduling/attaching Executable commands
+    /// Open a secure session with a Card for further scheduling/attaching Publisher commands
     ///
-    /// - Note: the healthCard provided by the Executable operation chain should be used for the commands
-    ///         to be executed on the secure channel. After the chain has completed the session should be
-    ///         invalidated/closed.
+    /// - Note: The healthCard provided by the Combine operation chain should be used for the commands
+    ///   to be executed on the secure channel.
+    ///   After the chain has completed the session should be invalidated/closed.
     ///
     /// - Parameters:
     ///     - can: The Channel access number for the session
     ///     - writeTimeout: time in seconds. Default: 30
     ///     - readTimeout: time in seconds. Default 30
-    /// - Returns: Executable<SecureHealthCardType> that negotiates a secure session when scheduled to run.
+    /// - Returns: Publisher that negotiates a secure session when scheduled to run.
     public func openSecureSession(can: CAN, writeTimeout: TimeInterval = 30, readTimeout: TimeInterval = 30)
-                    -> Executable<SecureHealthCardType> {
-        return Executable<SecureHealthCardType>
-                .evaluate { [self] () -> CardChannelType in
-                    return try self.openBasicChannel()
+                    -> AnyPublisher<SecureHealthCardType, Error> {
+        Just(self)
+                .tryMap { cardType in
+                    try cardType.openBasicChannel()
                 }
                 .flatMap { channel in
-                    /// Read EF.Version2 and determine HealthCardPropertyType
-                    channel.readCardType(writeTimeout: writeTimeout, readTimeout: readTimeout)
-                            .flatMap { type in
-                                let healthCard = try HealthCard(card: self, status: .valid(cardType: type))
-                                //swiftlint:disable:next todo
-                                // TODO Determine the key agreement protocol by reading the info from EF.Access
-                                // As of now for all current Health Card generations, it is .idPaceEcdhGmAesCbcCmac128
-                                let keyAgreementAlgorithm = KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128
-                                return try keyAgreementAlgorithm.negotiateSessionKey(
-                                                channel: channel,
-                                                can: can,
-                                                writeTimeout: writeTimeout,
-                                                readTimeout: readTimeout
-                                        )
-                                        .map { sessionKey in
-                                            return SecureHealthCard(session: sessionKey, card: healthCard)
+                    // Read/Determine ApplicationIdentifier of the card's initial application
+                    channel.determineCardAid()
+                            .flatMap { cardAid in
+                                // Read EF.CardAccess and determine algorithm for key agreement (e.g. PACE)
+                                channel.readKeyAgreementAlgorithm(cardAid: cardAid)
+                                        .flatMap { keyAgreementAlgorithm in
+                                            // Read EF.Version2 and determine HealthCardPropertyType
+                                            channel.readCardType(cardAid: cardAid,
+                                                                 writeTimeout: writeTimeout,
+                                                                 readTimeout: readTimeout)
+                                                    .tryMap { type in
+                                                        try HealthCard(card: self, status: .valid(cardType: type))
+                                                    }
+                                                    .flatMap { healthCard in
+                                                        keyAgreementAlgorithm.negotiateSessionKey(
+                                                                        card: healthCard,
+                                                                        can: can,
+                                                                        writeTimeout: writeTimeout,
+                                                                        readTimeout: readTimeout
+                                                                )
+                                                                .map { sessionKey in
+                                                                    SecureHealthCard(session: sessionKey,
+                                                                                     card: healthCard)
+                                                                }
+                                                    }
                                         }
                             }
                 }
+                .eraseToAnyPublisher()
     }
 }

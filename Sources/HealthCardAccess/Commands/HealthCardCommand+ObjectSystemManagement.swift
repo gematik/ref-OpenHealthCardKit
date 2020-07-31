@@ -215,8 +215,7 @@ extension HealthCardCommand {
             try expectedLength.isNot(0, else: HealthCardCommandBuilder.InvalidArgument.expectedLengthMustNotBeZero)
 
             let p2Value = calculateP2(fcp: true, next: false)
-            // swiftlint:disable:next force_try
-            return try! Select.builder()
+            return try Select.builder()
                     .set(p1: p1SelectionModeAid)
                     .set(p2: p2Value)
                     .set(ne: expectedLength)

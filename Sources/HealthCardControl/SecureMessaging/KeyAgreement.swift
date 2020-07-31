@@ -17,13 +17,13 @@
 import ASN1Kit
 import BigInt
 import CardReaderProviderApi
+import Combine
 import Foundation
 import GemCommonsKit
 import HealthCardAccess
 
 /// Holds functionality to negotiate a common key with a given `HealthCard` and a `CardAccessNumber`.
-public class KeyAgreement {
-
+public class KeyAgreement { // swiftlint:disable:this type_body_length
     public enum Error: Swift.Error, Equatable {
         case illegalArgument
         case unexpectedFormedAnswerFromCard
@@ -77,34 +77,33 @@ public class KeyAgreement {
         ///     - can: the `CardAccessNumber` of the `HealthCard`
         ///     - writeTimeout: timeout in seconds. time <= 0 is no timeout
         ///     - readTimeout: timeout in seconds. time <= 0 is no timeout
-        /// - Returns: When successful PaceKey both this application and the card agreed on.
-        /// - Throws: Error
+        /// - Returns: Publisher that when successful emits PaceKey both this application and the card agreed on.
         public func negotiateSessionKey(
-                channel: CardChannelType,
+                card: HealthCardType,
                 can: CAN,
                 writeTimeout: TimeInterval = 10,
                 readTimeout: TimeInterval = 10
-        ) throws -> Executable<SecureMessaging> {
+        ) -> AnyPublisher<SecureMessaging, Swift.Error> {
             switch self {
             case .idPaceEcdhGmAesCbcCmac128:
                 // Set security environment
-                return try step0PaceEcdhGmAesCbcCmac128(channel: channel,
-                        writeTimeout: writeTimeout,
-                        readTimeout: readTimeout)
+                return step0PaceEcdhGmAesCbcCmac128(card: card,
+                                                       writeTimeout: writeTimeout,
+                                                       readTimeout: readTimeout)
                         // Request nonceZ from card and decrypt it to nonceS as BigInt
                         .flatMap { _ in
-                            try step1PaceEcdhGmAesCbcCmac128(channel: channel,
-                                    can: can,
-                                    writeTimeout: writeTimeout,
-                                    readTimeout: readTimeout)
+                            step1PaceEcdhGmAesCbcCmac128(card: card,
+                                                         can: can,
+                                                         writeTimeout: writeTimeout,
+                                                         readTimeout: readTimeout)
                         }
                         // Generate first own public key (PK1_PCD) and send it to card.
                         // Receive first public key (PK1_PICC) from card
                         .flatMap { nonceS in
-                            try step2PaceEcdhGmAesCbcCmac128(channel: channel,
-                                    nonceS: nonceS,
-                                    writeTimeout: writeTimeout,
-                                    readTimeout: readTimeout)
+                            step2PaceEcdhGmAesCbcCmac128(card: card,
+                                                         nonceS: nonceS,
+                                                         writeTimeout: writeTimeout,
+                                                         readTimeout: readTimeout)
                         }
                         .map { pk2Pcd, keyPair2 in
                             (pk2Pcd, keyPair2)
@@ -112,11 +111,11 @@ public class KeyAgreement {
                         // Send own public key PK2_PCD to card and receive second public key (PK2_PICC) from card.
                         // Derive PaceKey from all the information.
                         .flatMap { pk2Pcd, keyPair2 in
-                            try step3PaceEcdhGmAesCbcCmac128(channel: channel,
-                                    pk2Pcd: pk2Pcd,
-                                    keyPair2: keyPair2,
-                                    writeTimeout: writeTimeout,
-                                    readTimeout: readTimeout)
+                            step3PaceEcdhGmAesCbcCmac128(card: card,
+                                                         pk2Pcd: pk2Pcd,
+                                                         keyPair2: keyPair2,
+                                                         writeTimeout: writeTimeout,
+                                                         readTimeout: readTimeout)
                                     .map { pk2Picc, paceKey in
                                         (pk2Pcd, pk2Picc, paceKey)
                                     }
@@ -125,74 +124,96 @@ public class KeyAgreement {
                         // so the card can verify it.
                         // Receive MAC_PICC from card and verify it.
                         .flatMap { pk2Pcd, pk2Picc, paceKey in
-                            try step4PaceEcdhGmAesCbcCmac128(channel: channel,
-                                    pk2Picc: pk2Picc,
-                                    pk2Pcd: pk2Pcd,
-                                    paceKey: paceKey,
-                                    writeTimeout: writeTimeout,
-                                    readTimeout: readTimeout)
-                                    .map { verifyMacPicc in
+                            step4PaceEcdhGmAesCbcCmac128(card: card,
+                                                         pk2Picc: pk2Picc,
+                                                         pk2Pcd: pk2Pcd,
+                                                         paceKey: paceKey,
+                                                         writeTimeout: writeTimeout,
+                                                         readTimeout: readTimeout)
+                                    .tryMap { verifyMacPicc in
                                         if !verifyMacPicc {
                                             throw Error.macPiccVerificationFailedLocally
                                         }
                                         return paceKey
                                     }
                         }
+                        .eraseToAnyPublisher()
             }
-
         }
     }
 
     /// Set the appropriate security environment on card.
-    private static func step0PaceEcdhGmAesCbcCmac128(channel: CardChannelType,
-                                                     writeTimeout: TimeInterval,
-                                                     readTimeout: TimeInterval) throws
-                    -> Executable<HealthCardResponseType> {
-        let algorithm = Algorithm.idPaceEcdhGmAesCbcCmac128
-        let key = try Key(algorithm.affectedKeyId)
-        let decodedOID = try ASN1Decoder.decode(asn1: try Data(hex: algorithm.protocolIdentifierHex))
-        let oid = try ObjectIdentifier(from: decodedOID)
-        return try HealthCardCommand.ManageSE.selectPACE(symmetricKey: key, dfSpecific: false, oid: oid)
-                .execute(on: channel, writeTimeout: writeTimeout, readTimeout: readTimeout)
+    private static func step0PaceEcdhGmAesCbcCmac128(
+            card: HealthCardType,
+            writeTimeout: TimeInterval,
+            readTimeout: TimeInterval
+    ) -> AnyPublisher<HealthCardResponseType, Swift.Error> {
+        Just(Algorithm.idPaceEcdhGmAesCbcCmac128)
+                .tryMap { algorithm -> (Key, ObjectIdentifier) in
+                    let algorithm = Algorithm.idPaceEcdhGmAesCbcCmac128
+                    let key = try Key(algorithm.affectedKeyId)
+                    let decodedOID = try ASN1Decoder.decode(asn1: try Data(hex: algorithm.protocolIdentifierHex))
+                    let oid = try ObjectIdentifier(from: decodedOID)
+                    return (key, oid)
+                }
+                .tryMap { key, oid -> HealthCardCommandType in
+                    try HealthCardCommand.ManageSE.selectPACE(symmetricKey: key, dfSpecific: false, oid: oid)
+                }
+                .flatMap {
+                    $0.publisher(for: card, writeTimeout: writeTimeout, readTimeout: readTimeout)
+                }
+                .eraseToAnyPublisher()
     }
 
     /// Request nonceZ from card and decrypt it to nonceS as BigInt
-    private static func step1PaceEcdhGmAesCbcCmac128(channel: CardChannelType,
-                                                     can: CAN,
-                                                     writeTimeout: TimeInterval,
-                                                     readTimeout: TimeInterval) throws
-                    -> Executable<BigInt> {
-        return HealthCardCommand.PACE.step1a()
-                .execute(on: channel, writeTimeout: writeTimeout, readTimeout: readTimeout)
-                .map { (response: HealthCardResponseType) -> Data in
+    private static func step1PaceEcdhGmAesCbcCmac128(
+            card: HealthCardType,
+            can: CAN,
+            writeTimeout: TimeInterval,
+            readTimeout: TimeInterval
+    ) -> AnyPublisher<BigInt, Swift.Error> {
+        Just(HealthCardCommand.PACE.step1a())
+                .mapError { $0 as Swift.Error}
+                .flatMap {
+                    $0.publisher(for: card, writeTimeout: writeTimeout, readTimeout: readTimeout)
+                }
+                .tryMap { (response: HealthCardResponseType) -> Data in
                     guard let responseData = response.data,
                           let nonceZ = try? KeyAgreement.extractPrimitive(constructedAsn1: responseData) else {
                         throw KeyAgreement.Error.unexpectedFormedAnswerFromCard
                     }
                     return nonceZ
                 }
-                .map { (nonceZ: Data) -> BigInt in
+                .tryMap { (nonceZ: Data) -> BigInt in
                     let derivedKey = KeyDerivationFunction.deriveKey(from: can.rawValue, mode: .password)
                     let nonceSData = try AES.CBC128.decrypt(data: nonceZ, key: derivedKey)
                     let nonceS = BigInt(sign: .plus, magnitude: BigUInt(nonceSData))
                     return nonceS
                 }
+                .eraseToAnyPublisher()
     }
 
     /// Generate first own public key (PK1_PCD) and send it to card.
     /// Receive first public key (PK1_PICC) from card
     /// Calculate a shared secret generating point gTilde
-    /// Generate second keyPair2 and public key PK2_PCD = gTilde * keypair2.privateKey and
-    private static func step2PaceEcdhGmAesCbcCmac128(channel: CardChannelType,
-                                                     nonceS: BigInt,
-                                                     writeTimeout: TimeInterval,
-                                                     readTimeout: TimeInterval) throws
-                    -> Executable<(ECPoint, EcdhKeyPair)> {
+    /// Generate second keyPair2 and public key PK2_PCD = gTilde * keyPair2.privateKey and
+    private static func step2PaceEcdhGmAesCbcCmac128(
+            card: HealthCardType,
+            nonceS: BigInt,
+            writeTimeout: TimeInterval,
+            readTimeout: TimeInterval
+    ) -> AnyPublisher<(ECPoint, EcdhKeyPair), Swift.Error> {
         let keyPair1 = EcdhKeyPairGenerator().generateKeyPair()
-        DLog("keyPair1_PCD publicKey: \(keyPair1.publicKey.encodedUncompressed32Bytes.hexString())")
-        return try HealthCardCommand.PACE.step2a(publicKey: keyPair1.publicKey.encodedUncompressed32Bytes)
-                .execute(on: channel, writeTimeout: writeTimeout, readTimeout: readTimeout)
-                .map { (pk1PiccResponse: HealthCardResponseType) -> (ECPoint, EcdhKeyPair) in
+        return Just(keyPair1)
+                .tryMap { keyPair1 -> HealthCardCommandType in
+                    DLog("keyPair1_PCD publicKey: \(keyPair1.publicKey.encodedUncompressed32Bytes.hexString())")
+                    return try HealthCardCommand.PACE.step2a(publicKey: keyPair1.publicKey.encodedUncompressed32Bytes)
+                }
+                .flatMap {
+                    $0.publisher(for: card, writeTimeout: writeTimeout, readTimeout: readTimeout)
+                }
+
+                .tryMap { (pk1PiccResponse: HealthCardResponseType) -> (ECPoint, EcdhKeyPair) in
                     guard let pk1PiccResponseResponseData = pk1PiccResponse.data else {
                         throw Error.unexpectedFormedAnswerFromCard
                     }
@@ -213,51 +234,59 @@ public class KeyAgreement {
                     let pk2Pcd = try keyPair2.multiplyPrivateKey(with: gTilde)
                     return (pk2Pcd, keyPair2)
                 }
+                .eraseToAnyPublisher()
     }
 
     /// Send own public key PK2_PCD to card and receive second public key (PK2_PICC) from card
     /// Derive PaceKey from all the information
-    private static func step3PaceEcdhGmAesCbcCmac128(channel: CardChannelType,
-                                                     pk2Pcd: ECPoint,
-                                                     keyPair2: EcdhKeyPair,
-                                                     writeTimeout: TimeInterval,
-                                                     readTimeout: TimeInterval) throws
-                    -> Executable<(ECPoint, AES128PaceKey)> {
-        return try HealthCardCommand.PACE.step3a(publicKey: pk2Pcd.encodedUncompressed32Bytes)
-                .execute(on: channel, writeTimeout: writeTimeout, readTimeout: readTimeout)
-                .map { (pk2PiccResponse: HealthCardResponseType) in
+    private static func step3PaceEcdhGmAesCbcCmac128(
+            card: HealthCardType,
+            pk2Pcd: ECPoint,
+            keyPair2: EcdhKeyPair,
+            writeTimeout: TimeInterval,
+            readTimeout: TimeInterval
+    ) -> AnyPublisher<(ECPoint, AES128PaceKey), Swift.Error> {
+        Just(pk2Pcd)
+                .tryMap { pk2Pcd -> HealthCardCommandType in
+                    try HealthCardCommand.PACE.step3a(publicKey: pk2Pcd.encodedUncompressed32Bytes)
+                }
+                .flatMap { $0.publisher(for: card, writeTimeout: writeTimeout, readTimeout: readTimeout) }
+                .tryMap { (pk2PiccResponse: HealthCardResponseType) in
                     guard let pk2PiccResponseResponseData = pk2PiccResponse.data else {
                         throw KeyAgreement.Error.unexpectedFormedAnswerFromCard
                     }
-                    let pk1PiccData = try KeyAgreement
-                            .extractPrimitive(constructedAsn1: pk2PiccResponseResponseData)
+                    let pk1PiccData = try KeyAgreement.extractPrimitive(constructedAsn1: pk2PiccResponseResponseData)
                     let pk2Picc = try ECPoint.parse(encoded: pk1PiccData)
                     let paceKey = try KeyAgreement.derivePaceKeyEcdhAes128(publicKey: pk2Picc, keyPair: keyPair2)
 
                     return (pk2Picc, paceKey)
                 }
+                .eraseToAnyPublisher()
     }
 
     /// Derive MAC_PCD from a key mac and from a auth token and send it to card for verification
     /// Receive MAC_PICC from card and verify it
-    private static func step4PaceEcdhGmAesCbcCmac128( // swiftlint:disable:this function_parameter_count
-            channel: CardChannelType,
-            pk2Picc: ECPoint,
-            pk2Pcd: ECPoint,
-            paceKey: AES128PaceKey,
-            writeTimeout: TimeInterval,
-            readTimeout: TimeInterval
-    ) throws -> Executable<Bool> {
+    private static func step4PaceEcdhGmAesCbcCmac128(// swiftlint:disable:this function_parameter_count
+                                                     card: HealthCardType,
+                                                     pk2Picc: ECPoint,
+                                                     pk2Pcd: ECPoint,
+                                                     paceKey: AES128PaceKey,
+                                                     writeTimeout: TimeInterval,
+                                                     readTimeout: TimeInterval
+    ) -> AnyPublisher<Bool, Swift.Error> {
         let algorithm = Algorithm.idPaceEcdhGmAesCbcCmac128
-
-        let macPcd = try KeyAgreement.deriveMac(publicKey: pk2Picc,
-                sessionKeyMac: paceKey.mac,
-                algorithm: algorithm)
-        let macPcdToken = macPcd.prefix(algorithm.macTokenPrefixSize)
-
-        return try HealthCardCommand.PACE.step4a(token: macPcdToken)
-                .execute(on: channel, writeTimeout: writeTimeout, readTimeout: readTimeout)
-                .map { (macPiccResponse: HealthCardResponseType) -> Bool in
+        return Just(algorithm)
+                .tryMap { algorithm -> HealthCardCommandType in
+                    let macPcd = try KeyAgreement.deriveMac(publicKey: pk2Picc,
+                                                            sessionKeyMac: paceKey.mac,
+                                                            algorithm: algorithm)
+                    let macPcdToken = macPcd.prefix(algorithm.macTokenPrefixSize)
+                    return try HealthCardCommand.PACE.step4a(token: macPcdToken)
+                }
+                .flatMap {
+                    $0.publisher(for: card, writeTimeout: writeTimeout, readTimeout: readTimeout)
+                }
+                .tryMap { (macPiccResponse: HealthCardResponseType) -> Bool in
                     if macPiccResponse.responseStatus != .success {
                         throw Error.macPcdVerificationFailedOnCard
                     }
@@ -266,11 +295,12 @@ public class KeyAgreement {
                     }
                     let macPiccData = try extractPrimitive(constructedAsn1: macPiccResponseData)
                     let verifyMacPiccData = try deriveMac(publicKey: pk2Pcd,
-                            sessionKeyMac: paceKey.mac,
-                            algorithm: algorithm)
+                                                          sessionKeyMac: paceKey.mac,
+                                                          algorithm: algorithm)
 
                     return macPiccData == verifyMacPiccData.prefix(8)
                 }
+                .eraseToAnyPublisher()
     }
 
     static func extractPrimitive(constructedAsn1: Data) throws -> Data {
@@ -314,7 +344,7 @@ public class KeyAgreement {
 
     private static func createAsn1AuthToken(ecPoint: ECPoint, protocolID: String) throws -> Data {
 
-        let asn1OID = try ObjectIdentifier.from(string: protocolID).asn1encode(tag: .taggedTag(0x6)) //
+        let asn1OID = try ObjectIdentifier.from(string: protocolID).asn1encode(tag: .taggedTag(0x6))
         let asn1 = create(tag: .taggedTag(0x6), data: ASN1Data.primitive(ecPoint.encodedUncompressed32Bytes))
         let asn1Vector = create(tag: .applicationTag(0x49), data: .constructed([asn1OID, asn1]))
 

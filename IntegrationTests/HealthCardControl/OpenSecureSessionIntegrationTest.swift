@@ -14,16 +14,19 @@
 //  limitations under the License.
 //
 
+import CardReaderProviderApi
+import CardSimulationCardReaderProvider
 import CardSimulationTerminalTestCase
-
+import DataKit
 import Foundation
+import GemCommonsKit
 import HealthCardAccess
 @testable import HealthCardControl
 import Nimble
 import XCTest
 
-final class HealthCardTypeExtVerifyPinTest: CardSimulationTerminalTestCase {
-    static let thisConfigFile = "Configuration/configuration_EGK_G2_1_80276883110000095711_GuD_TCP.xml"
+final class OpenSecureSessionIntegrationTest: CardSimulationTerminalTestCase {
+    static let thisConfigFile = "Configuration/configuration_E021D-A5Tp_432_80276883110000218486.xml"
 
     override class func configFile() -> URL? {
         let bundle = Bundle(for: CardSimulationTerminalTestCase.self)
@@ -31,26 +34,13 @@ final class HealthCardTypeExtVerifyPinTest: CardSimulationTerminalTestCase {
         return path.asURL
     }
 
-    func testVerifyMrPinHomeEgk21() {
-        let pinCode = "123456"
-        expect {
-            let format2Pin = try Format2Pin(pincode: pinCode)
-            return try Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
-                    .test()
-        } == VerifyPinResponse.success
-    }
+    func testOpenSecureSession() {
+        let can = try! CAN.from(Data("123123".utf8)) //swiftlint:disable:this force_try
 
-    func testVerifyMrPinHomeEgk21Failing() {
-        let pinCode = "654321"
         expect {
-            let format2Pin = try Format2Pin(pincode: pinCode)
-            return try Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
+            try Self.card.openSecureSession(can: can, writeTimeout: 0, readTimeout: 0)
                     .test()
-        } == VerifyPinResponse.failed(retryCount: 2)
+                    .status.type
+        } == .egk(generation: .g2)
     }
-
-    static let allTests = [
-        ("testVerifyMrPinHomeEgk21", testVerifyMrPinHomeEgk21),
-        ("testVerifyMrPinHomeEgk21Failing", testVerifyMrPinHomeEgk21Failing)
-    ]
 }

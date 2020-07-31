@@ -22,7 +22,7 @@ import Nimble
 import XCTest
 
 final class HealthCardTypeExtEfCardAccessIntTest: CardSimulationTerminalTestCase {
-    static let thisConfigFile = "Configuration/configuration_TLK_COS_image-kontaktlos128.xml"
+    static let thisConfigFile = "Configuration/configuration_E021D-A5Tp_432_80276883110000218486.xml"
 
     override class func configFile() -> URL? {
         let bundle = Bundle(for: CardSimulationTerminalTestCase.self)
@@ -32,14 +32,8 @@ final class HealthCardTypeExtEfCardAccessIntTest: CardSimulationTerminalTestCase
 
     func testReadEfCardAccess() {
         expect {
-            var mTemp: KeyAgreement.Algorithm?
-            try CardSimulationTerminalTestCase.healthCard.determineKeyAgreementAlgorithm(writeTimeout: 30,
-                                                                                         readTimeout: 30)
-                    .run(on: Executor.trampoline)
-                    .on { event in
-                        mTemp = event.value
-                    }
-            return mTemp
+            try Self.healthCard.currentCardChannel.readKeyAgreementAlgorithm(writeTimeout: 30, readTimeout: 30)
+                    .test()
         } == KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128
     }
 

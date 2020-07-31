@@ -33,12 +33,13 @@ The `Commands` groups contains all available `HealthCardCommand` objects for hea
 
 ===== Create a command
 The design of this API follows the link:https://en.wikipedia.org/wiki/Command_pattern[command design pattern]
-as well as functional programming paradigm comparable to http://reactivex.io/[ReactiveX].
-Thus a command object of appropriate command class for the desired command to be sent has to be created
-first. When creating the command it needs to be configured.
+leveraging Swift's https://developer.apple.com/documentation/combine/[Combine Framework].
+The command objects are designed to fulfil the use-cases described in the link:https://www.vesta-gematik.de/standard/formhandler/64/gemSpec_COS_V3_10_0.pdf/[Gematik COS specification].
+After creating a command object resp. sequence you can execute it on a Healthcard with the help of `publisher(for:)`.
+More information on how to configure the commands can also be found in the Gematik COS specification.
 
-Following example shall send a +SELECT+ command to a smart card
-in order to read a certificate +EF.C.CH.AUT.R2048+ from the application +ESIGN+.
+Following example shall send a +SELECT+ and a +READ+ command to a smart card
+in order to select and read the certificate stored in the file +EF.C.CH.AUT.R2048+ in the application +ESIGN+.
 
 First we want to to create a `SelectCommand` object passing a `ApplicationIdentifier`. We use one of the predefined
 helper functions by using `HealthCardCommand.Select`.
@@ -48,7 +49,7 @@ by setting the APDU-bytes manually.
 
 [source,swift]
 ----
-include::{integrationitestdir}/HealthCardAccess/OperationIntegrationTest.swift[tags=createCommand,indent=0]
+include::{integrationitestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=createCommand,indent=0]
 ----
 
 ===== Setting an execution target
@@ -60,32 +61,42 @@ as one kind of a `HealthCardType` implementing the `CardType` protocol.
 
 [source,swift]
 ----
-include::{integrationitestdir}/HealthCardAccess/OperationIntegrationTest.swift[tags=setExecutionTarget,indent=0]
+include::{integrationitestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=setExecutionTarget,indent=0]
 ----
 
+A created command can be lifted to the Combine framework with `publisher(for:writetimeout:readtimeout)`.
 The result of the command execution can be validated against an expected `ResponseStatus`,
 e.g. +SUCCESS+ (+0x9000+).
 
 [source,swift]
 ----
-include::{integrationitestdir}/HealthCardAccess/OperationIntegrationTest.swift[tags=evaluateResponseStatus,indent=0]
+include::{integrationitestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=evaluateResponseStatus,indent=0]
 ----
 
 ===== Create a Command Sequence
 
-It is possible to chain further commands via the `flatMap` function
-even in an inline manner for further execution:
+It is possible to chain further commands via the `flatMap` operator for subsequent execution:
+First create a command and lift it onto a Combine monad, then create a publisher using the `flatMap` operator, e.g.
+
+```
+Just(AnyHealthCardCommand.build())
+    .flatMap { command in command.pusblisher(for: card) }
+```
+
+Eventually use `eraseToAnyPublisher()`.
 
 [source,swift]
 ----
-include::{integrationitestdir}/HealthCardAccess/OperationIntegrationTest.swift[tags=createCommandSequence,indent=0]
+include::{integrationitestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=createCommandSequence,indent=0]
 ----
 
 ===== Process Execution result
 
-When the whole command chain is set up we have the run (or schedule) it by an `ExecutorService`.
+When the whole command chain is set up we have to subscribe to it.
+We really only will receive one value before completion, so something as simple as this `sink()`
+convenience publisher is useful.
 
 [source,swift]
 ----
-include::{integrationitestdir}/HealthCardAccess/OperationIntegrationTest.swift[tags=processExecutionResult,indent=0]
+include::{integrationitestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=processExecutionResult,indent=0]
 ----

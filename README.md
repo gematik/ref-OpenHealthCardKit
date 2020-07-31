@@ -12,7 +12,7 @@ This document describes the functionalitiy and structure of OpenHealthCardKit.
 
 ## API Documentation
 
-Generated API docs are available at <https://gematik.github.io/ref-openHealthCardKit>.
+Generated API docs are available at <https://gematik.github.io/ref-OpenHealthCardKit>.
 
 ## License
 
@@ -103,12 +103,13 @@ The `Commands` groups contains all available `HealthCardCommand` objects for hea
 ##### Create a command
 
 The design of this API follows the [command design pattern](https://en.wikipedia.org/wiki/Command_pattern)
-as well as functional programming paradigm comparable to [ReactiveX](http://reactivex.io/).
-Thus a command object of appropriate command class for the desired command to be sent has to be created
-first. When creating the command it needs to be configured.
+leveraging Swift’s [Combine Framework](https://developer.apple.com/documentation/combine/).
+The command objects are designed to fulfil the use-cases described in the [Gematik COS specification](https://www.vesta-gematik.de/standard/formhandler/64/gemSpec_COS_V3_10_0.pdf/).
+After creating a command object resp. sequence you can execute it on a Healthcard with the help of `publisher(for:)`.
+More information on how to configure the commands can also be found in the Gematik COS specification.
 
-Following example shall send a SELECT command to a smart card
-in order to read a certificate EF.C.CH.AUT.R2048 from the application ESIGN.
+Following example shall send a SELECT and a READ command to a smart card
+in order to select and read the certificate stored in the file EF.C.CH.AUT.R2048 in the application ESIGN.
 
 First we want to to create a `SelectCommand` object passing a `ApplicationIdentifier`. We use one of the predefined
 helper functions by using `HealthCardCommand.Select`.
@@ -131,12 +132,13 @@ as one kind of a `HealthCardType` implementing the `CardType` protocol.
     let card = try cardReader.connect([:])!
     let healthCardStatus = HealthCardStatus.valid(cardType: .egk(generation: .g2))
     let eGk = try HealthCard(card: card, status: healthCardStatus)
-    let exec: Executable<HealthCardResponseType> = selectEsignCommand.execute(on: eGk)
+    let publisher: AnyPublisher<HealthCardResponseType, Error> = selectEsignCommand.publisher(for: eGk)
 
+A created command can be lifted to the Combine framework with `publisher(for:writetimeout:readtimeout)`.
 The result of the command execution can be validated against an expected `ResponseStatus`,
 e.g. SUCCESS (0x9000).
 
-    let execEvaluated: Executable<HealthCardResponseType> = exec.map { healthCardResponse in
+    let checkResponse = publisher.tryMap { healthCardResponse -> HealthCardResponseType in
         guard healthCardResponse.responseStatus == ResponseStatus.success else {
             throw HealthCard.Error.operational // throw a meaningful Error
         }
@@ -145,41 +147,47 @@ e.g. SUCCESS (0x9000).
 
 ##### Create a Command Sequence
 
-It is possible to chain further commands via the `flatMap` function
-even in an inline manner for further execution:
+It is possible to chain further commands via the `flatMap` operator for subsequent execution:
+First create a command and lift it onto a Combine monad, then create a publisher using the `flatMap` operator, e.g.
 
-    let readCertificate: Executable<HealthCardResponseType> = execEvaluated.flatMap { _ in
-        let sfi = EgkFileSystem.EF.esignCChAutR2048.sfid!
-        let read = try HealthCardCommand.Read.readFileCommand(with: sfi, ne: 0x076C - 1)
-        return read.execute(on: eGk)
-    }
+    Just(AnyHealthCardCommand.build())
+        .flatMap { command in command.pusblisher(for: card) }
+
+Eventually use `eraseToAnyPublisher()`.
+
+    let readCertificate = checkResponse
+            .tryMap { _ -> HealthCardCommandType in
+                let sfi = EgkFileSystem.EF.esignCChAutR2048.sfid!
+                return try HealthCardCommand.Read.readFileCommand(with: sfi, ne: 0x076C - 1)
+            }
+            .flatMap { command in
+                command.publisher(for: eGk)
+            }
+            .eraseToAnyPublisher()
 
 ##### Process Execution result
 
-When the whole command chain is set up we have the run (or schedule) it by an `ExecutorService`.
+When the whole command chain is set up we have to subscribe to it.
+We really only will receive one value before completion, so something as simple as this `sink()`
+convenience publisher is useful.
 
     readCertificate
-            .run(on: Executor.trampoline)
-            .on { event in
-                event.fold(
-                        onComplete: { healthCardResponse in
-                            DLog("Got a certifcate")
-                            guard let data = healthCardResponse.data else {
-                                DLog("No certificate data")
-                                throw HealthCard.Error.operational
-                            }
-                            // proceed with certificate data here, show success message on screen etc.
-                        },
-                        onCancelled: {
-                            DLog("Cancelled")
-                        },
-                        onTimedOut: {
-                            DLog("Timeout")
-                        },
-                        onError: { error in
-                            DLog("Error: \(error.localizedDescription)")
-                        })
+            .sink(
+            receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    DLog("Completed")
+                case .failure(let error):
+                    DLog("Error: \(error)")
+                }
+            },
+            receiveValue: { healthCardResponse in
+                DLog("Got a certifcate")
+                let certificate = healthCardResponse.data!
+                // proceed with certificate data here
+                // use swiftUI to a show success message on screen etc.
             }
+    )
 
 ### HealthCardControl
 
@@ -198,24 +206,25 @@ See the [Gematik GitHub IO](https://gematik.github.io/) page for a more general 
 
 Take the necessary preparatory steps for signing a challenge on the Health Card, then sign it.
 
-    let challenge = Data([0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8])
-    let format2Pin = try Format2Pin(pincode: "123456")
-    CardSimulationTerminalTestCase.healthCard
-            .verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
-            .flatMap { _ in
-                CardSimulationTerminalTestCase.healthCard.sign(challenge: challenge)
-            }
-            .run(on: Executor.trampoline)
+        let challenge = Data([0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8])
+        let format2Pin = try Format2Pin(pincode: "123456")
+        return try Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
+                .flatMap { _ in
+                    Self.healthCard.sign(challenge: challenge)
+                }
+                .eraseToAnyPublisher()
+                .test()
+                .responseStatus
+    } == ResponseStatus.success
 
 Encapsulate the [PACE protocol](https://www.bsi.bund.de/DE/Publikationen/TechnischeRichtlinien/tr03110/index_htm.html)
 steps for establishing a secure channel with the Health Card and expose only a simple API call .
 
     try KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128.negotiateSessionKey(
-                    channel: CardSimulationTerminalTestCase.healthCard.currentCardChannel,
+                    card: CardSimulationTerminalTestCase.healthCard,
                     can: can,
                     writeTimeout: 0,
                     readTimeout: 10)
-            .run(on: Executor.trampoline)
 
 See the integration tests [IntegrationTests/HealthCardControl/](include::../../IntegrationTests/HealthCardControl/)
 for more already implemented use cases.

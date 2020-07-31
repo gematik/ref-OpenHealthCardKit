@@ -2,7 +2,7 @@ name: OpenHealthCardKit
 options:
   bundleIdPrefix: de.gematik.ti.openhealthcard
   deploymentTarget:
-    macOS: 10.14
+    macOS: 10.15
     iOS: 13.0
 settings:
   base:
@@ -70,6 +70,7 @@ targets:
     sources:
       - Sources/HealthCardAccess
     dependencies:
+      - sdk: Combine.framework
       - target: CardReaderAccess_${platform}
       - target: CardReaderProviderApi_${platform}
       - carthage: ASN1Kit

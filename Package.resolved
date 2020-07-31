@@ -1,0 +1,70 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "ASN1Kit",
+        "repositoryURL": "https://build.top.local/source/git/refImpl/mobszen/iOS/ASN1Kit.git",
+        "state": {
+          "branch": "R1.0.9",
+          "revision": "332f3b759ce78369c6f4fc9d97e58d84bc721a2a",
+          "version": null
+        }
+      },
+      {
+        "package": "BigInt",
+        "repositoryURL": "http://github.com/attaswift/BigInt",
+        "state": {
+          "branch": null,
+          "revision": "2bbb8a7addeb79ceccf45acac9f6e2a07cbe9680",
+          "version": "5.1.0"
+        }
+      },
+      {
+        "package": "Commandant",
+        "repositoryURL": "http://github.com/Carthage/Commandant",
+        "state": {
+          "branch": null,
+          "revision": "ab68611013dec67413628ac87c1f29e8427bc8e4",
+          "version": "0.17.0"
+        }
+      },
+      {
+        "package": "DataKit",
+        "repositoryURL": "http://github.com/SwiftCommon/DataKit",
+        "state": {
+          "branch": null,
+          "revision": "0aca955ad82c44c5a1668916d95538f90f2b7e43",
+          "version": "1.0.2"
+        }
+      },
+      {
+        "package": "Nimble",
+        "repositoryURL": "http://github.com/Quick/Nimble",
+        "state": {
+          "branch": null,
+          "revision": "2b1809051b4a65c1d7f5233331daa24572cd7fca",
+          "version": "8.1.1"
+        }
+      },
+      {
+        "package": "Quick",
+        "repositoryURL": "https://github.com/Quick/Quick.git",
+        "state": {
+          "branch": null,
+          "revision": "09b3becb37cb2163919a3842a4c5fa6ec7130792",
+          "version": "2.2.1"
+        }
+      },
+      {
+        "package": "GemCommonsKit",
+        "repositoryURL": "https://build.top.local/source/git/refImpl/mobszen/iOS/ref-GemCommonsKit.git",
+        "state": {
+          "branch": "R1.1.2",
+          "revision": "2b5719bf6c1b3da708000cfdd89c73a35c15aa98",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

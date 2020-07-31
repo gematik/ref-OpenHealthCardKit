@@ -15,6 +15,7 @@
 //
 
 import CardReaderProviderApi
+import Combine
 import Foundation
 
 public protocol HealthCardCommandType: CommandType {
@@ -37,36 +38,41 @@ extension HealthCardCommandType {
     }
 
     /// Execute the command on a given card
-    /// - Note: the Executable itself is not yet executed. You have to schedule/execute it on an ExecutorType
+    /// - Note: the Publisher itself is not yet executed. You have to subscribe to it using a `Combine.Subscriber`
     /// - Parameters:
-    ///     - card: the card to use for executing `self` on. Uses the `currentCardChannel` form the card to transmit on
+    ///     - card: the card to use for executing `self` on
     ///     - writeTimeout: the time in seconds to allow for the write to begin. time <= 0 no timeout
     ///     - readTimeout: the time in seconds to allow for the receiving to begin. time <= 0 no timeout
-    /// - Returns: Executable that holds a strong reference to the command: `self`
-    public func execute(on card: HealthCardType, writeTimeout: TimeInterval = 0, readTimeout: TimeInterval = 0)
-                    -> Executable<HealthCardResponseType> {
-        return execute(on: card.currentCardChannel, writeTimeout: writeTimeout, readTimeout: readTimeout)
+    /// - Returns: AnyPublisher that holds a strong reference to the command: `self`
+    public func publisher(`for` card: HealthCardType, writeTimeout: TimeInterval = 0, readTimeout: TimeInterval = 0)
+                    -> AnyPublisher<HealthCardResponseType, Swift.Error> {
+        publisher(for: card.currentCardChannel, writeTimeout: writeTimeout, readTimeout: readTimeout)
     }
 
     /// Execute the command on a given channel
-    /// - Note: the Executable itself is not yet executed. You have to schedule/execute it on an ExecutorType
+    /// - Note: the Publisher itself is not yet executed. You have to subscribe to it using a `Combine.Subscriber`
     /// - Parameters:
-    ///     - channel: the channe to use for executing `self` on
+    ///     - channel: the channel to use for executing `self` on
     ///     - writeTimeout: the time in seconds to allow for the write to begin. time <= 0 no timeout
     ///     - readTimeout: the time in seconds to allow for the receiving to begin. time <= 0 no timeout
-    /// - Returns: Executable that holds a strong reference to the command: `self`
-    public func execute(on channel: CardChannelType, writeTimeout: TimeInterval = 0, readTimeout: TimeInterval = 0)
-                    -> Executable<HealthCardResponseType> {
-        return Executable<HealthCardResponseType>
-                .evaluate {
-                    try channel.transmit(
-                            command: self,
-                            writeTimeout: writeTimeout,
-                            readTimeout: readTimeout
-                    )
-                }
+    /// - Returns: AnyPublisher that holds a strong reference to the command: `self`
+    public func publisher(`for` channel: CardChannelType, writeTimeout: TimeInterval = 0, readTimeout: TimeInterval = 0)
+                    -> AnyPublisher<HealthCardResponseType, Swift.Error> {
+        Combine.Future<ResponseType, Swift.Error> { promise in
+                    do {
+                        let res = try channel.transmit(
+                                command: self,
+                                writeTimeout: writeTimeout,
+                                readTimeout: readTimeout
+                        )
+                        promise(.success(res))
+                    } catch {
+                        promise(.failure(error))
+                    }
+        }
                 .map {
                     HealthCardResponse.from(response: $0, for: self)
                 }
+                .eraseToAnyPublisher()
     }
 }
