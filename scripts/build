@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# scripts/build: Build the application
+
+set -ev
+
+CONFIG=$(echo ${1-debug} | tr '[:upper:]' '[:lower:]')
+IOS_DEPLOYMENT_TARGET=${2-"ios13.0"}
+
+cd "$(dirname "$0")/.."
+
+[ -z "$DEBUG" ] || set -x
+
+echo "==> Building…[$CONFIG]:[$IOS_DEPLOYMENT_TARGET]"
+
+# simulator build
+swift build -c "${CONFIG}" -Xswiftc "-sdk" -Xswiftc "`xcrun --sdk iphonesimulator --show-sdk-path`" -Xswiftc "-target" -Xswiftc "x86_64-apple-${IOS_DEPLOYMENT_TARGET}-simulator"
+
+# iphoneos build
+swift build -c "${CONFIG}" -Xswiftc "-sdk" -Xswiftc "`xcrun --sdk iphoneos --show-sdk-path`" -Xswiftc "-target" -Xswiftc "arm64-apple-${IOS_DEPLOYMENT_TARGET}-iphoneos"

@@ -1,5 +1,5 @@
-github "gematik/asn1kit" "1.0.7"
-github "gematik/ref-GemCommonsKit" "1.1.0"
+github "gematik/asn1kit" "1.0.9"
+github "gematik/ref-GemCommonsKit" "1.1.2"
 github "Carthage/Commandant" "0.17.0"
 github "Quick/Nimble" "v8.0.1"
 github "SwiftCommon/DataKit" "1.0.2"

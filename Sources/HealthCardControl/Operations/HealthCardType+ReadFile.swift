@@ -15,6 +15,7 @@
 //
 
 import CardReaderProviderApi
+import Combine
 import Foundation
 import HealthCardAccess
 
@@ -41,52 +42,60 @@ extension HealthCardType {
     ///     - failOnEndOfFileWarning: whether the operation must execute 'clean' or till the end-of-file warning.
     ///             [default: true]
     ///
-    /// - Note: This executable keeps reading till the received number of bytes is `size`
-    ///         or the channel returns 0x6282: endOfFileWarning.
-    ///         When the current channel `maxResponseLength` is less than the expected `size`, the file is read in
-    ///         chunks and returned as a whole.
+    /// - Note: This Publisher keeps reading till the received number of bytes is `size`
+    ///   or the channel returns 0x6282: endOfFileWarning.
+    ///   When the current channel `maxResponseLength` is less than the expected `size`,
+    ///   the file is read in chunks and returned as a whole.
     ///
-    /// - Throws: Emits `ReadError` on the Executable in case of failure.
+    /// - Throws: Emits `ReadError` on the Publisher in case of failure.
     ///
-    /// - Returns: Executable that reads the current selected file
+    /// - Returns: Publisher that reads the current selected file
     public func readSelectedFile(expected size: Int?, failOnEndOfFileWarning: Bool = true, offset: Int = 0)
-                    -> Executable<Data> {
+                    -> AnyPublisher<Data, Error> {
         let maxResponseLength = self.currentCardChannel.maxResponseLength - 2 // allow for 2 status bytes sw1, sw2
         let expectedResponseLength = size ?? 0x10000
         let responseLength = min(maxResponseLength, expectedResponseLength)
-        return Executable<Data>
-                .evaluate {
+        return Just(responseLength)
+                .tryMap { responseLength in
                     try HealthCardCommand.Read.readFileCommand(ne: responseLength, offset: offset)
                 }
                 .flatMap { command in
-                    command.execute(on: self)
-                }
-                .flatMap { response in
-                    guard response.responseStatus == .success ||
-                                  (!failOnEndOfFileWarning &&
-                                          response.responseStatus == .endOfFileWarning) else {
-                        // Fail because we received an end-of-file warning or did not succeed
-                        throw ReadError.unexpectedResponse(state: response.responseStatus)
-                    }
-                    guard let responseData = response.data, !responseData.isEmpty else {
-                        // No data received
-                        throw ReadError.noData(state: response.responseStatus)
-                    }
-                    guard responseData.count < expectedResponseLength &&
-                                  response.responseStatus != .endOfFileWarning else {
-                        // Done
-                        return Executable<Data>.unit(responseData)
-                    }
-                    // Continue reading
-                    return self.readSelectedFile(
-                                    expected: size != nil ? (expectedResponseLength - responseData.count) : nil,
-                                    failOnEndOfFileWarning: failOnEndOfFileWarning,
-                                    offset: offset + responseData.count
-                            )
-                            .map {
-                                responseData + $0
+                    command.publisher(for: self)
+                            .tryMap { response -> (Bool, Data) in
+                                guard response.responseStatus == .success ||
+                                              (!failOnEndOfFileWarning &&
+                                                      response.responseStatus == .endOfFileWarning) else {
+                                    // Fail because we received an end-of-file warning or did not succeed
+                                    throw ReadError.unexpectedResponse(state: response.responseStatus)
+                                }
+                                guard let responseData = response.data, !responseData.isEmpty else {
+                                    // No data received
+                                    throw ReadError.noData(state: response.responseStatus)
+                                }
+                                let continueReading = responseData.count < expectedResponseLength &&
+                                        response.responseStatus != .endOfFileWarning
+                                return (continueReading, responseData)
+                            }
+                            .flatMap { readAgain, responseData -> AnyPublisher<Data, Error> in
+                                if readAgain {
+                                    // Continue reading
+                                    return self.readSelectedFile(
+                                                    expected: size != nil ?
+                                                            (expectedResponseLength - responseData.count) : nil,
+                                                    failOnEndOfFileWarning: failOnEndOfFileWarning,
+                                                    offset: offset + responseData.count
+                                            )
+                                            .map {
+                                                responseData + $0
+                                            }
+                                            .eraseToAnyPublisher()
+                                } else {
+                                    //Done
+                                    return Just(responseData).mapError { $0 as Error}.eraseToAnyPublisher()
+                                }
                             }
                 }
+                .eraseToAnyPublisher()
     }
 
     /// Select a dedicated file with or without requesting the FileIdentifier's File Control Parameter.
@@ -98,38 +107,56 @@ extension HealthCardType {
     ///
     /// - Throws: emits `SelectError` (or `ReadError` is case no FCP data could be read and fcp = true)
     ///
-    /// - Returns: Executable chain that selects the given file when executed
+    /// - Returns: Publisher chain that selects the given file when executed
     public func selectDedicated(file: DedicatedFile, fcp: Bool = false, length: Int = 256)
-                    -> Executable<(ResponseStatus, FileControlParameter?)> {
-        return Executable<(ResponseStatus, FileControlParameter?)>
-                .unit(HealthCardCommand.Select.selectFile(with: file.aid))
-                .flatMap { command in
-                    command.execute(on: self)
+                    -> AnyPublisher<(ResponseStatus, FileControlParameter?), Error> {
+
+        let channel = self
+        return Just(file.aid)
+                .tryMap { aid -> HealthCardCommand in
+                    HealthCardCommand.Select.selectFile(with: aid)
                 }
-                .flatMap { response in
+                .flatMap {
+                    $0.publisher(for: channel)
+                }
+                .tryMap { response -> HealthCardResponseType in
                     guard response.responseStatus == .success else {
                         throw SelectError.failedToSelectAid(file.aid, status: response.responseStatus)
                     }
-                    guard let fid = file.fid else {
-                        return Executable<(ResponseStatus, FileControlParameter?)>.unit((response.responseStatus, nil))
-                    }
-                    let command = fcp ?
-                            try HealthCardCommand.Select.selectEfRequestingFcp(with: fid, expectedLength: length)
-                            : HealthCardCommand.Select.selectEf(with: fid)
-                    return command.execute(on: self).map { fidResponse in
-                        guard fidResponse.responseStatus == .success else {
-                            throw SelectError.failedToSelectFid(fid, status: fidResponse.responseStatus)
-                        }
-                        if fcp {
-                            guard let fcpData = fidResponse.data else {
-                                throw ReadError.noData(state: fidResponse.responseStatus)
-                            }
-                            let fcp = try FileControlParameter.parse(data: fcpData)
-                            return (fidResponse.responseStatus, fcp)
-                        } else {
-                            return (fidResponse.responseStatus, nil)
-                        }
-                    }
+                    return response
                 }
+                .flatMap { response -> AnyPublisher<(ResponseStatus, FileControlParameter?), Error> in
+                    guard let fid = file.fid else {
+                        return Just<(ResponseStatus, FileControlParameter?)>((response.responseStatus, nil))
+                                .mapError { $0 as Error }
+                                .eraseToAnyPublisher()
+                    }
+
+                    return Just(fcp)
+                            .tryMap { fcp -> HealthCardCommand in
+                                let command = fcp ?
+                                        try HealthCardCommand.Select.selectEfRequestingFcp(with: fid,
+                                                                                           expectedLength: length)
+                                        : HealthCardCommand.Select.selectEf(with: fid)
+                                return command
+                            }
+                            .flatMap { $0.publisher(for: channel) }
+                            .tryMap {  fidResponse in
+                                guard fidResponse.responseStatus == .success else {
+                                    throw SelectError.failedToSelectFid(fid, status: fidResponse.responseStatus)
+                                }
+                                if fcp {
+                                    guard let fcpData = fidResponse.data else {
+                                        throw ReadError.noData(state: fidResponse.responseStatus)
+                                    }
+                                    let fcp = try FileControlParameter.parse(data: fcpData)
+                                    return (fidResponse.responseStatus, fcp)
+                                } else {
+                                    return (fidResponse.responseStatus, nil)
+                                }
+                            }
+                            .eraseToAnyPublisher()
+                }
+                .eraseToAnyPublisher()
     }
 }

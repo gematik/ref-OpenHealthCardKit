@@ -23,10 +23,7 @@ import Nimble
 import XCTest
 
 final class ReadAutCertificateR2048Test: CardSimulationTerminalTestCase {
-    private let dedicatedFile = DedicatedFile(
-            aid: EgkFileSystem.DF.ESIGN.aid,
-            fid: EgkFileSystem.EF.esignCChAutR2048.fid
-    )
+
     private var expectedCertificate: Data!
 
     override func setUp() {
@@ -42,12 +39,13 @@ final class ReadAutCertificateR2048Test: CardSimulationTerminalTestCase {
     }
 
     func testReadAutCertificate2048() {
-        let response = CardSimulationTerminalTestCase.healthCard
-                .readAutCertificate()
-                .run(on: Executor.trampoline)
-                .test()
-                .value
-        expect(response?.info) == .efAutR2048
-        expect(response?.certificate) == expectedCertificate
+        var autCertificateResponse: AutCertificateResponse?
+        expect {
+            autCertificateResponse = try CardSimulationTerminalTestCase.healthCard
+                    .readAutCertificate()
+                    .test()
+        }.toNot(throwError())
+        expect(autCertificateResponse?.info) == .efAutR2048
+        expect(autCertificateResponse?.certificate) == expectedCertificate
     }
 }

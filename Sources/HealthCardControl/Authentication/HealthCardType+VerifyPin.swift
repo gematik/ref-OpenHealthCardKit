@@ -14,6 +14,7 @@
 //  limitations under the License.
 //
 
+import Combine
 import Foundation
 import HealthCardAccess
 
@@ -37,13 +38,13 @@ extension HealthCardType {
     ///     - pin: `Format2Pin` holds the Pin information for the `type`. E.g. mrPinHome.
     ///     - type: verification type. Any of `EgkFileSystem.Pin`.
     ///
-    /// - Returns: Executable that tries to verify the given `pin` information against `type`
+    /// - Returns: Publisher that tries to verify the given `pin` information against `type`
     ///
     /// - Note: Only supports eGK Card types
-    public func verify(pin: Format2Pin, type: EgkFileSystem.Pin) -> Executable<VerifyPinResponse> {
+    public func verify(pin: Format2Pin, type: EgkFileSystem.Pin) -> AnyPublisher<VerifyPinResponse, Error> {
         let verifyPasswordParameter = (type.rawValue, false, pin)
         return HealthCardCommand.Verify.verify(password: verifyPasswordParameter)
-            .execute(on: self)
+            .publisher(for: self)
             .map { response in
                 if response.responseStatus == .success {
                     return .success
@@ -51,6 +52,7 @@ extension HealthCardType {
                     return .failed(retryCount: response.responseStatus.retryCount)
                 }
             }
+        .eraseToAnyPublisher()
     }
 }
 

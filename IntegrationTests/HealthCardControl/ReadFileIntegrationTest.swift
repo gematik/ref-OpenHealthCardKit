@@ -51,67 +51,56 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
             ALog("Could not read certificate file: \(path)\nError: \(error)")
         }
 
-        _ = HealthCardCommand.Select.selectRoot()
-                .execute(on: CardSimulationTerminalTestCase.healthCard)
-                .run(on: Executor.trampoline)
+        do {
+        _ = try HealthCardCommand.Select.selectRoot()
+                .publisher(for: Self.healthCard)
                 .test()
+        } catch let error {
+            ALog("Could not execute select root command while setup\nError: \(error)")
+        }
     }
 
     func testReadFileTillEOF() {
-        guard let (responseStatus, _) = CardSimulationTerminalTestCase.healthCard.selectDedicated(file: dedicatedFile)
-                .run(on: Executor.trampoline)
-                .test().value else {
-            Nimble.fail("Failed to select and read FCP [Preparing test-case]")
-            return
-        }
-        expect(responseStatus) == .success
+        expect {
+           let (responseStatus, _) = try Self.healthCard.selectDedicated(file: self.dedicatedFile)
+                    .test()
+            return responseStatus
+        } == ResponseStatus.success
 
-        let fileResponse = CardSimulationTerminalTestCase.healthCard.readSelectedFile(expected: nil,
-                                                                                      failOnEndOfFileWarning: false)
-                .run(on: Executor.trampoline)
-                .test()
-
-        expect(fileResponse.value) == expectedCertificate
+        expect {
+            try Self.healthCard.readSelectedFile(expected: nil, failOnEndOfFileWarning: false)
+                    .test()
+        } == expectedCertificate
     }
 
     func testReadFileFailOnEOF() {
-        guard let (responseStatus, _) = CardSimulationTerminalTestCase.healthCard.selectDedicated(file: dedicatedFile)
-                .run(on: Executor.trampoline)
-                .test().value else {
-            Nimble.fail("Failed to select and read FCP [Preparing test-case]")
-            return
-        }
-        expect(responseStatus) == .success
+        expect {
+            let (responseStatus, _) = try Self.healthCard.selectDedicated(file: self.dedicatedFile)
+                    .test()
+            return responseStatus
+        } == ResponseStatus.success
 
-        let error = CardSimulationTerminalTestCase.healthCard.readSelectedFile(expected: 2000)
-                .run(on: Executor.trampoline)
-                .test().error
-
-        if let readError = error as? ReadError {
-            expect(readError) == ReadError.unexpectedResponse(state: ResponseStatus.endOfFileWarning)
-        } else {
-            Nimble.fail("Unexpected error")
-        }
+        expect {
+            try Self.healthCard.readSelectedFile(expected: 2000)
+                    .test()
+        }.to(throwError(ReadError.unexpectedResponse(state: ResponseStatus.endOfFileWarning)))
     }
 
     func testReadFile() {
-        guard let (responseStatus, fcp) = CardSimulationTerminalTestCase.healthCard.selectDedicated(file: dedicatedFile,
-                                                                                                    fcp: true)
-                .run(on: Executor.trampoline)
-                .test().value else {
+        guard let (responseStatus, fcp) = try? Self.healthCard.selectDedicated(file: dedicatedFile, fcp: true)
+                .test() else {
             Nimble.fail("Failed to select and read FCP [Preparing test-case]")
             return
         }
         expect(responseStatus) == .success
         expect(fcp).toNot(beNil())
 
-        // swiftlint:disable:next force_unwrapping
-        let fileResponse = CardSimulationTerminalTestCase.healthCard.readSelectedFile(expected: Int(fcp!.readSize!),
-                                                                                      failOnEndOfFileWarning: true)
-                .run(on: Executor.trampoline)
-                .test()
-
-        expect(fileResponse.value) == expectedCertificate
+        expect {
+            // swiftlint:disable:next force_unwrapping
+            try Self.healthCard.readSelectedFile(expected: Int(fcp!.readSize!),
+                                                 failOnEndOfFileWarning: true)
+                    .test()
+        } == expectedCertificate
     }
 
     func testReadFileInChunks() {
@@ -125,21 +114,19 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
             return
         }
 
-        guard let (responseStatus, fcp) = healthCard.selectDedicated(file: dedicatedFile, fcp: true)
-                .run(on: Executor.trampoline)
-                .test().value else {
+        guard let (responseStatus, fcp) = try? healthCard.selectDedicated(file: dedicatedFile, fcp: true)
+                .test() else {
             Nimble.fail("Failed to select and read FCP [Preparing test-case]")
             return
         }
         expect(responseStatus) == .success
         expect(fcp).toNot(beNil())
 
-        // swiftlint:disable:next force_unwrapping
-        let fileResponse = healthCard.readSelectedFile(expected: Int(fcp!.readSize!), failOnEndOfFileWarning: true)
-                .run(on: Executor.trampoline)
-                .test()
-
-        expect(fileResponse.value) == expectedCertificate
+        expect {
+            // swiftlint:disable:next force_unwrapping
+            try healthCard.readSelectedFile(expected: Int(fcp!.readSize!), failOnEndOfFileWarning: true)
+                    .test()
+        } == expectedCertificate
     }
 
     func testReadFileInChunksTillEOF() {
@@ -153,20 +140,18 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
             return
         }
 
-        guard let (responseStatus, fcp) = healthCard.selectDedicated(file: dedicatedFile, fcp: true)
-                .run(on: Executor.trampoline)
-                .test().value else {
+        guard let (responseStatus, fcp) = try? healthCard.selectDedicated(file: dedicatedFile, fcp: true)
+                .test() else {
             Nimble.fail("Failed to select and read FCP [Preparing test-case]")
             return
         }
         expect(responseStatus) == .success
         expect(fcp).toNot(beNil())
 
-        let fileResponse = healthCard.readSelectedFile(expected: nil, failOnEndOfFileWarning: false)
-                .run(on: Executor.trampoline)
-                .test()
-
-        expect(fileResponse.value) == expectedCertificate
+        expect {
+            try healthCard.readSelectedFile(expected: nil, failOnEndOfFileWarning: false)
+                    .test()
+        }  == expectedCertificate
     }
 
     func testReadFileInChunksFailOnEOF() {
@@ -180,25 +165,15 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
             return
         }
 
-        guard let (responseStatus, _) = healthCard.selectDedicated(file: dedicatedFile)
-                .run(on: Executor.trampoline)
-                .test().value else {
-            Nimble.fail("Failed to select and read FCP [Preparing test-case]")
-            return
-        }
+        expect {
+            let (responseStatus, _) = try healthCard.selectDedicated(file: self.dedicatedFile)
+                    .test()
+            return responseStatus
+        } == ResponseStatus.success
 
-        expect(responseStatus) == .success
-
-        let fileResponse = healthCard.readSelectedFile(expected: 2000, failOnEndOfFileWarning: true)
-                .run(on: Executor.trampoline)
-                .test()
-
-        if let readError = fileResponse.error as? ReadError {
-            expect(readError) == ReadError.unexpectedResponse(state: ResponseStatus.endOfFileWarning)
-        } else {
-            Nimble.fail("Unexpected error")
-        }
-
-        expect(fileResponse.value).to(beNil())
+        expect {
+            try healthCard.readSelectedFile(expected: 2000, failOnEndOfFileWarning: true)
+                    .test()
+        }.to(throwError(ReadError.unexpectedResponse(state: ResponseStatus.endOfFileWarning)))
     }
 }

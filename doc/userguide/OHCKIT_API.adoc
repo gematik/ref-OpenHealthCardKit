@@ -2,4 +2,4 @@ include::config.adoc[]
 
 == API Documentation
 
-Generated API docs are available at https://gematik.github.io/ref-openHealthCardKit.
+Generated API docs are available at https://gematik.github.io/ref-OpenHealthCardKit.

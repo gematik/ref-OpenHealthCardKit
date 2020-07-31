@@ -29,15 +29,29 @@ final class CardChannelTypeExtVersionIntegrationTest: CardSimulationTerminalTest
         return path.asURL
     }
 
-    func testReadCardTypeAndVersion() {
+    func testReadCardTypeFromVersion() {
         expect {
-            var mType: HealthCardPropertyType?
-            CardSimulationTerminalTestCase.healthCard.currentCardChannel.readCardType()
-                    .run(on: Executor.trampoline)
-                    .on { event in
-                        mType = event.value
+            try Self.healthCard.currentCardChannel.readCardType()
+                    .test()
+        } == HealthCardPropertyType.egk(generation: .g2_1)
+    }
+
+    func testDetermineCardAidThenReadCardTypeFromVersion() {
+        expect {
+            try Self.healthCard.currentCardChannel.determineCardAid()
+                    .flatMap { cardAid in
+                        Self.healthCard.currentCardChannel.readCardType(cardAid: cardAid)
                     }
-            return mType
+                    .eraseToAnyPublisher()
+                    .test()
+        } == HealthCardPropertyType.egk(generation: .g2_1)
+    }
+
+    func testReadCardTypeFromVersionWithKnownCardAid() {
+        let cardAid = CardAid.egk
+        expect {
+            try Self.healthCard.currentCardChannel.readCardType(cardAid: cardAid)
+                    .test()
         } == HealthCardPropertyType.egk(generation: .g2_1)
     }
 }

@@ -97,11 +97,14 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
         let channel = MockChannel(messageHandler: commandHandler)
         let card = MockHealthCard(status: egkCardStatus, currentCardChannel: channel)
 
-        let autResponse = card.readAutCertificate()
-                .run(on: Executor.trampoline)
-                .test().value
-        XCTAssertEqual(autResponse?.info, .efAutE256)
-        XCTAssertEqual(autResponse?.certificate, mockCertificate)
+        var autCertificateResponse: AutCertificateResponse?
+        expect {
+            autCertificateResponse = try card
+                    .readAutCertificate()
+                    .test()
+        }.toNot(throwError())
+        expect(autCertificateResponse?.info) == .efAutE256
+        expect(autCertificateResponse?.certificate) == mockCertificate
     }
 
     func testReadAutCertificate_unsupportedCardType() {
@@ -112,9 +115,7 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
         let card = MockHealthCard(status: egkCardStatus, currentCardChannel: channel)
 
         expect {
-            card.readAutCertificate()
-                    .run(on: Executor.trampoline)
-                    .test().error
-        }.to(matchError(HealthCard.Error.unsupportedCardType))
+            try card.readAutCertificate().test()
+        }.to(throwError(HealthCard.Error.unsupportedCardType))
     }
 }

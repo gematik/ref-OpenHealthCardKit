@@ -25,7 +25,7 @@ import Nimble
 import XCTest
 
 final class KeyAgreementIntegrationTest: CardSimulationTerminalTestCase {
-    static let thisConfigFile = "Configuration/configuration_TLK_COS_image-kontaktlos128.xml"
+    static let thisConfigFile = "Configuration/configuration_E021D-A5Tp_432_80276883110000218486.xml"
 
     override class func configFile() -> URL? {
         let bundle = Bundle(for: CardSimulationTerminalTestCase.self)
@@ -34,22 +34,17 @@ final class KeyAgreementIntegrationTest: CardSimulationTerminalTestCase {
     }
 
     func testNegotiatePaceEcdhGmAesCbcCmac128() {
-        let can = try! CAN.from(Data("12345678".utf8)) //swiftlint:disable:this force_try
-        expect {
-            var paceKey: SecureMessaging?
+        let can = try! CAN.from(Data("123123".utf8)) // swiftlint:disable:this force_try
+        expect { () -> SecureMessaging? in
             // tag::negotiateSessionKey[]
             try KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128.negotiateSessionKey(
-                            channel: CardSimulationTerminalTestCase.healthCard.currentCardChannel,
+                            card: CardSimulationTerminalTestCase.healthCard,
                             can: can,
                             writeTimeout: 0,
                             readTimeout: 10)
-                    .run(on: Executor.trampoline)
                     // end::negotiateSessionKey[]
-                    .on { event in
-                        paceKey = event.value
-                    }
-            return paceKey
-        }.toNot(throwError())
+                    .test()
+        }.toNot(beNil())
     }
 
     static let allTests = [

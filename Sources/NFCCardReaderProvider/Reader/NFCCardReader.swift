@@ -50,7 +50,7 @@ public class NFCCardReader: NSObject, CardReaderType {
         }
     }
 
-    init(controllerName: String) {
+    public init(controllerName: String) {
         self.name = controllerName
     }
 

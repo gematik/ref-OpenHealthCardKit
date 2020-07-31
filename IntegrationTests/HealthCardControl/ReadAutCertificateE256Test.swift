@@ -31,10 +31,6 @@ final class ReadAutCertificateE256Test: CardSimulationTerminalTestCase {
         return path.asURL
     }
 
-    private let dedicatedFile = DedicatedFile(
-            aid: EgkFileSystem.DF.ESIGN.aid,
-            fid: EgkFileSystem.EF.esignCChAutR2048.fid
-    )
     private var expectedCertificate: Data!
 
     override func setUp() {
@@ -50,20 +46,18 @@ final class ReadAutCertificateE256Test: CardSimulationTerminalTestCase {
     }
 
     func testReadAutCertificateE256() {
-        //swiftlint:disable:next force_try
-        let type = try! CardSimulationTerminalTestCase.card.openBasicChannel()
-                .readCardType()
-                .run(on: Executor.trampoline)
-                .test()
-                .value
-        //swiftlint:disable:next force_unwrapping force_try
-        let healthCard = try! HealthCard(card: CardSimulationTerminalTestCase.card, status: .valid(cardType: type!))
-        let response = healthCard
-                .readAutCertificate()
-                .run(on: Executor.trampoline)
-                .test()
-                .value
-        expect(response?.info) == .efAutE256
-        expect(response?.certificate) == expectedCertificate
+        // setup: Instantiate health card object with card type eGk 2.1
+        let egkCardStatus = HealthCardStatus.valid(cardType: HealthCardPropertyType.egk(generation: .g2_1))
+        // swiftlint:disable:next force_try
+        let healthCard = try! HealthCard(card: CardSimulationTerminalTestCase.card, status: egkCardStatus)
+
+        var autCertificateResponse: AutCertificateResponse?
+        expect {
+            autCertificateResponse = try healthCard
+                    .readAutCertificate()
+                    .test()
+        }.toNot(throwError())
+        expect(autCertificateResponse?.info) == .efAutE256
+        expect(autCertificateResponse?.certificate) == expectedCertificate
     }
 }

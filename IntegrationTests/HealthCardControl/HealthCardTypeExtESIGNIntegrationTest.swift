@@ -31,24 +31,19 @@ final class HealthCardTypeExtESIGNIntegrationTest: CardSimulationTerminalTestCas
     }
 
     func testSignForAuthentication() {
-
         expect {
-            var response: HealthCardResponseType?
             // tag::signChallenge[]
             let challenge = Data([0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8])
             let format2Pin = try Format2Pin(pincode: "123456")
-            CardSimulationTerminalTestCase.healthCard
-                    .verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
+            return try Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
                     .flatMap { _ in
-                        CardSimulationTerminalTestCase.healthCard.sign(challenge: challenge)
+                        Self.healthCard.sign(challenge: challenge)
                     }
-                    .run(on: Executor.trampoline)
-                    // end::signChallenge[]
-                    .on { event in
-                        response = event.value
-                    }
-            return response?.responseStatus
+                    .eraseToAnyPublisher()
+                    .test()
+                    .responseStatus
         } == ResponseStatus.success
+        // end::signChallenge[]
     }
 
     static let allTests = [

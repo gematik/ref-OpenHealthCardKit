@@ -14,6 +14,7 @@
 //  limitations under the License.
 //
 
+import Combine
 import Foundation
 import HealthCardAccess
 
@@ -63,26 +64,32 @@ public typealias AutCertificateResponse = (info: AutCertInfo, certificate: Data)
 extension HealthCardType {
     /// Read the MF/DF.ESIGN.EF.C.CH.AUT.[E256/R2048] certificate from the receiver
     ///
-    /// - Returns: the certificate file and ESignInfo association to it
-    public func readAutCertificate() -> Executable<AutCertificateResponse> {
-        return Executable<AutCertificateResponse>.evaluate {
-                guard let info = self.status.type?.autCertInfo else {
-                    throw HealthCard.Error.unsupportedCardType
+    /// - Returns: Publisher that tries to read the authentication certificate file and ESignInfo associated to it
+    public func readAutCertificate() -> AnyPublisher<AutCertificateResponse, Error> {
+        Just(self.status)
+                .tryMap { status -> AutCertInfo in
+                    guard let info = status.type?.autCertInfo else {
+                        throw HealthCard.Error.unsupportedCardType
+                    }
+                    return info
                 }
-                return info
-        }
-            .flatMap { info in
-                return self.selectDedicated(file: info.certificate, fcp: true)
-                    .flatMap { status, fcp in
-                        guard let fcp = fcp, let readSize = fcp.readSize else {
-                            throw ReadError.fcpMissingReadSize(state: status)
-                        }
-                        return self.readSelectedFile(expected: Int(readSize))
-                    }
-                    .map { certificate in
-                        return (info: info, certificate: certificate)
-                    }
-            }
+                .flatMap { info in
+                    self.selectDedicated(file: info.certificate, fcp: true)
+                            .tryMap { status, fcp in
+                                guard let fcp = fcp, let readSize = fcp.readSize else {
+                                    throw ReadError.fcpMissingReadSize(state: status)
+                                }
+                                return readSize
+                            }
+                            .flatMap { (readSize: UInt) in
+                                return self.readSelectedFile(expected: Int(readSize))
+                                        .map { certificate in
+                                            return (info: info, certificate: certificate)
+                                        }
+                                        .eraseToAnyPublisher()
+                            }
+                }
+                .eraseToAnyPublisher()
     }
 }
 
@@ -109,32 +116,43 @@ extension HealthCardType {
     /// - Note: Only supports eGK Card types
     ///
     /// - Returns: Executable that signs the given challenge on the card
-    public func sign(challenge: Data) -> Executable<HealthCardResponseType> {
-        return Executable<HealthCardResponseType>
-                .evaluate {
-                    guard let info = self.status.type?.autCertInfo else {
+    public func sign(challenge: Data) -> AnyPublisher<HealthCardResponseType, Error> {
+        return Just(self.status)
+                .tryMap { status -> AutCertInfo in
+                    guard let info = status.type?.autCertInfo else {
                         throw HealthCard.Error.unsupportedCardType
                     }
                     return info
                 }
-                .flatMap { (info: AutCertInfo) in
-                    HealthCardCommand.Select.selectFile(with: info.eSign)
-                            .execute(on: self)
-                            .flatMap { (response: HealthCardResponseType) in
+                .flatMap { info in
+                    return HealthCardCommand.Select.selectFile(with: info.eSign)
+                            .publisher(for: self)
+                            .tryMap { response in
                                 guard response.responseStatus == .success else {
                                     throw HealthCard.Error.operational
                                 }
-                                return try HealthCardCommand.ManageSE.selectSigning(key: info.key,
-                                                                                    dfSpecific: true,
-                                                                                    algorithm: info.algorithm)
-                                        .execute(on: self)
                             }
-                            .flatMap { (response: HealthCardResponseType) in
-                                guard response.responseStatus == .success else {
-                                    throw HealthCard.Error.operational
-                                }
-                                return try HealthCardCommand.PsoDSA.sign(challenge).execute(on: self)
+                            .tryMap {
+                                try HealthCardCommand.ManageSE.selectSigning(key: info.key,
+                                                                             dfSpecific: true,
+                                                                             algorithm: info.algorithm)
                             }
+                            .flatMap {
+                                $0.publisher(for: self)
+                                        .tryMap { response in
+                                            guard response.responseStatus == .success else {
+                                                throw HealthCard.Error.operational
+                                            }
+                                        }
+                                        .tryMap {
+                                            try HealthCardCommand.PsoDSA.sign(challenge)
+                                        }
+                                        .flatMap {
+                                            $0.publisher(for: self)
+                                        }
+                            }
+                            .eraseToAnyPublisher()
                 }
+                .eraseToAnyPublisher()
     }
 }

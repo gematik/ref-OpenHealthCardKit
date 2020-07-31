@@ -15,15 +15,14 @@
 //
 
 import CardSimulationTerminalTestCase
-
 import Foundation
 import HealthCardAccess
 @testable import HealthCardControl
 import Nimble
 import XCTest
 
-final class HealthCardTypeExtVerifyPinTest: CardSimulationTerminalTestCase {
-    static let thisConfigFile = "Configuration/configuration_EGK_G2_1_80276883110000095711_GuD_TCP.xml"
+final class DetermineCardAidIntegrationTest: CardSimulationTerminalTestCase {
+    static let thisConfigFile = "Configuration/configuration_EGK_G2_1_ecc.xml"
 
     override class func configFile() -> URL? {
         let bundle = Bundle(for: CardSimulationTerminalTestCase.self)
@@ -31,26 +30,10 @@ final class HealthCardTypeExtVerifyPinTest: CardSimulationTerminalTestCase {
         return path.asURL
     }
 
-    func testVerifyMrPinHomeEgk21() {
-        let pinCode = "123456"
+    func testDetermineCardAid() {
         expect {
-            let format2Pin = try Format2Pin(pincode: pinCode)
-            return try Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
+            try Self.healthCard.currentCardChannel.determineCardAid()
                     .test()
-        } == VerifyPinResponse.success
+        } == CardAid.egk
     }
-
-    func testVerifyMrPinHomeEgk21Failing() {
-        let pinCode = "654321"
-        expect {
-            let format2Pin = try Format2Pin(pincode: pinCode)
-            return try Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
-                    .test()
-        } == VerifyPinResponse.failed(retryCount: 2)
-    }
-
-    static let allTests = [
-        ("testVerifyMrPinHomeEgk21", testVerifyMrPinHomeEgk21),
-        ("testVerifyMrPinHomeEgk21Failing", testVerifyMrPinHomeEgk21Failing)
-    ]
 }
