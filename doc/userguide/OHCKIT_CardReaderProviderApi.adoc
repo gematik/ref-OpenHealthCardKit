@@ -3,4 +3,4 @@ include::config.adoc[]
 [#CardReaderProviderApi]
 === CardReaderProviderApi
 
-(Smart)CardReader protocols for interacting with <<OCHKIT_HealthCardAccess.adoc#HealthCardAccess, HealthCardAccess>>.
+(Smart)CardReader protocols for interacting with `HealthCardAccess`.

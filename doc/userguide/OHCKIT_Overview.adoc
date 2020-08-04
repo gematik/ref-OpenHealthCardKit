@@ -7,10 +7,10 @@ necessary for accessing and interacting with German Health Cards via a mobile iO
 
 OpenHealthCardKit consists of the submodules
 
-- <<OCHKIT_CardReaderProviderApi.adoc#CardReaderProviderApi, CardReaderProviderApi>>
-- <<OCHKIT_HealthCardAccess.adoc#HealthCardAccess, HealthCardAccess>>
-- <<OCHKIT_ealthCardControl.adoc#HealthCardControl, HealthCardControl>>
-- <<OCHKIT_NFCCardReaderProvider.adoc#NFCCardReaderProvider, NFCCardReaderProvider>>
+- CardReaderProviderApi
+- HealthCardAccess
+- HealthCardControl
+- NFCCardReaderProvider
 
 As a reference for each submodule see also the `IntegrationTests`.
 Also see a https://github.com/gematik/ref-OpenHealthCardApp-iOS[Demo App] on GitHub using this framework.

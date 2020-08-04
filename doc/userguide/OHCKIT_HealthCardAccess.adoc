@@ -34,7 +34,7 @@ The `Commands` groups contains all available `HealthCardCommand` objects for hea
 ===== Create a command
 The design of this API follows the link:https://en.wikipedia.org/wiki/Command_pattern[command design pattern]
 leveraging Swift's https://developer.apple.com/documentation/combine/[Combine Framework].
-The command objects are designed to fulfil the use-cases described in the link:https://www.vesta-gematik.de/standard/formhandler/64/gemSpec_COS_V3_10_0.pdf/[Gematik COS specification].
+The command objects are designed to fulfil the use-cases described in the link:https://www.vesta-gematik.de/standards/detail/standards/spezifikation-des-card-operating-system-cos-elektrische-schnittstelle-1/[Gematik COS specification].
 After creating a command object resp. sequence you can execute it on a Healthcard with the help of `publisher(for:)`.
 More information on how to configure the commands can also be found in the Gematik COS specification.
 

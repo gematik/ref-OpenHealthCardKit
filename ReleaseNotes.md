@@ -1,3 +1,6 @@
+# Release 2.0.4
+- fix dead links in README
+
 # Release 2.0.2
 - make use of Combine framework
 - add swift package manager support

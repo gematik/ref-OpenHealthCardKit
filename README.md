@@ -52,20 +52,20 @@ necessary for accessing and interacting with German Health Cards via a mobile iO
 
 OpenHealthCardKit consists of the submodules
 
--   [CardReaderProviderApi](OCHKIT_CardReaderProviderApi.xml#CardReaderProviderApi)
+-   CardReaderProviderApi
 
--   [HealthCardAccess](OCHKIT_HealthCardAccess.xml#HealthCardAccess)
+-   HealthCardAccess
 
--   [HealthCardControl](OCHKIT_ealthCardControl.xml#HealthCardControl)
+-   HealthCardControl
 
--   [NFCCardReaderProvider](OCHKIT_NFCCardReaderProvider.xml#NFCCardReaderProvider)
+-   NFCCardReaderProvider
 
 As a reference for each submodule see also the `IntegrationTests`.
 Also see a [Demo App](https://github.com/gematik/ref-OpenHealthCardApp-iOS) on GitHub using this framework.
 
 ### CardReaderProviderApi
 
-(Smart)CardReader protocols for interacting with [HealthCardAccess](OCHKIT_HealthCardAccess.xml#HealthCardAccess).
+(Smart)CardReader protocols for interacting with `HealthCardAccess`.
 
 ### HealthCardAccess
 
@@ -104,7 +104,7 @@ The `Commands` groups contains all available `HealthCardCommand` objects for hea
 
 The design of this API follows the [command design pattern](https://en.wikipedia.org/wiki/Command_pattern)
 leveraging Swift’s [Combine Framework](https://developer.apple.com/documentation/combine/).
-The command objects are designed to fulfil the use-cases described in the [Gematik COS specification](https://www.vesta-gematik.de/standard/formhandler/64/gemSpec_COS_V3_10_0.pdf/).
+The command objects are designed to fulfil the use-cases described in the [Gematik COS specification](https://www.vesta-gematik.de/standards/detail/standards/spezifikation-des-card-operating-system-cos-elektrische-schnittstelle-1/).
 After creating a command object resp. sequence you can execute it on a Healthcard with the help of `publisher(for:)`.
 More information on how to configure the commands can also be found in the Gematik COS specification.
 
@@ -197,7 +197,7 @@ This library can be used to realize use cases for interacting with a German Heal
 Typically you would use this library as the high level API gateway for your mobile application
 to send predefined command chains to the Health Card and interpret the responses.
 
-For more info, please find the low level part [HealthCardAcces](OHCKIT_HealthCardAccess.xml#HealthCardAccess).
+For more info, please find the low level part `HealthCardAccess`.
 and a [Demo App](https://github.com/gematik/ref-OpenHealthCardApp-iOS) on GitHub.
 
 See the [Gematik GitHub IO](https://gematik.github.io/) page for a more general overview.
@@ -206,6 +206,7 @@ See the [Gematik GitHub IO](https://gematik.github.io/) page for a more general 
 
 Take the necessary preparatory steps for signing a challenge on the Health Card, then sign it.
 
+    expect {
         let challenge = Data([0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8])
         let format2Pin = try Format2Pin(pincode: "123456")
         return try Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
@@ -231,5 +232,5 @@ for more already implemented use cases.
 
 ### NFCCardReaderProvider
 
-An [CardReaderProvider](OHC_KIT_CardReaderProvider.xml#CardReaderProviderApi) implementation that handles the
+A `CardReaderProvider` implementation that handles the
 communication with the Apple iPhone NFC interface.
