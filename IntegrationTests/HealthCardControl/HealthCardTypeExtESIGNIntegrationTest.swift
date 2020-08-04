@@ -31,8 +31,8 @@ final class HealthCardTypeExtESIGNIntegrationTest: CardSimulationTerminalTestCas
     }
 
     func testSignForAuthentication() {
+        // tag::signChallenge[]
         expect {
-            // tag::signChallenge[]
             let challenge = Data([0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8])
             let format2Pin = try Format2Pin(pincode: "123456")
             return try Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)

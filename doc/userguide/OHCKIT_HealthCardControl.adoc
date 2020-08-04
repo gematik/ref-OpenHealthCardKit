@@ -9,7 +9,7 @@ This library can be used to realize use cases for interacting with a German Heal
 Typically you would use this library as the high level API gateway for your mobile application
 to send predefined command chains to the Health Card and interpret the responses.
 
-For more info, please find the low level part <<OHCKIT_HealthCardAccess.adoc#HealthCardAccess, HealthCardAcces>>.
+For more info, please find the low level part `HealthCardAccess`.
 and a https://github.com/gematik/ref-OpenHealthCardApp-iOS[Demo App] on GitHub.
 
 See the https://gematik.github.io/[Gematik GitHub IO] page for a more general overview.
