@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Command Structure Reference</title>
+    <link rel="stylesheet" type="text/css" href="../../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../../js/jquery.min.js" defer></script>
+    <script src="../../js/jazzy.js" defer></script>
+    
+    <script src="../../js/lunr.min.js" defer></script>
+    <script src="../../js/typeahead.jquery.js" defer></script>
+    <script src="../../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Struct/Command" class="dashAnchor"></a>
+
+    <a title="Command Structure Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../../index.html">
+           Docs
+        </a>
+         (98% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/gematik/ref-openhealthcardkit">
+            <img class="header-icon" src="../../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../../index.html"> Reference</a>
+      <img class="carat" src="../../img/carat.png" />
+      Command Structure Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/APDU.html">APDU</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/APDU/Error.html">– Error</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/APDU/Response.html">– Response</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/APDU/Command.html">– Command</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/CardReaderControllerObjcWrapper.html">CardReaderControllerObjcWrapper</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Classes/ProviderDescriptor.html">ProviderDescriptor</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Enums/CardError.html">CardError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Functions.html#/s:21CardReaderProviderApi2eeoiySbAA11CommandType_p_AaC_ptF">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Functions.html#/s:21CardReaderProviderApi2eeoiySbAA12ResponseType_p_AaC_ptF">==(_:_:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/CardChannelType.html">CardChannelType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/CardReaderControllerDelegate.html">CardReaderControllerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/CardReaderControllerType.html">CardReaderControllerType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/CardReaderProviderType.html">CardReaderProviderType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/CardReaderType.html">CardReaderType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/CardType.html">CardType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/CommandType.html">CommandType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/ProviderDescriptorType.html">ProviderDescriptorType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Protocols/ResponseType.html">ResponseType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Structs/CardProtocol.html">CardProtocol</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Structs/InvalidCommandChannel.html">InvalidCommandChannel</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../../Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../../Typealiases.html#/s:21CardReaderProviderApi3ATRa">ATR</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            <h1>Command</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Command</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt"><a href="../../Classes/APDU.html">APDU</a></span><span class="o">.</span><span class="kt">Command</span><span class="p">:</span> <span class="kt"><a href="../../Protocols/CommandType.html">CommandType</a></span></code></pre>
+
+                </div>
+              </div>
+            <p>An APDU Command per ISO/IEC 7816-4.
+Command APDU encoding options:</p>
+<pre class="highlight swift"><code>    <span class="k">case</span> <span class="mi">1</span><span class="p">:</span>  <span class="o">|</span><span class="kt">CLA</span><span class="o">|</span><span class="kt">INS</span><span class="o">|</span><span class="kt">P1</span> <span class="o">|</span><span class="kt">P2</span> <span class="o">|</span>                                 <span class="n">len</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="k">case</span> <span class="mi">2</span><span class="nv">s</span><span class="p">:</span> <span class="o">|</span><span class="kt">CLA</span><span class="o">|</span><span class="kt">INS</span><span class="o">|</span><span class="kt">P1</span> <span class="o">|</span><span class="kt">P2</span> <span class="o">|</span><span class="kt">LE</span> <span class="o">|</span>                             <span class="n">len</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="k">case</span> <span class="mi">3</span><span class="nv">s</span><span class="p">:</span> <span class="o">|</span><span class="kt">CLA</span><span class="o">|</span><span class="kt">INS</span><span class="o">|</span><span class="kt">P1</span> <span class="o">|</span><span class="kt">P2</span> <span class="o">|</span><span class="kt">LC</span> <span class="o">|...</span><span class="kt">BODY</span><span class="o">...|</span>                  <span class="n">len</span> <span class="o">=</span> <span class="mi">6</span><span class="o">..</span><span class="mi">260</span>
+    <span class="k">case</span> <span class="mi">4</span><span class="nv">s</span><span class="p">:</span> <span class="o">|</span><span class="kt">CLA</span><span class="o">|</span><span class="kt">INS</span><span class="o">|</span><span class="kt">P1</span> <span class="o">|</span><span class="kt">P2</span> <span class="o">|</span><span class="kt">LC</span> <span class="o">|...</span><span class="kt">BODY</span><span class="o">...|</span><span class="kt">LE</span> <span class="o">|</span>              <span class="n">len</span> <span class="o">=</span> <span class="mi">7</span><span class="o">..</span><span class="mi">261</span>
+    <span class="k">case</span> <span class="mi">2</span><span class="nv">e</span><span class="p">:</span> <span class="o">|</span><span class="kt">CLA</span><span class="o">|</span><span class="kt">INS</span><span class="o">|</span><span class="kt">P1</span> <span class="o">|</span><span class="kt">P2</span> <span class="o">|</span><span class="mo">00</span> <span class="o">|</span><span class="kt">LE1</span><span class="o">|</span><span class="kt">LE2</span><span class="o">|</span>                     <span class="n">len</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="k">case</span> <span class="mi">3</span><span class="nv">e</span><span class="p">:</span> <span class="o">|</span><span class="kt">CLA</span><span class="o">|</span><span class="kt">INS</span><span class="o">|</span><span class="kt">P1</span> <span class="o">|</span><span class="kt">P2</span> <span class="o">|</span><span class="mo">00</span> <span class="o">|</span><span class="kt">LC1</span><span class="o">|</span><span class="kt">LC2</span><span class="o">|...</span><span class="kt">BODY</span><span class="o">...|</span>          <span class="n">len</span> <span class="o">=</span> <span class="mi">8</span><span class="o">..</span><span class="mi">65542</span>
+    <span class="k">case</span> <span class="mi">4</span><span class="nv">e</span><span class="p">:</span> <span class="o">|</span><span class="kt">CLA</span><span class="o">|</span><span class="kt">INS</span><span class="o">|</span><span class="kt">P1</span> <span class="o">|</span><span class="kt">P2</span> <span class="o">|</span><span class="mo">00</span> <span class="o">|</span><span class="kt">LC1</span><span class="o">|</span><span class="kt">LC2</span><span class="o">|...</span><span class="kt">BODY</span><span class="o">...|</span><span class="kt">LE1</span><span class="o">|</span><span class="kt">LE2</span><span class="o">|</span>  <span class="n">len</span> <span class="o">=</span><span class="mi">10</span><span class="o">..</span><span class="mi">65544</span>
+
+    <span class="kt">LE</span><span class="p">,</span> <span class="kt">LE1</span><span class="p">,</span> <span class="kt">LE2</span> <span class="n">may</span> <span class="n">be</span> <span class="mh">0x00</span><span class="o">.</span>
+    <span class="kt">LC</span> <span class="n">must</span> <span class="n">not</span> <span class="n">be</span> <span class="mh">0x00</span> <span class="n">and</span> <span class="kt">LC1</span><span class="o">|</span><span class="kt">LC2</span> <span class="n">must</span> <span class="n">not</span> <span class="n">be</span> <span class="mh">0x00</span><span class="o">|</span><span class="mh">0x00</span>
+</code></pre>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi4APDUC7CommandV3cla3ins2p12p22neAEs5UInt8V_A3LSiSgtKcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(cla:ins:p1:p2:ne:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi4APDUC7CommandV3cla3ins2p12p22neAEs5UInt8V_A3LSiSgtKcfc">init(cla:<wbr>ins:<wbr>p1:<wbr>p2:<wbr>ne:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Constructs a CommandAPDU from the four header bytes.
+This is <strong>case 1</strong> in ISO 7816, no command body.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">cla</span><span class="p">:</span> <span class="kt">UInt8</span><span class="p">,</span> <span class="nv">ins</span><span class="p">:</span> <span class="kt">UInt8</span><span class="p">,</span> <span class="nv">p1</span><span class="p">:</span> <span class="kt">UInt8</span><span class="p">,</span> <span class="nv">p2</span><span class="p">:</span> <span class="kt">UInt8</span><span class="p">,</span> <span class="nv">ne</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>cla</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>CLA byte</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>ins</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Instruction byte</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>p1</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>P1 byte</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>p2</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>P2 byte</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>ne</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Nr of expected bytes in response. Default: 0</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi4APDUC7CommandV3cla3ins2p12p24data2neAEs5UInt8V_A3M10Foundation4DataVSgSiSgtKcfc"></a>
+                    <a name="//apple_ref/swift/Method/init(cla:ins:p1:p2:data:ne:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi4APDUC7CommandV3cla3ins2p12p24data2neAEs5UInt8V_A3M10Foundation4DataVSgSiSgtKcfc">init(cla:<wbr>ins:<wbr>p1:<wbr>p2:<wbr>data:<wbr>ne:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Constructs a CommandAPDU from the four header bytes, command data,
+and expected response data length. This is case 4 in ISO 7816,
+command data and Le present. The value Nc is taken as
+<code>dataLength</code>.
+If Ne or Nc are zero, the APDU is encoded as case 1, 2, or 3 per ISO 7816.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">cla</span><span class="p">:</span> <span class="kt">UInt8</span><span class="p">,</span> <span class="nv">ins</span><span class="p">:</span> <span class="kt">UInt8</span><span class="p">,</span> <span class="nv">p1</span><span class="p">:</span> <span class="kt">UInt8</span><span class="p">,</span> <span class="nv">p2</span><span class="p">:</span> <span class="kt">UInt8</span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">?,</span> <span class="nv">ne</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>cla</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>CLA byte</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>ins</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Instruction byte</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>p1</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>P1 byte</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>p2</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>P2 byte</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>ne</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Nr of expected bytes in response. Default: 0</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi4APDUC7CommandV4data10Foundation4DataVSgvp"></a>
+                    <a name="//apple_ref/swift/Property/data" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi4APDUC7CommandV4data10Foundation4DataVSgvp">data</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>APDU body data</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi4APDUC7CommandV3clas5UInt8Vvp"></a>
+                    <a name="//apple_ref/swift/Property/cla" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi4APDUC7CommandV3clas5UInt8Vvp">cla</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>APDU class identifier</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">cla</span><span class="p">:</span> <span class="kt">UInt8</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi4APDUC7CommandV3inss5UInt8Vvp"></a>
+                    <a name="//apple_ref/swift/Property/ins" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi4APDUC7CommandV3inss5UInt8Vvp">ins</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>APDU Instruction</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">ins</span><span class="p">:</span> <span class="kt">UInt8</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi4APDUC7CommandV2p1s5UInt8Vvp"></a>
+                    <a name="//apple_ref/swift/Property/p1" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi4APDUC7CommandV2p1s5UInt8Vvp">p1</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>APDU P1</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">p1</span><span class="p">:</span> <span class="kt">UInt8</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi4APDUC7CommandV2p2s5UInt8Vvp"></a>
+                    <a name="//apple_ref/swift/Property/p2" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi4APDUC7CommandV2p2s5UInt8Vvp">p2</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>APDU P2</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">p2</span><span class="p">:</span> <span class="kt">UInt8</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi4APDUC7CommandV2neSiSgvp"></a>
+                    <a name="//apple_ref/swift/Property/ne" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi4APDUC7CommandV2neSiSgvp">ne</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>APDU Le - Expected length in response body</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">ne</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi4APDUC7CommandV2ncSivp"></a>
+                    <a name="//apple_ref/swift/Property/nc" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi4APDUC7CommandV2ncSivp">nc</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>APDU Lc - Command body length</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">nc</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi4APDUC7CommandV5bytes10Foundation4DataVvp"></a>
+                    <a name="//apple_ref/swift/Property/bytes" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi4APDUC7CommandV5bytes10Foundation4DataVvp">bytes</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>APDU raw</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">bytes</span><span class="p">:</span> <span class="kt">Data</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2021 <a class="link" href="https://www.gematik.de" target="_blank" rel="external">gematik GmbH</a>. All rights reserved. (Last updated: 2021-07-16)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.7</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>HealthCardCommand Structure Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Struct/HealthCardCommand" class="dashAnchor"></a>
+
+    <a title="HealthCardCommand Structure Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+           Docs
+        </a>
+         (89% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/gematik/ref-openhealthcardkit">
+            <img class="header-icon" src="../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html"> Reference</a>
+      <img class="carat" src="../img/carat.png" />
+      HealthCardCommand Structure Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/HealthCard.html">HealthCard</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/HealthCardCommandBuilder.html">HealthCardCommandBuilder</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/HealthCardCommandBuilder/InvalidArgument.html">– InvalidArgument</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Global%20Variables.html">Global Variables</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Global%20Variables.html#/s:16HealthCardAccess19dfSpecificPwdMarkers5UInt8Vvp">dfSpecificPwdMarker</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/CardGeneration.html">CardGeneration</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/HealthCardPropertyType.html">HealthCardPropertyType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/HealthCardStatus.html">HealthCardStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/PSOAlgorithm.html">PSOAlgorithm</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ResponseStatus.html">ResponseStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/SignatureAlgorithm.html">SignatureAlgorithm</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Extensions/Data.html">Data</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols.html#/s:16HealthCardAccess0B8ItemTypeP">CardItemType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CardKeyReferenceType.html">CardKeyReferenceType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/CardObjectIdentifierType.html">CardObjectIdentifierType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/HealthCardCommandType.html">HealthCardCommandType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/HealthCardFileSystemType.html">HealthCardFileSystemType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/HealthCardResponseType.html">HealthCardResponseType</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/HealthCardType.html">HealthCardType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/ApplicationIdentifier.html">ApplicationIdentifier</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/ApplicationIdentifier/Error.html">– Error</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/CAN.html">CAN</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/CAN/InvalidCAN.html">– InvalidCAN</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/CVCBody.html">CVCBody</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/CVCBody/Tag.html">– Tag</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/CVCChat.html">CVCChat</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/CVCChat/Tag.html">– Tag</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/CVCPublicKey.html">CVCPublicKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/CVCPublicKey/Tag.html">– Tag</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/CardVersion2.html">CardVersion2</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/CardVersion2/Error.html">– Error</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/CertificateInfo.html">CertificateInfo</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/DHPubKey.html">DHPubKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/DedicatedFile.html">DedicatedFile</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/ECDSAPubKey.html">ECDSAPubKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/EgkFileSystem.html">EgkFileSystem</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/EgkFileSystem/EF.html">– EF</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/EgkFileSystem/DF.html">– DF</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/EgkFileSystem/Pin.html">– Pin</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/ElementaryFile.html">ElementaryFile</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/FileControlParameter.html">FileControlParameter</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/FileControlParameter/LifeCycleState.html">– LifeCycleState</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/FileControlParameter/Tag.html">– Tag</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/FileControlParameter/Error.html">– Error</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/FileIdentifier.html">FileIdentifier</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/FileIdentifier/Error.html">– Error</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Format2Pin.html">Format2Pin</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Format2Pin/Error.html">– Error</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/GemCvCertificate.html">GemCvCertificate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/GemCvCertificate/Error.html">– Error</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/GemCvCertificate/Tag.html">– Tag</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HbaFileSystem.html">HbaFileSystem</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HbaFileSystem/EF.html">– EF</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HbaFileSystem/DF.html">– DF</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand.html">HealthCardCommand</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/ActivateRecord.html">– ActivateRecord</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/AppendRecord.html">– AppendRecord</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/DeactivateRecord.html">– DeactivateRecord</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/DeleteRecord.html">– DeleteRecord</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/EraseRecord.html">– EraseRecord</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/ReadRecord.html">– ReadRecord</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/SearchRecord.html">– SearchRecord</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/UpdateRecord.html">– UpdateRecord</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/Erase.html">– Erase</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/Read.html">– Read</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/SetLogicalEof.html">– SetLogicalEof</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/Update.html">– Update</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/Write.html">– Write</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/Authentication.html">– Authentication</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/ELC.html">– ELC</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/PACE.html">– PACE</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/SecurityStatus.html">– SecurityStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/ManageSE.html">– ManageSE</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/Misc.html">– Misc</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/Activate.html">– Activate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/Deactivate.html">– Deactivate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/Delete.html">– Delete</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/LoadApplication.html">– LoadApplication</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/Select.html">– Select</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/TerminateCardUsage.html">– TerminateCardUsage</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/TerminateDf.html">– TerminateDf</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/Terminate.html">– Terminate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/PsoChecksum.html">– PsoChecksum</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/PsoDSA.html">– PsoDSA</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/PsoDecipher.html">– PsoDecipher</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/PsoEncipher.html">– PsoEncipher</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/PsoCertificate.html">– PsoCertificate</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/ChangeReferenceData.html">– ChangeReferenceData</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/DisableVerificationRequirement.html">– DisableVerificationRequirement</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/EnableVerificationRequirement.html">– EnableVerificationRequirement</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/Status.html">– Status</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardCommand/Verify.html">– Verify</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/HealthCardResponse.html">HealthCardResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Key.html">Key</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Key/Error.html">– Error</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Password.html">Password</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/Password/Error.html">– Error</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/RSAPubKey.html">RSAPubKey</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/ShortFileIdentifier.html">ShortFileIdentifier</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs/ShortFileIdentifier/Error.html">– Error</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Structs.html#/s:16HealthCardAccess14SmcbFileSystemV">SmcbFileSystem</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:16HealthCardAccess9Signaturea">Signature</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Typealiases.html#/s:16HealthCardAccess15X509Certificatea">X509Certificate</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content top-matter">
+            <h1>HealthCardCommand</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">HealthCardCommand</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">HealthCardCommand</span><span class="p">:</span> <span class="kt"><a href="../Protocols/HealthCardCommandType.html">HealthCardCommandType</a></span></code></pre>
+
+                </div>
+              </div>
+            <p><em>HealthCardCommand</em> is a struct holding a <code>CommandType</code> object and a dictionary
+of command context specific <code><a href="../Enums/ResponseStatus.html">ResponseStatus</a></code>es.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV04apduD00B17ReaderProviderApi0D4Type_pvp"></a>
+                    <a name="//apple_ref/swift/Property/apduCommand" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV04apduD00B17ReaderProviderApi0D4Type_pvp">apduCommand</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p><code>CommandType</code> holding the command data</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">apduCommand</span><span class="p">:</span> <span class="kt">CommandType</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV16responseStatusesSDys6UInt16VAA14ResponseStatusOGvp"></a>
+                    <a name="//apple_ref/swift/Property/responseStatuses" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV16responseStatusesSDys6UInt16VAA14ResponseStatusOGvp">responseStatuses</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Dictionary mapping from <em>UInt16</em> status codes (e.g. 0x9000) to its command context specific <code><a href="../Enums/ResponseStatus.html">ResponseStatus</a></code>es.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">responseStatuses</span><span class="p">:</span> <span class="p">[</span><span class="kt">UInt16</span> <span class="p">:</span> <span class="kt"><a href="../Enums/ResponseStatus.html">ResponseStatus</a></span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV14ActivateRecordV"></a>
+                    <a name="//apple_ref/swift/Struct/ActivateRecord" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV14ActivateRecordV">ActivateRecord</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Commands representing Activate Record command in gemSpec_COS#14.4.1</p>
+
+                        <a href="../Structs/HealthCardCommand/ActivateRecord.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ActivateRecord</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV12AppendRecordV"></a>
+                    <a name="//apple_ref/swift/Struct/AppendRecord" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV12AppendRecordV">AppendRecord</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Commands representing Append Record command in gemSpec_COS#14.4.2</p>
+
+                        <a href="../Structs/HealthCardCommand/AppendRecord.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">AppendRecord</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV16DeactivateRecordV"></a>
+                    <a name="//apple_ref/swift/Struct/DeactivateRecord" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV16DeactivateRecordV">DeactivateRecord</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Commands representing Deactivate Record command in gemSpec_COS#14.4.3</p>
+
+                        <a href="../Structs/HealthCardCommand/DeactivateRecord.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">DeactivateRecord</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV12DeleteRecordV"></a>
+                    <a name="//apple_ref/swift/Struct/DeleteRecord" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV12DeleteRecordV">DeleteRecord</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Commands representing Delete Record command in gemSpec_COS#14.4.4</p>
+
+                        <a href="../Structs/HealthCardCommand/DeleteRecord.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">DeleteRecord</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV11EraseRecordV"></a>
+                    <a name="//apple_ref/swift/Struct/EraseRecord" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV11EraseRecordV">EraseRecord</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Commands representing Erase Record command in gemSpec_COS#14.4.5</p>
+
+                        <a href="../Structs/HealthCardCommand/EraseRecord.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">EraseRecord</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV10ReadRecordV"></a>
+                    <a name="//apple_ref/swift/Struct/ReadRecord" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV10ReadRecordV">ReadRecord</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Commands representing Read Record command in gemSpec_COS#14.4.6</p>
+
+                        <a href="../Structs/HealthCardCommand/ReadRecord.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ReadRecord</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV12SearchRecordV"></a>
+                    <a name="//apple_ref/swift/Struct/SearchRecord" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV12SearchRecordV">SearchRecord</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Commands representing Search Record command in gemSpec_COS#14.4.7</p>
+
+                        <a href="../Structs/HealthCardCommand/SearchRecord.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">SearchRecord</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV12UpdateRecordV"></a>
+                    <a name="//apple_ref/swift/Struct/UpdateRecord" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV12UpdateRecordV">UpdateRecord</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Commands representing Update Record command in gemSpec_COS#14.4.8</p>
+
+                        <a href="../Structs/HealthCardCommand/UpdateRecord.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">UpdateRecord</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV5EraseV"></a>
+                    <a name="//apple_ref/swift/Struct/Erase" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV5EraseV">Erase</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Commands representing the commands in gemSpec_COS#14.3.1</p>
+
+                        <a href="../Structs/HealthCardCommand/Erase.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Erase</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV4ReadV"></a>
+                    <a name="//apple_ref/swift/Struct/Read" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV4ReadV">Read</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Commands representing the commands in gemSpec_COS#14.3.2</p>
+
+                        <a href="../Structs/HealthCardCommand/Read.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Read</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV13SetLogicalEofV"></a>
+                    <a name="//apple_ref/swift/Struct/SetLogicalEof" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV13SetLogicalEofV">SetLogicalEof</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Commands representing the commands in gemSpec_COS#14.3.4</p>
+
+                        <a href="../Structs/HealthCardCommand/SetLogicalEof.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">SetLogicalEof</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV6UpdateV"></a>
+                    <a name="//apple_ref/swift/Struct/Update" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV6UpdateV">Update</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Commands representing the commands in gemSpec_COS#14.3.5</p>
+
+                        <a href="../Structs/HealthCardCommand/Update.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Update</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV5WriteV"></a>
+                    <a name="//apple_ref/swift/Struct/Write" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV5WriteV">Write</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Commands representing the commands in gemSpec_COS#14.3.6</p>
+
+                        <a href="../Structs/HealthCardCommand/Write.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Write</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV14AuthenticationV"></a>
+                    <a name="//apple_ref/swift/Struct/Authentication" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV14AuthenticationV">Authentication</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>These builders represent the commands in gemSpec_COS#14.7 &ldquo;Komponentenauthentisierung&rdquo;.</p>
+
+                        <a href="../Structs/HealthCardCommand/Authentication.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Authentication</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV3ELCV"></a>
+                    <a name="//apple_ref/swift/Struct/ELC" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV3ELCV">ELC</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Use-case ELC #14.7.2.2 and #14.7.2.3</p>
+
+                        <a href="../Structs/HealthCardCommand/ELC.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ELC</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV4PACEV"></a>
+                    <a name="//apple_ref/swift/Struct/PACE" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV4PACEV">PACE</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Use-case PACE #14.7.2.1 and #14.7.2.4</p>
+
+                        <a href="../Structs/HealthCardCommand/PACE.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">PACE</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV14SecurityStatusV"></a>
+                    <a name="//apple_ref/swift/Struct/SecurityStatus" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV14SecurityStatusV">SecurityStatus</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Use-cases for getting the security status for particular objects/references gemSpec_COS#14.7.3</p>
+
+                        <a href="../Structs/HealthCardCommand/SecurityStatus.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">SecurityStatus</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV8ManageSEV"></a>
+                    <a name="//apple_ref/swift/Struct/ManageSE" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV8ManageSEV">ManageSE</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Use case Manage Security Environment - gemSpec_COS#14.9.9</p>
+
+                        <a href="../Structs/HealthCardCommand/ManageSE.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ManageSE</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV4MiscV"></a>
+                    <a name="//apple_ref/swift/Struct/Misc" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV4MiscV">Misc</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Builder representing Miscellaneous Commands in gemSpec_COS#14.9</p>
+
+                        <a href="../Structs/HealthCardCommand/Misc.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Misc</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV8ActivateV"></a>
+                    <a name="//apple_ref/swift/Struct/Activate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV8ActivateV">Activate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Builders representing Activate Command gemSpec_COS#14.2.1</p>
+
+                        <a href="../Structs/HealthCardCommand/Activate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Activate</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV10DeactivateV"></a>
+                    <a name="//apple_ref/swift/Struct/Deactivate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV10DeactivateV">Deactivate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Builders representing Deactivate Command gemSpec_COS#14.2.3</p>
+
+                        <a href="../Structs/HealthCardCommand/Deactivate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Deactivate</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV6DeleteV"></a>
+                    <a name="//apple_ref/swift/Struct/Delete" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV6DeleteV">Delete</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Builders representing Delete Command gemSpec_COS#14.2.4</p>
+
+                        <a href="../Structs/HealthCardCommand/Delete.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Delete</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV15LoadApplicationV"></a>
+                    <a name="//apple_ref/swift/Struct/LoadApplication" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV15LoadApplicationV">LoadApplication</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Builders representing Load Application Command gemSpec_COS#14.2.5</p>
+
+                        <a href="../Structs/HealthCardCommand/LoadApplication.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">LoadApplication</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV6SelectV"></a>
+                    <a name="//apple_ref/swift/Struct/Select" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV6SelectV">Select</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Builders representing Select Command gemSpec_COS#14.2.6</p>
+
+                        <a href="../Structs/HealthCardCommand/Select.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Select</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV09TerminateB5UsageV"></a>
+                    <a name="//apple_ref/swift/Struct/TerminateCardUsage" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV09TerminateB5UsageV">TerminateCardUsage</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Builders representing Terminate Card Usage Command gemSpec_COS#14.2.7</p>
+
+                        <a href="../Structs/HealthCardCommand/TerminateCardUsage.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">TerminateCardUsage</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV11TerminateDfV"></a>
+                    <a name="//apple_ref/swift/Struct/TerminateDf" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV11TerminateDfV">TerminateDf</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Builders representing Terminate DF Command gemSpec_COS#14.2.8</p>
+
+                        <a href="../Structs/HealthCardCommand/TerminateDf.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">TerminateDf</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV9TerminateV"></a>
+                    <a name="//apple_ref/swift/Struct/Terminate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV9TerminateV">Terminate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Builders representing Terminate Command gemSpec_COS#14.2.9</p>
+
+                        <a href="../Structs/HealthCardCommand/Terminate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Terminate</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV22expectedLengthWildcardSivpZ"></a>
+                    <a name="//apple_ref/swift/Variable/expectedLengthWildcard" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV22expectedLengthWildcardSivpZ">expectedLengthWildcard</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Expected length wildcard, short or extended</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">let</span> <span class="nv">expectedLengthWildcard</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV11PsoChecksumV"></a>
+                    <a name="//apple_ref/swift/Struct/PsoChecksum" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV11PsoChecksumV">PsoChecksum</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Builder representing Compute Cryptographic Checksum in gemSpec_COS#14.8.1</p>
+
+                        <a href="../Structs/HealthCardCommand/PsoChecksum.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">PsoChecksum</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV6PsoDSAV"></a>
+                    <a name="//apple_ref/swift/Struct/PsoDSA" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV6PsoDSAV">PsoDSA</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Builder representing Compute Digital Signature in gemSpec_COS#14.8.2
+And Verify Digital Signature in gemSpec_COS#14.8.9</p>
+
+                        <a href="../Structs/HealthCardCommand/PsoDSA.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">PsoDSA</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV11PsoDecipherV"></a>
+                    <a name="//apple_ref/swift/Struct/PsoDecipher" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV11PsoDecipherV">PsoDecipher</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Builders representing Decipher command in gemSpec_COS#14.8.3</p>
+
+                        <a href="../Structs/HealthCardCommand/PsoDecipher.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">PsoDecipher</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV11PsoEncipherV"></a>
+                    <a name="//apple_ref/swift/Struct/PsoEncipher" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV11PsoEncipherV">PsoEncipher</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Builders representing Encipher command in gemSpec_COS#14.8.4</p>
+
+                        <a href="../Structs/HealthCardCommand/PsoEncipher.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">PsoEncipher</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV14PsoCertificateV"></a>
+                    <a name="//apple_ref/swift/Struct/PsoCertificate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV14PsoCertificateV">PsoCertificate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Builder(s) representing Verify Certificate in gemSpec_COS#14.8.7</p>
+
+                        <a href="../Structs/HealthCardCommand/PsoCertificate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">PsoCertificate</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV19ChangeReferenceDataV"></a>
+                    <a name="//apple_ref/swift/Struct/ChangeReferenceData" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV19ChangeReferenceDataV">ChangeReferenceData</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Command representing Change/Set Reference Data Command gemSpec_COS#14.6.1</p>
+
+                        <a href="../Structs/HealthCardCommand/ChangeReferenceData.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">ChangeReferenceData</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV30DisableVerificationRequirementV"></a>
+                    <a name="//apple_ref/swift/Struct/DisableVerificationRequirement" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV30DisableVerificationRequirementV">DisableVerificationRequirement</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Command representing Disable Verification Requirement Command gemSpec_COS#14.6.2</p>
+
+                        <a href="../Structs/HealthCardCommand/DisableVerificationRequirement.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">DisableVerificationRequirement</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV29EnableVerificationRequirementV"></a>
+                    <a name="//apple_ref/swift/Struct/EnableVerificationRequirement" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV29EnableVerificationRequirementV">EnableVerificationRequirement</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Command representing Enable Verification Requirement Command gemSpec_COS#14.6.3</p>
+
+                        <a href="../Structs/HealthCardCommand/EnableVerificationRequirement.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">EnableVerificationRequirement</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV6StatusV"></a>
+                    <a name="//apple_ref/swift/Struct/Status" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV6StatusV">Status</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Command representing Get Pin Status Command gemSpec_COS#14.6.4</p>
+
+                        <a href="../Structs/HealthCardCommand/Status.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Status</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB7CommandV6VerifyV"></a>
+                    <a name="//apple_ref/swift/Struct/Verify" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB7CommandV6VerifyV">Verify</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Command representing Verify Secret Command gemSpec_COS#14.6.6</p>
+
+                        <a href="../Structs/HealthCardCommand/Verify.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">struct</span> <span class="kt">Verify</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi11CommandTypeP4data10Foundation4DataVSgvp"></a>
+                    <a name="//apple_ref/swift/Property/data" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi11CommandTypeP4data10Foundation4DataVSgvp">data</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">Data</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi11CommandTypeP2neSiSgvp"></a>
+                    <a name="//apple_ref/swift/Property/ne" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi11CommandTypeP2neSiSgvp">ne</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">ne</span><span class="p">:</span> <span class="kt">Int</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi11CommandTypeP2ncSivp"></a>
+                    <a name="//apple_ref/swift/Property/nc" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi11CommandTypeP2ncSivp">nc</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">nc</span><span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi11CommandTypeP3clas5UInt8Vvp"></a>
+                    <a name="//apple_ref/swift/Property/cla" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi11CommandTypeP3clas5UInt8Vvp">cla</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">cla</span><span class="p">:</span> <span class="kt">UInt8</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi11CommandTypeP3inss5UInt8Vvp"></a>
+                    <a name="//apple_ref/swift/Property/ins" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi11CommandTypeP3inss5UInt8Vvp">ins</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">ins</span><span class="p">:</span> <span class="kt">UInt8</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi11CommandTypeP2p1s5UInt8Vvp"></a>
+                    <a name="//apple_ref/swift/Property/p1" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi11CommandTypeP2p1s5UInt8Vvp">p1</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">p1</span><span class="p">:</span> <span class="kt">UInt8</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi11CommandTypeP2p2s5UInt8Vvp"></a>
+                    <a name="//apple_ref/swift/Property/p2" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi11CommandTypeP2p2s5UInt8Vvp">p2</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">p2</span><span class="p">:</span> <span class="kt">UInt8</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi11CommandTypeP5bytes10Foundation4DataVvp"></a>
+                    <a name="//apple_ref/swift/Property/bytes" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi11CommandTypeP5bytes10Foundation4DataVvp">bytes</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">bytes</span><span class="p">:</span> <span class="kt">Data</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>&copy; 2021 <a class="link" href="https://www.gematik.de" target="_blank" rel="external">gematik GmbH</a>. All rights reserved. (Last updated: 2021-07-16)</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.13.7</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>
