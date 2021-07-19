@@ -1,0 +1,35 @@
+/*
+  Localizable.strings
+  NFCDemo
+*/
+
+/*
+  CAN
+*/
+"onb_txt_sign_up_can_intro" = "Please enter your card's CAN.";
+"onb_edt_sign_up_can_enter_can" = "CAN";
+"onb_btn_next" = "Next";
+"onb_btn_connect" = "Connect";
+"onb_txt_sign_up_can_help" = "Where can I find my CAN?";
+"onb_txt_sign_up_can_help_explanation" = "Don't see a CAN printed on your card?\nThen you'll need a new health insurance card. You can request one from your statutory health insurer.";
+"onb_txt_title_sign_up" = "Sign up";
+
+/*
+  PIN
+*/
+"onb_txt_sign_up_pin_intro" = "Please enter your card's PIN.";
+"onb_edt_sign_up_pin_enter_pin" = "PIN-code";
+"onb_txt_sign_up_pin_help" = "I don't have a PIN";
+"onb_txt_sign_up_pin_explanation" = "A Pin code will be mailed to you by your statutory health insurer shortly after you've received your health card.";
+
+/*
+  NFC Sheet
+*/
+"nfc_connect_egk_sign_up" = "Hold your health insurance card to the back of your iPhone.";
+
+/*
+  Error
+*/
+"alert_error_title" = "Error";
+"alert_error_message_unknown" = "Unknown";
+"alert_btn_ok" = "Ok";

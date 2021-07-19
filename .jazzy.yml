@@ -1,0 +1,9 @@
+author: gematik GmbH
+author_url: https://www.gematik.de
+exclude: /*/internal*
+github_url: https://github.com/gematik/ref-openhealthcardkit
+theme: fullwidth
+swift_build_tool: xcodebuild
+xcodebuild_arguments:
+  - "-project"
+  - 'OpenHealthCardKit.xcodeproj'

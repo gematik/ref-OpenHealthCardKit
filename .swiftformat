@@ -1,0 +1,17 @@
+--exclude Package.swift,.build,vendor,Carthage,DerivedData,build
+
+# format options
+--swiftversion 5.2
+
+--indent 4
+--ifdef no-indent
+--maxwidth 120
+--operatorfunc no-space
+--self remove
+--trimwhitespace always
+--wraparguments preserve
+--wrapcollections preserve
+
+# rules
+
+--enable isEmpty

@@ -1,0 +1,4 @@
+github "gematik/ref-GemCommonsKit" ~> 1.0
+github "gematik/asn1kit" ~> 1.0
+github "gematik/openssl-swift" ~> 1.0
+github "SwiftCommon/DataKit" ~> 1.0

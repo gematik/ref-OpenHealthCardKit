@@ -1,0 +1,10 @@
+include::config.adoc[]
+
+[#NFCDemo]
+=== NFCDemo
+
+The NFCDemo iOS App target demonstrates the use of OHCKit and the NFCCardReader[Provider] specifically by utilizing
+said framework to connect to and establish a secure communications channel with an eGK Card via NFC.
+
+The App consist out of two screens/views. The first one will prompt the user for the CAN number.
+The second prompts for the PIN. This PIN is verified on the card against `mrpinHome` when the `connect` button is tapped.

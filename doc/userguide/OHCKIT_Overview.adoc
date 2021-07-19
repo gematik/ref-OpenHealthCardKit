@@ -1,0 +1,16 @@
+include::config.adoc[]
+
+== Overview
+
+OpenHealthCardKit bundles submodules that provide the functionality
+necessary for accessing and interacting with German Health Cards via a mobile iOS device.
+
+OpenHealthCardKit consists of the submodules
+
+- CardReaderProviderApi
+- HealthCardAccess
+- HealthCardControl
+- NFCCardReaderProvider
+
+As a reference for each submodule see also the `IntegrationTests`.
+Also see a https://github.com/gematik/ref-OpenHealthCardApp-iOS[Demo App] on GitHub using this framework.

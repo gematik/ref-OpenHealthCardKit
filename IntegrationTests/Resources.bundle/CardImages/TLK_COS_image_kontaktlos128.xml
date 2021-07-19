@@ -1,0 +1,546 @@
+<?xml version="1.0" encoding="ISO-8859-15"?>
+<card version="2" name="TLK_COS_image_kontaktlos128">
+    <!-- *********************************************************************** -->
+    <!-- * gematik  COS Gen-2 TestLaborKartenDaten                             * -->
+    <!-- *                                                                     * -->
+    <!-- * kontaktlose Kartenschnittstelle. In diesem Image werden alle Objekte* -->
+    <!-- * beschrieben, die fuer die Pruefung von CAN notwendig sind.          * -->
+    <!-- *                                                                     * -->
+    <!-- * Version       : 1.7.2     Date   : 01.04.2015                       * -->
+    <!-- *                                                                     * -->
+    <!-- *********************************************************************** -->
+    <!--                                                                         -->
+    <!-- WR         14.01.2014                                                   -->
+    <!--     diverse Anpassung fuer CAN - Tests                                  -->
+    <!--                                                                         -->
+    <!-- *********************************************************************** -->
+    <!--                                                                         -->
+    <!-- ADM        26.02.2014                                                   -->
+    <!--     RSA_20 Attribute                                                    -->
+    <!--                                                                         -->
+    <!-- *********************************************************************** -->
+    <!--                                                                         -->
+    <!-- ADM        08.05.2014                                                   -->
+    <!--     LifecycleStatus bei 454C43B3B4B5B6B7B8B9BABB                        -->
+    <!--                                                                         -->
+    <!-- *********************************************************************** -->
+    <!--                                                                         -->
+    <!-- WR         28.05.2014                                                   -->
+    <!--     Attribut accessRulesSessionkeys entfernt                            -->
+    <!--                                                                         -->
+    <!-- *********************************************************************** -->
+    <!--                                                                         -->
+    <!-- WR         18.07.2014                                                   -->
+    <!--     HistoricalBytes in EF.ATR auf aktuelle Spezifikation angepasst.     -->
+    <!--     Der EF.ATR ist herstellerspezifisch und spezifikationskonform       -->
+    <!--     anzupassen.                                                         -->
+    <!--                                                                         -->
+    <!-- *********************************************************************** -->
+    <!--                                                                         -->
+    <!-- CSP        19.08.2014                                                   -->
+    <!--     "herstellerspezifisch"-Marker in EF.ATR und EF.GDO korrigiert       -->
+    <!--     fehlerhaftes Zahlenformat in PWD_01 korrigiert                      -->
+    <!--                                                                         -->
+    <!-- *********************************************************************** -->
+    <!--                                                                         -->
+    <!-- JHO        28.08.2014                                                   -->
+    <!--     persistentPublicKeyList wurde gelöscht                              -->
+    <!--                                                                         -->
+    <!-- *********************************************************************** -->
+    <!--                                                                         -->
+    <!-- CSP        01.04.2015                                                   -->
+    <!--     - spezifikationskonforme Darstellung der Hexwerte (kleinschreibung) -->
+    <!--     - Abschnitt Commons zugefügt                                        -->
+    <!--                                                                         -->
+    <!-- *********************************************************************** -->
+    <!--                                                                         -->
+    <!-- name       datum                                                        -->
+    <!--     text                                                                -->
+    <!--                                                                         -->
+    <!-- *********************************************************************** -->
+    <!--                                                                         -->
+    <!-- Zugriffsart == [??] ist eine WildCard CLA-, INS-, P1 und P2-Byte        -->
+    <!--                     fuer alle vom zugehoerigen Objekt zu                -->
+    <!--                     unterstuetzenden Kommandos bzw. P1/P2-Parameter.    -->
+    <!--                                                                         -->
+    <!--  Objekte, die ein Attribut herstellerspezifisch mit dem Wert "TRUE"     -->
+    <!--  enthalten, sind vom Hersteller zu personalisieren ( gemäß der          -->
+    <!--  aktuell gültigen Spezifikation ).                                      -->
+    <!--                                                                         -->
+    <!-- *********************************************************************** -->
+    <!--                                                                         -->
+    <!-- Fuer das Kartendatum ( pointInTime )gilt:  23.05.14                     -->
+    <!--                                                                         -->
+    <!-- Fuer das Ablaufdatum aller im Image personalisierten                    -->
+    <!-- Schluessel gilt: 23.05.15                                               -->
+    <!--                                                                         -->
+    <!-- gemSpec_COS#N022.300:  AUT(xx)  Parameter der Laenge 1                  -->
+    <!-- gemSpec_COS#N022.400:  AUT(xx xx xx xx xx xx xx) Parameter der Laenge 7 -->
+    <!-- gemSpec_COS#N022.500:                                                   -->
+    <!--        AUT(xx xx xx xx.xx xx xx xx, xx xx xx.xx xx xx xx)               -->
+    <!--                     Interpretation-Flaglist Laenge 8, Flaglist Laenge 7 -->
+    <!--                                                                         -->
+    <!-- *********************************************************************** -->
+    <objectSystem>
+        <attribute id="root">
+            <child id="MF" objectType="Application">
+                <attributes>
+                    <attribute id="accessRules">
+                        CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]}
+                    </attribute>
+                    <attribute id="applicationIdentifier">{d2760000025445535450414345313238}</attribute>
+                    <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                    <attribute id="shareable">TRUE</attribute>
+                    <attribute id="uniqueID">5</attribute>
+                </attributes>
+                <children>
+                    <child id="EF_ATR" objectType="TransparentElementaryFile">
+                        <attributes>
+                            <attribute id="body" herstellerspezifisch="true">e01102020800020300ffff02020800020208005f5210006701444547544f01739611f3059000
+                            </attribute>
+                            <attribute id="fileIdentifier">2f01</attribute>
+                            <attribute id="shortFileIdentifier">1d</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="shareable">TRUE</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({00||b0||??||??},ALW)}],[TERMINATED,??,{({00||b0||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({00||b0||??||??},ALW)}],[TERMINATED,??,{({00||b0||??||??},ALW)}]}
+                            </attribute>
+                            <attribute id="flagTransactionMode">FALSE</attribute>
+                            <attribute id="flagChecksum">FALSE</attribute>
+                            <attribute id="numberOfOctet" herstellerspezifisch="true">26</attribute>
+                            <attribute id="positionLogicalEndOfFile" herstellerspezifisch="true">26</attribute>
+                            <attribute id="uniqueID">10</attribute>
+                        </attributes>
+                    </child>
+                    <child id="EF.CardAccess" objectType="TransparentElementaryFile" optionKontaktloseSchnittstelle="true">
+                        <attributes>
+                            <attribute id="body" herstellerspezifisch="true">31143012060a04007f0007020204020202010202010d</attribute>
+                            <attribute id="fileIdentifier">011c</attribute>
+                            <attribute id="shortFileIdentifier">1c</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="shareable">TRUE</attribute>
+                            <attribute id="accessRules">CB{ [ACTIVATED,1,{ ({00||b0||??||??},ALW) }]}, CL{ [ACTIVATED,1,{ ({00||b0||??||??},ALW) }]}</attribute>
+                            <attribute id="flagTransactionMode">FALSE</attribute>
+                            <attribute id="flagChecksum">TRUE</attribute>
+                            <attribute id="numberOfOctet" herstellerspezifisch="true">16</attribute>
+                            <attribute id="positionLogicalEndOfFile" herstellerspezifisch="true">16</attribute>
+                        </attributes>
+                    </child>
+                    <child id="EF.C.CA_eGK.CS.E256" objectType="TransparentElementaryFile">
+                        <attributes>
+                            <attribute id="body">
+                                7F2181D87F4E81915F290170420844454758588502187F494D06082A8648CE3D04030286410408317DE88413112B3B974C0F84C4303B9B8A9B14E54CAD13486E32F5767E321523B8F81A13CC2D267660658419B429CFF2EDA1EB7388967D22C09A68D8356D1A5F200844454758581102187F4C1306082A8214004C0481185307800000000000005F25060108000302005F24060206000302005F374076FF269E8C990D1196ACC72808434EE5C38187FC2E3C2D6A28D836CAF0B9F95C353CEDB4769B4CE80F2856D46FF2720C31587AE7F5CE6DFDAED02EBDEECD92CF
+                            </attribute>
+                            <attribute id="fileIdentifier">2f07</attribute>
+                            <attribute id="shortFileIdentifier">07</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="shareable">TRUE</attribute>
+                            <attribute id="accessRules">CB{ [ACTIVATED,1,{
+                                ({00||d6||??||??},AND{OR{SMMAC(13),SMMAC(18),SMMAC(cvc_FlagList_CMS:00800000000000)},SMCMDENC}), ({00||b0||??||??},ALW) }]}, CL{
+                                [ACTIVATED,1,{ ({00||d6||??||??},AND{OR{SMMAC(13),SMMAC(18),SMMAC(cvc_FlagList_CMS:00800000000000)},SMCMDENC}),
+                                ({00||b0||??||??},AND{OR{SMMAC(02),SMMAC(13),SMMAC(18),SMMAC(cvc_FlagList_CMS:00800000000000)},SMRSPENC}) }]}
+                            </attribute>
+                            <attribute id="flagTransactionMode">TRUE</attribute>
+                            <attribute id="flagChecksum">FALSE</attribute>
+                            <attribute id="numberOfOctet">00dc</attribute>
+                            <attribute id="positionLogicalEndOfFile">DC</attribute>
+                        </attributes>
+                    </child>
+                    <child id="EF_GDO" objectType="TransparentElementaryFile">
+                        <attributes>
+                            <attribute id="body" herstellerspezifisch="true">5a0a80276678901234567890</attribute>
+                            <attribute id="fileIdentifier">2f02</attribute>
+                            <attribute id="shortFileIdentifier">02</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="shareable">TRUE</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({00||b0||??||??},ALW)}],[TERMINATED,??,{({00||b0||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({00||b0||??||??},ALW)}],[TERMINATED,??,{({00||b0||??||??},ALW)}]}
+                            </attribute>
+                            <attribute id="flagTransactionMode">FALSE</attribute>
+                            <attribute id="flagChecksum">FALSE</attribute>
+                            <attribute id="numberOfOctet">0c</attribute>
+                            <attribute id="positionLogicalEndOfFile">0c</attribute>
+                            <attribute id="uniqueID">15</attribute>
+                        </attributes>
+                    </child>
+                    <child id="EF_DIR" objectType="LinearVariableElementaryFile">
+                        <attributes>
+                            <attribute id="fileIdentifier">2f00</attribute>
+                            <attribute id="shortFileIdentifier">1e</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="shareable">TRUE</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({00||b2||??||??},ALW)}],[TERMINATED,??,{({00||b2||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({00||b2||??||??},ALW)}],[TERMINATED,??,{({00||b2||??||??},ALW)}]}
+                            </attribute>
+                            <attribute id="flagTransactionMode">TRUE</attribute>
+                            <attribute id="flagChecksum">TRUE</attribute>
+                            <attribute id="maximumNumberOfRecords">0c</attribute>
+                            <attribute id="maximumRecordLength">36</attribute>
+                            <attribute id="flagRecordLifeCycleStatus">FALSE</attribute>
+                            <attribute id="numberOfOctet">01a0</attribute>
+                            <attribute id="uniqueID">20</attribute>
+                        </attributes>
+                        <records>
+                            <record id="DieAIDmussTLKweituniquesein">
+                                <attribute id="recordLifeCycleStatus"/>
+                                <attribute id="recordValue">61124f10d2760000025445535450414345313238</attribute>
+                            </record>
+                        </records>
+                    </child>
+                    <child id="EF_TEST" objectType="TransparentElementaryFile">
+                        <attributes>
+                            <attribute id="body">0102030405060708090a0b0c0d0e0f</attribute>
+                            <attribute id="fileIdentifier">2f10</attribute>
+                            <attribute id="shortFileIdentifier">10</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="shareable">TRUE</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,1,{({00||b0||??||??},SMMAC(d2760000400008))}],[ACTIVATED,2,{({00||b0||??||??},AND{SMMAC(d2760000400008),SMRSPENC})}],[DEACTIVATED,??,{({00||b0||??||??},ALW)}],[TERMINATED,??,{({00||b0||??||??},ALW)}]},CL{[ACTIVATED,1,{({00||b0||??||??},AND{SMMAC(02),AUTC(d2760000400008)})}],[ACTIVATED,2,{({00||b0||??||??},AND{SMMAC(02),AUTC(d2760000400008),SMRSPENC})}],[DEACTIVATED,??,{({00||b0||??||??},ALW)}],[TERMINATED,??,{({00||b0||??||??},ALW)}]}
+                            </attribute>
+                            <attribute id="flagTransactionMode">FALSE</attribute>
+                            <attribute id="flagChecksum">FALSE</attribute>
+                            <attribute id="numberOfOctet">0f</attribute>
+                            <attribute id="positionLogicalEndOfFile">0f</attribute>
+                            <attribute id="uniqueID">25</attribute>
+                        </attributes>
+                    </child>
+                    <child id="EF_TEST_2" objectType="TransparentElementaryFile">
+                        <attributes>
+                            <attribute id="body">0f0e0d0c0b0a090807060504030201</attribute>
+                            <attribute id="fileIdentifier">2f11</attribute>
+                            <attribute id="shortFileIdentifier">16</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="shareable">TRUE</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,1,{({??||??||??||??},PWD(01))}],[ACTIVATED,2,{({??||??||??||??},PWD(02))}],[ACTIVATED,3,{({??||??||??||??},PWD(03))}],[ACTIVATED,4,{({??||??||??||??},PWD(04))}],[DEACTIVATED,??,{({??||??||??||??},PWD(05))}],[TERMINATED,??,{({??||??||??||??},PWD(06))}]},CL{[ACTIVATED,1,{({00||44||00||00,00||04||00||00,00||e4||00||00,00||e8||00||00,00||0e||??||??,80||0e||??||??},AND{SMMAC(02),PWD(06)}),({00||b0||??||??},AND{SMMAC(02),SMRSPENC,PWD(06)}),({00||d0||??||??,00||d6||??||??},AND{SMMAC(02),SMCMDENC,PWD(06)})}],[ACTIVATED,2,{({00||44||00||00,00||04||00||00,00||e4||00||00,00||e8||00||00,00||0e||??||??,80||0e||??||??},AND{SMMAC(02),PWD(05)}),({00||b0||??||??},AND{SMMAC(02),SMRSPENC,PWD(05)}),({00||d0||??||??,00||d6||??||??},AND{SMMAC(02),SMCMDENC,PWD(05)})}],[ACTIVATED,3,{({00||44||00||00,00||04||00||00,00||e4||00||00,00||e8||00||00,00||0e||??||??,80||0e||??||??},AND{SMMAC(02),PWD(04)}),({00||b0||??||??},AND{SMMAC(02),SMRSPENC,PWD(04)}),({00||d0||??||??,00||d6||??||??},AND{SMMAC(02),SMCMDENC,PWD(04)})}],[ACTIVATED,4,{({00||44||00||00,00||04||00||00,00||e4||00||00,00||e8||00||00,00||0e||??||??,80||0e||??||??},AND{SMMAC(02),PWD(03)}),({00||b0||??||??},AND{SMMAC(02),SMRSPENC,PWD(03)}),({00||d0||??||??,00||d6||??||??},AND{SMMAC(02),SMCMDENC,PWD(03)})}],[DEACTIVATED,??,{({00||44||00||00,00||04||00||00,00||e4||00||00,00||e8||00||00,00||0e||??||??,80||0e||??||??},AND{SMMAC(02),PWD(02)}),({00||b0||??||??},AND{SMMAC(02),SMRSPENC,PWD(02)}),({00||d0||??||??,00||d6||??||??},AND{SMMAC(02),SMCMDENC,PWD(02)})}],[TERMINATED,??,{({00||44||00||00,00||04||00||00,00||e4||00||00,00||e8||00||00,00||0e||??||??,80||0e||??||??},AND{SMMAC(02),PWD(01)}),({00||b0||??||??},AND{SMMAC(02),SMRSPENC,PWD(01)}),({00||d0||??||??,00||d6||??||??},AND{SMMAC(02),SMCMDENC,PWD(01)})}]}
+                            </attribute>
+                            <attribute id="flagTransactionMode">FALSE</attribute>
+                            <attribute id="flagChecksum">FALSE</attribute>
+                            <attribute id="numberOfOctet">0f</attribute>
+                            <attribute id="positionLogicalEndOfFile">0f</attribute>
+                            <attribute id="uniqueID">26</attribute>
+                        </attributes>
+                    </child>
+                    <child id="PWD_01" objectType="PWD">
+                        <attributes>
+                            <attribute id="pwdIdentifier">01</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]}
+                            </attribute>
+                            <attribute id="minimumLength">06</attribute>
+                            <attribute id="maximumLength">0c</attribute>
+                            <attribute id="startRetryCounter">03</attribute>
+                            <attribute id="retryCounter">03</attribute>
+                            <attribute id="transportStatus">regularPassword</attribute>
+                            <attribute id="flagEnabled">TRUE</attribute>
+                            <attribute id="startSSecList">{(1,INFINITY),(2,INFINITY),(3,INFINITY),(4,INFINITY)}</attribute>
+                            <attribute id="pukUsage">0a</attribute>
+                            <attribute id="secret">26123451ffffffff</attribute>
+                            <attribute id="PUK">2812345678ffffff</attribute>
+                            <attribute id="uniqueID">30</attribute>
+                        </attributes>
+                    </child>
+                    <child id="PWD_02" objectType="PWD">
+                        <attributes>
+                            <attribute id="pwdIdentifier">02</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]}
+                            </attribute>
+                            <attribute id="minimumLength">06</attribute>
+                            <attribute id="maximumLength">0c</attribute>
+                            <attribute id="startRetryCounter">03</attribute>
+                            <attribute id="retryCounter">03</attribute>
+                            <attribute id="transportStatus">regularPassword</attribute>
+                            <attribute id="flagEnabled">TRUE</attribute>
+                            <attribute id="startSSecList">{(1,INFINITY),(2,INFINITY),(3,INFINITY),(4,INFINITY)}</attribute>
+                            <attribute id="pukUsage">0a</attribute>
+                            <attribute id="secret">26123452ffffffff</attribute>
+                            <attribute id="PUK">2812345678ffffff</attribute>
+                            <attribute id="uniqueID">35</attribute>
+                        </attributes>
+                    </child>
+                    <child id="PWD_03" objectType="PWD">
+                        <attributes>
+                            <attribute id="pwdIdentifier">03</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]}
+                            </attribute>
+                            <attribute id="minimumLength">06</attribute>
+                            <attribute id="maximumLength">0c</attribute>
+                            <attribute id="startRetryCounter">03</attribute>
+                            <attribute id="retryCounter">03</attribute>
+                            <attribute id="transportStatus">regularPassword</attribute>
+                            <attribute id="flagEnabled">TRUE</attribute>
+                            <attribute id="startSSecList">{(1,INFINITY),(2,INFINITY),(3,INFINITY),(4,INFINITY)}</attribute>
+                            <attribute id="pukUsage">0a</attribute>
+                            <attribute id="secret">26123453ffffffff</attribute>
+                            <attribute id="PUK">2812345678ffffff</attribute>
+                            <attribute id="uniqueID">40</attribute>
+                        </attributes>
+                    </child>
+                    <child id="PWD_04" objectType="PWD">
+                        <attributes>
+                            <attribute id="pwdIdentifier">04</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]}
+                            </attribute>
+                            <attribute id="minimumLength">06</attribute>
+                            <attribute id="maximumLength">0c</attribute>
+                            <attribute id="startRetryCounter">03</attribute>
+                            <attribute id="retryCounter">03</attribute>
+                            <attribute id="transportStatus">regularPassword</attribute>
+                            <attribute id="flagEnabled">TRUE</attribute>
+                            <attribute id="startSSecList">{(1,INFINITY),(2,INFINITY),(3,INFINITY),(4,INFINITY)}</attribute>
+                            <attribute id="pukUsage">0a</attribute>
+                            <attribute id="secret">26123454ffffffff</attribute>
+                            <attribute id="PUK">2812345678ffffff</attribute>
+                            <attribute id="uniqueID">45</attribute>
+                        </attributes>
+                    </child>
+                    <child id="PWD_05" objectType="PWD">
+                        <attributes>
+                            <attribute id="pwdIdentifier">05</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]}
+                            </attribute>
+                            <attribute id="minimumLength">06</attribute>
+                            <attribute id="maximumLength">0c</attribute>
+                            <attribute id="startRetryCounter">03</attribute>
+                            <attribute id="retryCounter">03</attribute>
+                            <attribute id="transportStatus">regularPassword</attribute>
+                            <attribute id="flagEnabled">TRUE</attribute>
+                            <attribute id="startSSecList">{(1,INFINITY),(2,INFINITY),(3,INFINITY),(4,INFINITY)}</attribute>
+                            <attribute id="pukUsage">0a</attribute>
+                            <attribute id="secret">26123455ffffffff</attribute>
+                            <attribute id="PUK">2812345678ffffff</attribute>
+                            <attribute id="uniqueID">50</attribute>
+                        </attributes>
+                    </child>
+                    <child id="PWD_06" objectType="PWD">
+                        <attributes>
+                            <attribute id="pwdIdentifier">06</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]}
+                            </attribute>
+                            <attribute id="minimumLength">06</attribute>
+                            <attribute id="maximumLength">0c</attribute>
+                            <attribute id="startRetryCounter">03</attribute>
+                            <attribute id="retryCounter">03</attribute>
+                            <attribute id="transportStatus">regularPassword</attribute>
+                            <attribute id="flagEnabled">TRUE</attribute>
+                            <attribute id="startSSecList">{(1,INFINITY),(2,INFINITY),(3,INFINITY),(4,INFINITY)}</attribute>
+                            <attribute id="pukUsage">0a</attribute>
+                            <attribute id="secret">26123456ffffffff</attribute>
+                            <attribute id="PUK">2812345678ffffff</attribute>
+                            <attribute id="uniqueID">60</attribute>
+                        </attributes>
+                    </child>
+                    <child id="CAN_02" objectType="SymmetricConnectionKey">
+                        <attributes>
+                            <attribute id="keyIdentifier">02</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]}
+                            </attribute>
+                            <attribute id="can">2812345678ffffff</attribute>
+                            <attribute id="algorithmIdentifier">id-PACE-ECDH-GM-AES-CBC-CMAC-128</attribute>
+                            <attribute id="uniqueID">1020</attribute>
+                        </attributes>
+                    </child>
+                    <child id="ELC_07" objectType="PrivateElcKey">
+                        <attributes>
+                            <attribute id="keyIdentifier">07</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,1,{({00||88||00||00},PWD(01)),({00||46||??||??},PWD(01)),({00||46||??||??},AND{AUTCHAT(cvc_FlagList_TI:00000000000001),SMRSPENC}),({00||2a||9e||9a},PWD(01)),({00||2a||9e||9a},AND{AUTCHAT(cvc_FlagList_TI:00000000000001),SMRSPENC}),({00||2a||80||86},PWD(01)),({00||2a||80||86},AND{AUTCHAT(cvc_FlagList_TI:00000000000001),SMRSPENC}),({00||2a||86||b8},PWD(01)),({00||44||20||07},PWD(01)),({00||04||20||07},PWD(01))}],[ACTIVATED,2,{({00||88||00||00},PWD(02)),({00||46||??||??},PWD(02)),({00||04||20||07},PWD(02))}],[ACTIVATED,3,{({00||88||00||00},PWD(03)),({00||46||??||??},PWD(03)),({00||04||20||07},PWD(03))}],[ACTIVATED,4,{({00||88||00||00},PWD(04)),({00||46||??||??},PWD(04)),({00||04||20||07},PWD(04))}],[DEACTIVATED,??,{({00||88||00||00},PWD(05)),({00||46||??||??},PWD(05)),({00||44||20||07},PWD(05)),({00||04||20||07},PWD(05)),({00||e8||20||07},PWD(05))}],[TERMINATED,??,{({00||88||00||00},PWD(06)),({00||46||??||??},PWD(06)),({00||44||20||07},PWD(06)),({00||04||20||07},PWD(06)),({00||e8||20||07},PWD(06)),({00||e4||20||07},PWD(06))}]},CL{[ACTIVATED,1,{({00||88||00||00},PWD(06)),({00||46||??||??},PWD(06)),({00||46||??||??},AND{AUTCHAT(cvc_FlagList_TI:00000000000001),SMRSPENC}),({00||2a||9e||9a},PWD(06)),({00||2a||9e||9a},AND{AUTCHAT(cvc_FlagList_CMS:00000000000001),SMRSPENC}),({00||2a||80||86},PWD(06)),({00||2a||80||86},AND{AUTCHAT(cvc_FlagList_CMS:00000000000001),SMRSPENC}),({00||2a||86||b8},PWD(06)),({00||44||20||07},PWD(06)),({00||04||20||07},PWD(06))}],[ACTIVATED,2,{({00||88||00||00},PWD(05)),({00||46||??||??},PWD(05)),({00||04||20||07},PWD(05))}],[ACTIVATED,3,{({00||88||00||00},PWD(04)),({00||46||??||??},PWD(04)),({00||04||20||07},PWD(04))}],[ACTIVATED,4,{({00||88||00||00},PWD(03)),({00||46||??||??},PWD(03)),({00||04||20||07},PWD(03))}],[DEACTIVATED,??,{({00||88||00||00},PWD(02)),({00||46||??||??},PWD(02)),({00||44||20||07},PWD(02)),({00||04||20||07},PWD(02)),({00||e8||20||07},PWD(02))}],[TERMINATED,??,{({00||88||00||00},PWD(01)),({00||46||??||??},PWD(01)),({00||44||20||07},PWD(01)),({00||04||20||07},PWD(01)),({00||e8||20||07},PWD(01)),({00||e4||20||07},PWD(01))}]}
+                            </attribute>
+                            <attribute id="domainParameterOid">brainpoolP256r1</attribute>
+                            <attribute id="P">
+                                048a41faf2447485687fa101481b0696d7f7d8afb4d8af7ac832bba4692444676d96fa6c27084a839784248f66d9f3b01fa1c2fa42497ce0fccc4aebaefa472f75
+                            </attribute>
+                            <attribute id="listAlgorithmIdentifier">
+                                {[1,(elcRoleAuthentication,elcSessionkey4SM,elcSharedSecretCalculation,signECDSA)],[2,(elcRoleAuthentication,elcSessionkey4SM,elcSharedSecretCalculation,signECDSA)],[3,(elcRoleAuthentication,elcSessionkey4SM,elcSharedSecretCalculation,signECDSA)],[4,(elcRoleAuthentication,elcSessionkey4SM,elcSharedSecretCalculation,signECDSA)]}
+                            </attribute>
+                            <attribute id="keyAvailable">TRUE</attribute>
+                            <attribute id="privateKey">96d473b4f1f50175cefe9556ad06a443640406c08ed0b0385819ec3b3f8d7496</attribute>
+                            <attribute id="uniqueID">1006</attribute>
+                        </attributes>
+                    </child>
+                    <child id="ELC_10" objectType="PrivateElcKey">
+                        <attributes>
+                            <attribute id="keyIdentifier">10</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,1,{({??||??||??||??},ALW)}],[ACTIVATED,2,{({??||??||??||??},ALW)}],[ACTIVATED,3,{({??||??||??||??},ALW)}],[ACTIVATED,4,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,1,{({??||??||??||??},ALW)}],[ACTIVATED,2,{({??||??||??||??},ALW)}],[ACTIVATED,3,{({??||??||??||??},ALW)}],[ACTIVATED,4,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]}
+                            </attribute>
+                            <attribute id="domainParameterOid">brainpoolP256r1</attribute>
+                            <attribute id="P">
+                                048a41faf2447485687fa101481b0696d7f7d8afb4d8af7ac832bba4692444676d96fa6c27084a839784248f66d9f3b01fa1c2fa42497ce0fccc4aebaefa472f75
+                            </attribute>
+                            <attribute id="listAlgorithmIdentifier">
+                                {[1,(elcRoleAuthentication,elcSessionkey4SM,elcSharedSecretCalculation,signECDSA)],[2,(elcRoleAuthentication,elcSessionkey4SM,elcSharedSecretCalculation,signECDSA)],[3,(elcRoleAuthentication,elcSessionkey4SM,elcSharedSecretCalculation,signECDSA)],[4,(elcRoleAuthentication,elcSessionkey4SM,elcSharedSecretCalculation,signECDSA)]}
+                            </attribute>
+                            <attribute id="keyAvailable">TRUE</attribute>
+                            <attribute id="privateKey">96d473b4f1f50175cefe9556ad06a443640406c08ed0b0385819ec3b3f8d7496</attribute>
+                            <attribute id="uniqueID">1010</attribute>
+                        </attributes>
+                    </child>
+                    <child id="RSA_20" objectType="PrivateRsaKey">
+                        <attributes>
+                            <attribute id="keyIdentifier">16</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]}
+                            </attribute>
+                            <attribute id="modulusLength">0800</attribute>
+                            <attribute id="n">
+                                8a00f10bff4414004474eec629d19d2890a592dce9f5fc37221ae945611887d150323846afd84ad5850de79dc983bfbe2dfeaff5d4188a6a1aa9cdd55367268862f7910abb0dd8069ce1393ef0488352300c69c874a7ad3ebbcc55159e941569c682fbcfe90f9644bd6f6bcd9d23e05dbe7a79f386c59496d699e7475bd882caaa529473d081bf10e7ec44e2368a28b6f3d2ecd09787818503d10d9d4876b5ed70090ef1fc9e315e10fa87285e576348db92b10d49acd8a9b887e2190fa2d355c2b072f05c22a53defebf581c18f6f05a25e3c9997b42718dc5dd3810b34d2823b82c33d23a54d1d93b424032e085064d59751de9e34e0ace502324057370e75
+                            </attribute>
+                            <attribute id="e">010001</attribute>
+                            <attribute id="d">
+                                29c695319b8981407f78a25b6c875ebacbe6c3698a8d83573144d23ec560c6a48f515485d96f715fe79248fe13e58522ce0b9e3a9d84fc49985eb4c79222d4a04ecd40a3edf207e620917161e31d205bbdddd41bf16c5cde73bd2c388a33abb3c47b1c3d5900f5ed43273a8c18b8a68fda3c7b34442505910fcfb11a81ec2dd3381405f1f9882d7218a5020db7c1187ddaafcc5144a95630a92e8df47c5e16a878344ed7197c4b4d5690df563a67a005e97ee475778ca7b1d03947a443845c95f571e75255d55a280a28ea729e070a118bffdd077ecd5cf55026806fcd7fbb8bd0314fbbae3efb65bbafff032b783840a51f272ae0a85476fccc2877d395eff5
+                            </attribute>
+                            <attribute id="p">
+                                b5823f045195c21098944c65f965dffbb3f671436ef8d95968af39ce52122cad94294a1b684ce2c5ecaa4845a650d4ccccb81b1a9abf715cd328e14f16f3066344ee9399aae3796d075e364333b06d797cd0691decf3982322cd8ba75662da4ddee34cd6fdffaf743b64466fb87d720d0f74bc451b5e5dd3be088c10144c1f57
+                            </attribute>
+                            <attribute id="q">
+                                c2a3f1b047ada9b0b46b191c1ecea00041d07178fd6cb8bd2b78dcbcc6d8f1111c2365c5245bc658d64e8b28bd15f89ffd1675d6a7ee8fccb27034a7d015432e6a9c17c6f0f1bf7ef05c72475c84aa2e3e8b2448531c62b0dafffb60cc3f295c7bbb8785c654923b7af31091ead8b8a067b1b92cdcda4a568c79a6f6840f3d13
+                            </attribute>
+                            <attribute id="dP">
+                                0714eeda7f48658afa3907060f85ff08360c4e7d000e6b84868617ae4a1b756ccc5414151faba8496aa37630697dcbdfb5b9152da38e06a14587d9ca992da0392d4e55a9f035f1dde424b3df495bffd9769a370fb8d8043e92b40c57da11ff4c7c7ec7d7b78f4b4c30a907ea81fb3b00f1726f8a0eb84ed6dd1a3e44be55fdff
+                            </attribute>
+                            <attribute id="dQ">
+                                1363412fcdf3fe731b858f7abd96d7592f3514187925db40fc938d6940655b9dd8afadf3752baf162a42a899e63bca0825ad970f4aaaf8a7eb1e42207519a917768715d73b28d96a4b86e9db31dc0517962345f9ee4d658738494740dd176d8748cbe533ee0d7e836e3bc7eac0f9d56a24ea0f07e8f7d56fc98e549339944b01
+                            </attribute>
+                            <attribute id="c">
+                                13089be5f94fdb5a10819ba9ce5f87cc6aae3a98d0ebd37223eca1a574b4bfd8fe69ab1aef8b29e339840715e0589abe59af14ae0709a66a18741e965362a523353309500ad0afb17ad87ecd00dea48e929899a6aa0dd3094e0b2cadeecebdefb820e6fffd8111864efd1fdfe76a1d5c51a667c005d9e12bb781e1a9c3cb823e
+                            </attribute>
+                            <attribute id="listAlgorithmIdentifier">
+                                {[1,(rsaRoleAuthentication,rsaSessionkey4SM)],[2,(rsaRoleAuthentication,rsaSessionkey4SM)],[3,(rsaRoleAuthentication,rsaSessionkey4SM)],[4,(rsaRoleAuthentication,rsaSessionkey4SM)]}
+                            </attribute>
+                            <attribute id="keyAvailable">TRUE</attribute>
+                            <attribute id="uniqueID">1030</attribute>
+                        </attributes>
+                    </child>
+                    <child id="4445585858600112" objectType="PublicElcVerificationKey">
+                        <attributes>
+                            <attribute id="keyIdentifier">4445585858600112</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="domainParameterOid">brainpoolP256r1</attribute>
+                            <attribute id="P">
+                                0434dc65068c3633671828f73adeb8fbc01952e3de3511823448f15afc28ebea3829be1ac9d4d10869ce5fa675275087603e4e9fc86ff3c127b9e94a14c670164d
+                            </attribute>
+                            <attribute id="oid">ecdsa-with-SHA256</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[DEACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[TERMINATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}]}
+                            </attribute>
+                            <attribute id="accessRulesVerification">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[DEACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[TERMINATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}]}
+                            </attribute>
+                            <attribute id="accessRulesAuthentication">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[DEACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[TERMINATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}]}
+                            </attribute>
+                            <attribute id="CHAT">cvc_FlagList_TI:ffffffffffffff</attribute>
+                            <attribute id="expirationDate">010500050203</attribute>
+                            <attribute id="privateKey">74320bea049777bc663c27cfb2c488b7a49b05af348d9186f86a7196c2f6bb43</attribute>
+                            <attribute id="uniqueID">70</attribute>
+                        </attributes>
+                    </child>
+                    <child id="4445585858600212" objectType="PublicElcVerificationKey">
+                        <attributes>
+                            <attribute id="keyIdentifier">4445585858600212</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="domainParameterOid">brainpoolP384r1</attribute>
+                            <attribute id="P">
+                                043e84af62d1330a9a6f04a2791e0935e7cfe01eb8f7ae8d96eef77c036c0569928e53700322a28454e647c85ea9c89c1d3051ce803c21e5c27a73bd8da121524d4679ded5144368523855e522cfe9a7d1ba31e691900cd02740c399ffcc10f260
+                            </attribute>
+                            <attribute id="oid">ecdsa-with-SHA384</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[DEACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[TERMINATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}]}
+                            </attribute>
+                            <attribute id="accessRulesVerification">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[DEACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[TERMINATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}]}
+                            </attribute>
+                            <attribute id="accessRulesAuthentication">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[DEACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[TERMINATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}]}
+                            </attribute>
+                            <attribute id="CHAT">cvc_FlagList_TI:ffffffffffffff</attribute>
+                            <attribute id="expirationDate">010500050203</attribute>
+                            <attribute id="privateKey">3dbf52550829cec527f91de05fc3d70b47c38d1c8504623174c912afc7941afbe104b9b3d34a4eb0dd35452e2b67884a
+                            </attribute>
+                            <attribute id="uniqueID">80</attribute>
+                        </attributes>
+                    </child>
+                    <child id="4445585858600312" objectType="PublicElcVerificationKey">
+                        <attributes>
+                            <attribute id="keyIdentifier">4445585858600312</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="domainParameterOid">brainpoolP512r1</attribute>
+                            <attribute id="P">
+                                043b5e694c154f4dd0812a91273869d382f5c81748ef5797416369b445f60dd2480d2400d1e7dd896b054ba615d8927fb10911e02753a22b1f6ec1ba18d0c1fdaa905712f33003bec6a51c179006e7b98f8d1d1219db49944f05602b46ac511570b136907081a5f93a0e000b7f335f76a7f8c18584fc7a7d11fddc96844ff8cb5b
+                            </attribute>
+                            <attribute id="oid">ecdsa-with-SHA512</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[DEACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[TERMINATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}]}
+                            </attribute>
+                            <attribute id="accessRulesVerification">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[DEACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[TERMINATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}]}
+                            </attribute>
+                            <attribute id="accessRulesAuthentication">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[DEACTIVATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}],[TERMINATED,??,{({??||??||??||??},AND{SMMAC(02),SMCMDENC})}]}
+                            </attribute>
+                            <attribute id="CHAT">cvc_FlagList_TI:ffffffffffffff</attribute>
+                            <attribute id="expirationDate">010500050203</attribute>
+                            <attribute id="privateKey">
+                                285927d1d7469dc69c83d25380dd51bbbd39cc69cf74219a53700eb44d1d0827130c6881ea13836d454eae6972b5702b1da75e9ba39c6050539c5173129d2d0b
+                            </attribute>
+                            <attribute id="uniqueID">90</attribute>
+                        </attributes>
+                    </child>
+                    <child id="4445585858600007" objectType="PublicRsaVerificationKey">
+                        <attributes>
+                            <attribute id="keyIdentifier">4445585858600007</attribute>
+                            <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+                            <attribute id="modulusLength">0800</attribute>
+                            <attribute id="n">
+                                ca6333598b4577568ee7259a62b008be4baa2ed6f86a099cfe2612d430a900ea8d0783de7ba174233e7a6ef6a197752dcd762d981c6354268cf0507ce46d026f37f6c3e50efac2d79098b0be4d3374defe4bcf4e3b1f26f4f21cab16367d1f8b6d257efa93bf0cd5ff933fb0ef30f5c75042c5fce9263f5d7e845c7ff732a5238fcde15b970df296646a63c74a802dd8dc4d92e891e2d044a83f4a664eb94babbb5e809c1e19f1b9cab688c8b005e7191983f87b9e8a37a6ee6d8b3252f7392985419df26e31433c98547711d252ac28ea9daad93f65a615f847dd52ccd326b1f5d8828f7387c6332e4f75bc93edc9a9b2bc29a17de1782d0957e0426cce6a67
+                            </attribute>
+                            <attribute id="e">010001</attribute>
+                            <attribute id="d">
+                                663ec9916257dcdb60e48bcdbc2fbcab0ea4d2770e16dbf6713b20e60c1345803971638081aae6766bb904d81a78dedd1de0a756227957e905e8de70ca21fc49ddd70fce67cbeda563ca8ff8041e8bdba053024f3e75158447d08dea71eab28608c519aa53fbffeb18ebf6105836bee44bbb00352e408160a56b0f2422e9761d2e0b1a4d74351209558c209671c8c2f9ebdb6fc6913fc442fcaee77979f60592216bf7508ee2b67a3490a247ca4c6f488cdeaf2c3d6ef2ee09b0cad3f1be62f30ea81dfd31f9f6faca1ba29f550a37dbb7c4a678d8c029e8a88f8c6c004bcd01870d672655abc9b67f3718e14b481a6dbef0f7b08c83655db7d4590de74755d1
+                            </attribute>
+                            <attribute id="oid">sigS_ISO9796-2Withrsa_sha256</attribute>
+                            <attribute id="accessRules">
+                                CB{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,??,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]}
+                            </attribute>
+                            <attribute id="accessRulesVerification">
+                                CB{[ACTIVATED,1,{({??||??||??||??},ALW)}],[ACTIVATED,2,{({??||??||??||??},ALW)}],[ACTIVATED,3,{({??||??||??||??},ALW)}],[ACTIVATED,4,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,1,{({??||??||??||??},ALW)}],[ACTIVATED,2,{({??||??||??||??},ALW)}],[ACTIVATED,3,{({??||??||??||??},ALW)}],[ACTIVATED,4,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]}
+                            </attribute>
+                            <attribute id="accessRulesAuthentication">
+                                CB{[ACTIVATED,1,{({??||??||??||??},ALW)}],[ACTIVATED,2,{({??||??||??||??},ALW)}],[ACTIVATED,3,{({??||??||??||??},ALW)}],[ACTIVATED,4,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]},CL{[ACTIVATED,1,{({??||??||??||??},ALW)}],[ACTIVATED,2,{({??||??||??||??},ALW)}],[ACTIVATED,3,{({??||??||??||??},ALW)}],[ACTIVATED,4,{({??||??||??||??},ALW)}],[DEACTIVATED,??,{({??||??||??||??},ALW)}],[TERMINATED,??,{({??||??||??||??},ALW)}]}
+                            </attribute>
+                            <attribute id="uniqueID">1000</attribute>
+                        </attributes>
+                    </child>
+                </children>
+            </child>
+        </attribute>
+        <attribute id="coldAnswerToReset" herstellerspezifisch="true">3bdd96ff81b1fe451f03006404050803739621d0009000c9</attribute>
+        <attribute id="warmAnswerToReset" herstellerspezifisch="true">3bdd96ff81b1fe451f03006404050803739621d0009000c9</attribute>
+        <attribute id="iccsn8" herstellerspezifisch="true">6678901234567890</attribute>
+        <attribute id="pointInTime">010400050203</attribute>
+        <attribute id="lifeCycleStatus">ACTIVATED</attribute>
+        <attribute id="publicKeyList"/>
+        <attribute id="reservedPersistentCacheSlots">05</attribute>
+    </objectSystem>
+    <commons>
+        <common id="imageVersion" type="STRING">Image_V1.7.2;gemSpec_COS_Wrapper_V1.6.0;gemSpec_COS_V3.7.0</common>
+        <common id="objectSystemId" type="STRING">TLK_COS_image_kontaktlos128</common>
+    </commons>
+</card>

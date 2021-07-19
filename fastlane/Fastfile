@@ -1,0 +1,213 @@
+#
+# Copyright (c) 2021 gematik GmbH
+# 
+# Licensed under the Apache License, Version 2.0 (the License);
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an 'AS IS' BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+fastlane_version "2.156.0"
+
+xcversion(version: ENV["FL_XCODE_VERSION"] || "12.5")
+# xcversion(version: ENV["FL_XCODE_VERSION"] || "12.0.1")
+
+mac_schemes = ["AllTests_macOS"]
+ios_schemes = ["AllTests_iOS"]
+
+# Figure out if a setting is truthy
+def true?(obj)
+  if obj.nil?
+    raise "Object is nil. Not a valid boolean value"
+  end
+  obj.to_s.downcase == "true"
+end
+
+desc "Lane that resolves the project dependencies using Carthage."
+lane :carthage_resolve_dependencies do
+  carthage_mint="mint run carthage"
+  carthage(executable: carthage_mint, command: "bootstrap", no_build: true)
+  # Create Xcodeproj when necessary for Carthage dependencies
+  sh("find", "../Carthage/Checkouts/", "-type", "d", "-mindepth", "1", "-maxdepth", "1", "!", "-exec", "sh", "-c", "test -e {}/*.xcodeproj", ";", "-execdir", "sh", "-c", "cd {}; if [ -e project.yml ]; then xcodegen; fi;", ";")
+  sh("find", "../Carthage/Checkouts/", "-type", "d", "-mindepth", "1", "-maxdepth", "1", "!", "-exec", "sh", "-c", "test -e {}/*.xcodeproj", ";", "-execdir", "sh", "-c", "cd {}; if [ -e Package.swift ] && [ -e Package.xcconfig ]; then swift package generate-xcodeproj --xcconfig-overrides Package.xcconfig; elif [ -e Package.swift ]; then swift package generate-xcodeproj; fi;", ";")
+
+  carthage(
+    executable: carthage_mint,
+    command: "build",
+    use_binaries: false,
+    platform: "Mac,iOS",
+    use_xcframeworks: true,
+    cache_builds: true,
+    configuration: "Debug"
+  ) 
+end
+
+desc "Build the project schemes for macOS"
+lane :build_mac do
+  mac_schemes.each do |scheme|
+    scan(
+      scheme: scheme,
+      build_for_testing: true
+    )
+  end
+end
+
+desc "Build and test (scan) the project schemes for macOS"
+desc "CI builds should run this lane on every commit"
+desc ""
+lane :test_mac do
+  mac_schemes.each do |scheme|
+    scan(scheme: scheme)
+  end
+end
+
+desc "Build the project for iOS"
+lane :build_ios do
+  ios_schemes.each do |scheme|
+    scan(
+      scheme: scheme,
+      build_for_testing: true
+    )
+  end
+end
+
+desc "Build and test (scan) the project for iOS"
+desc "CI builds should run this lane on every commit"
+lane :test_ios do
+  ios_schemes.each do |scheme|
+    scan(scheme: scheme)
+  end
+end
+
+desc "Build the project for macOS and iOS by calling `build_mac` and `build_ios`"
+lane :build_all do
+  build_mac
+  build_ios
+end
+
+desc "Build and test (scan) the project for macOS and iOS by calling `test_mac` and `test_ios`"
+lane :test_all do
+  test_mac
+  test_ios
+end
+
+desc "Lane that (auto) genarates API documentation from inline comments."
+lane :generate_documentation do
+
+  targetsJson = sh "cd .. && xcodebuild -quiet -list -json; cd - > /dev/null"
+  targets = JSON.parse(targetsJson)
+
+  schemes = targets["project"]["schemes"]
+    .filter { |scheme| scheme.end_with? "_iOS" }
+    .filter { |scheme| !scheme.include? "Test" }
+
+  schemes.append("NFCCardReaderProvider")
+
+  overview = "# Overview\n\n"
+
+  for scheme in schemes
+    target_name = scheme.sub("_iOS", "")
+
+    overview += "  - [#{target_name}](modules/#{target_name}/index.html)\n"
+
+    sh "cd .. && jazzy --config \".jazzy.yml\" --xcodebuild_arguments -scheme,#{scheme},-destination,'generic/platform=iOS' --output \"docs/modules/#{target_name}\"; cd - > /dev/null"
+  end
+
+  require 'redcarpet'
+
+  renderer = Redcarpet::Render::HTML.new()
+  markdown = Redcarpet::Markdown.new(renderer, extensions = {})
+
+  indexPage = "<!DOCTYPE html>" \
+    "<html lang=\"en\">" \
+    "  <head>" \
+    "    <title>  Reference</title>" \
+    "    <link rel=\"stylesheet\" type=\"text/css\" href=\"modules/CardReaderAccess/css/jazzy.css\" />" \
+    "  </head>" \
+    "  <body>" \
+    "    <header class=\"header\">" \
+    "      <p class=\"header-col header-col--primary\">" \
+    "        <a class=\"header-link\" href=\"index.html\">" \
+    "           Docs" \
+    "        </a>" \
+    "      </p>" \
+    "    " \
+    "      <p class=\"header-col--secondary\">" \
+    "        <form role=\"search\" action=\"search.json\">" \
+    "          <input type=\"text\" placeholder=\"Search documentation\" data-typeahead>" \
+    "        </form>" \
+    "      </p>" \
+    "    " \
+    "        <p class=\"header-col header-col--secondary\">" \
+    "          <a class=\"header-link\" href=\"https://github.com/gematik/ref-openhealthcardkit\">" \
+    "            <img class=\"header-icon\" src=\"img/gh.png\"/>" \
+    "            View on GitHub" \
+    "          </a>" \
+    "        </p>" \
+    "    " \
+    "    </header>" \
+    "    <div class=\"content-wrapper\">" \
+    "      <article class=\"main-content\">" \
+    "        <div class=\"section-content top-matter\">" \
+    "          #{markdown.render(overview)}" \
+    "        </div>" \
+    "      </article>" \
+    "    </div>" \
+    "    <section class=\"footer\">" \
+    "      <p>&#169; 2021 <a class=\"link\" href=\"https://www.gematik.de\" target=\"_blank\" rel=\"external\">gematik GmbH</a></p>" \
+    "    </section>" \
+    "  </body>" \
+    "</html>"
+    
+  File.write('../docs/index.html', indexPage)
+
+end
+
+desc "Lane that runs the static code analyzer(s) for the project."
+desc "CI builds should run this lane on every commit"
+desc "Currently swiftlint is used as static analyzer"
+desc ""
+lane :static_code_analysis do
+  swiftlint_mint="mint run swiftlint"
+  swiftlint(
+    executable: swiftlint_mint,
+    mode: :lint,
+    ignore_exit_status: false,
+    quiet: true,
+    strict: true
+  )
+  sh "cd .. && swiftformat . --config .swiftformat --lint --quiet; cd -"
+end
+
+desc "Lane that sets up the SPM/Carthage dependencies and xcodeproj."
+desc ""
+desc "###Example:"
+desc "```\nfastlane setup configuration:Release\n```"
+desc ""
+lane :setup do |options|
+  carthage_resolve_dependencies options
+  # spm(command: "resolve") # use when switched to spm
+  sh("cd .. && mint run xcodegen generate --spec ./project.yml")
+end
+
+desc "Lane that the ci build should invoke directly to do a complete build/test/analysis."
+desc "This lane calls `setup`, `static_code_analysis`, "
+desc "`test_all`, `generate_documentation`. See these sub-lanes for option parameters"
+desc ""
+desc "###Example:"
+desc "```\nfastlane cibuild\n```"
+desc ""
+lane :cibuild do |options|
+  setup options
+  static_code_analysis
+  test_all
+  generate_documentation
+end
+

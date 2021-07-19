@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <general>
+        <attribute id="cardImageFile">../CardImages/TLK_COS_image_kontaktlos128.xml</attribute>
+        <attribute id="channelContextFile">../ChannelContexts/ChannelContext_G2_eGK.xml</attribute>
+        <attribute id="cardIo">com.achelos.egk.g2sim.tcpipcardio.TcpIpCardIo</attribute>
+        <attribute id="maxApduBufferSize" basis="dezimal" desc="leer ==> benutze Bufferangabe aus EF.ATR"/>
+        <attribute id="maxApduBufferSizeSM" basis="dezimal" desc="leer ==> benutze Bufferangabe aus EF.ATR"/>
+        <attribute id="maxRApduBufferSize" basis="dezimal" desc="leer ==> benutze Bufferangabe aus EF.ATR"/>
+        <attribute id="maxRApduBufferSizeSM" basis="dezimal" desc="leer ==> benutze Bufferangabe aus EF.ATR"/>
+        <attribute id="maxNoChannels">4</attribute>
+        <attribute id="maxNoSecurityEnvironments">4</attribute>
+        <attribute id="performanceFactor">0</attribute>
+        <attribute id="deactivateIntIccsnEqualsExtIccsn">false</attribute>
+        <!-- <attribute id="ignoreta1">false</attribute> -->
+        <!-- <attribute id="ppsresponse">FF119495</attribute> -->
+        <attribute id="useextloader">false</attribute>
+        <attribute id="useseveralapps">false</attribute>
+    </general>
+    <deactivatedCommands>
+    </deactivatedCommands>
+    <testsysteminterface>
+        <attribute id="port">3039</attribute> <!-- DEZ: 12345 -->
+    </testsysteminterface>
+    <logging>
+        <attribute id="com.achelos.egk.g2sim.textlogger.TextfileLogger">
+            <location>../log/</location>
+            <prefix>Logfile</prefix>
+            <timestamp>yyyy-MM-dd HH-mm-ss</timestamp>
+            <suffix>.log</suffix>
+            <debug>true</debug>
+        </attribute>
+        <attribute id="de.gematik.g2.simulation.logger.TerminalLogger">
+            <location>../log/</location>
+            <prefix>Logfile</prefix>
+            <timestamp>yyyy-MM-dd HH-mm-ss</timestamp>
+            <suffix>.log</suffix>
+        </attribute>
+    </logging>
+    <ioConfiguration>
+        <port>50000</port>
+        <range>10000</range>
+        <prototcolLayerType>com.achelos.egk.g2sim.collis.tpdu.T1Layer</prototcolLayerType>
+    </ioConfiguration>
+</configuration>

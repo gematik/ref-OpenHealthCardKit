@@ -1,0 +1,7 @@
+include::config.adoc[]
+
+[#NFCCardReaderProvider]
+=== NFCCardReaderProvider
+
+A `CardReaderProvider` implementation that handles the
+communication with the Apple iPhone NFC interface.

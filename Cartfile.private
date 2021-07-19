@@ -1,0 +1,4 @@
+github "Quick/Nimble" ~> 9.0
+github "tadija/AEXML" "4.5.0"
+github "hectr/swift-stream-reader" "0.3.0"
+github "swiftsocket/SwiftSocket" "2e6ba27140a29fae8a6331ba4463312e0c71a6b0"

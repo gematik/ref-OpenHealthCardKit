@@ -1,0 +1,205 @@
+name: OpenHealthCardKit
+options:
+  bundleIdPrefix: de.gematik.ti.ohcapp4ios
+  deploymentTarget:
+    macOS: 10.15
+    iOS: 13.0
+  minimumXcodeGenVersion: 2.3.0
+schemes:
+  AllTests_iOS:
+    build:
+      targets:
+        NFCDemo: all
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - NFCDemo
+      targets:
+        - CardReaderProviderApiTests_iOS
+        - CardReaderAccessTests_iOS
+        - HealthCardAccessTests_iOS
+        - HealthCardControlTests_iOS
+        - NFCCardReaderProviderTests
+  AllTests_macOS:
+    build:
+      targets:
+        CardReaderAccess_macOS: test
+    test:
+      gatherCoverageData: true
+      targets:
+        - CardReaderProviderApiTests_macOS
+        - CardReaderAccessTests_macOS
+        - HealthCardAccessTests_macOS
+        - HealthCardControlTests_macOS
+settings:
+  base:
+    CODE_SIGN_IDENTITY: ""
+    SWIFT_VERSION: 5.0
+    ALWAYS_SEARCH_USER_PATHS: NO
+    FRAMEWORK_SEARCH_PATHS: "$(inherited)"
+    BUILD_LIBRARY_FOR_DISTRIBUTION: YES
+  configs:
+    Release:
+      SWIFT_COMPILATION_MODE: wholemodule
+    Debug:
+      SWIFT_COMPILATION_MODE: incremental
+targets:
+  NFCDemo:
+    type: application
+    platform: iOS
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: de.gematik.ohcapp4ios.DemoApp
+        TARGETED_DEVICE_FAMILY: 1
+        SWIFT_VERSION: $(inherited)
+        ALWAYS_SEARCH_USER_PATHS: $(inherited)
+        CODE_SIGN_ENTITLEMENTS: Sources/NFCDemo/Resources/NFCDemo.entitlements
+    configFiles:
+      Debug: Resources/debug.xcconfig
+      Release: Resources/release.xcconfig
+    sources:
+      - Sources/NFCDemo
+    scheme:
+      testTargets:
+    dependencies:
+      - framework: Carthage/Build/DataKit.xcframework
+      - framework: Carthage/Build/GemCommonsKit.xcframework
+      - target: CardReaderProviderApi_iOS
+      - target: CardReaderAccess_iOS
+      - target: NFCCardReaderProvider
+      - framework: Carthage/Build/ASN1Kit.xcframework
+      - target: HealthCardAccess_iOS
+      - target: HealthCardControl_iOS
+      - sdk: CoreNFC.framework
+      - sdk: Combine.framework
+      - sdk: SwiftUI.framework
+  CardReaderProviderApi:
+    type: framework
+    platform: [iOS,macOS]
+    sources:
+      - Sources/CardReaderProviderApi
+    info:
+      path: Resources/CardReaderProviderApi_Info.plist
+    dependencies:
+      - framework: Carthage/Build/GemCommonsKit.xcframework
+    scheme:
+      testTargets:
+        - CardReaderProviderApiTests_${platform}
+      gatherCoverageData: true
+  CardReaderAccess:
+    type: framework
+    platform: [iOS,macOS]
+    sources:
+      - Sources/CardReaderAccess
+    info:
+      path: Resources/CardReaderAccess_Info.plist
+    dependencies:
+      - target: CardReaderProviderApi_${platform}
+    scheme:
+      testTargets:
+        - CardReaderAccessTests_${platform}
+      gatherCoverageData: true
+  CardReaderProviderApiTests:
+    type: bundle.unit-test
+    platform: [macOS,iOS]
+    info:
+      path: Resources/CardReaderProviderApiTests_Info.plist
+    sources:
+      - Tests/CardReaderProviderApiTests
+    dependencies:
+      - target: CardReaderProviderApi_${platform}
+      - framework: Carthage/Build/Nimble.xcframework
+  CardReaderAccessTests:
+    type: bundle.unit-test
+    platform: [macOS,iOS]
+    info:
+      path: Resources/CardReaderAccessTests_Info.plist
+    sources:
+      - Tests/CardReaderAccessTests
+    dependencies:
+      - target: CardReaderAccess_${platform}
+      - framework: Carthage/Build/Nimble.xcframework
+  HealthCardAccess:
+    type: framework
+    platform: [macOS,iOS]
+    info:
+      path: Resources/HealthCardAccess_Info.plist
+    sources:
+      - Sources/HealthCardAccess
+    dependencies:
+      - sdk: Combine.framework
+      - target: CardReaderAccess_${platform}
+      - target: CardReaderProviderApi_${platform}
+      - framework: Carthage/Build/ASN1Kit.xcframework
+      - framework: Carthage/Build/DataKit.xcframework
+    transitivelyLinkDependencies: true
+    scheme:
+      testTargets:
+        - HealthCardAccessTests_${platform}
+      gatherCoverageData: true
+  HealthCardAccessTests:
+    type: bundle.unit-test
+    platform: [macOS,iOS]
+    info:
+      path: Resources/HealthCardAccessTests_Info.plist
+    sources:
+      - path: Tests/HealthCardAccessTests
+      - path: Tests/Util
+    dependencies:
+      - target: HealthCardAccess_${platform}
+      - framework: Carthage/Build/ObjCCommonsKit.xcframework
+      - framework: Carthage/Build/Nimble.xcframework
+  HealthCardControl:
+    type: framework
+    platform: [iOS,macOS]
+    info:
+      path: Resources/HealthCardControl_Info.plist
+    sources:
+      - path: Sources/HealthCardControl
+    dependencies:
+      - target: HealthCardAccess_${platform}
+      - framework: Carthage/Build/OpenSSL.xcframework
+    transitivelyLinkDependencies: true
+    scheme:
+      testTargets:
+        - HealthCardControlTests_${platform}
+      gatherCoverageData: true
+  HealthCardControlTests:
+    name: HealthCardControlTests_${platform}
+    type: bundle.unit-test
+    platform: [macOS,iOS]
+    info:
+      path: Resources/HealthCardControlTests_Info.plist
+    sources:
+      - path: Tests/HealthCardControlTests
+      - path: Tests/Util
+    dependencies:
+      - target: HealthCardControl_${platform}
+      - framework: Carthage/Build/Nimble.xcframework
+  NFCCardReaderProvider:
+    type: framework
+    platform: iOS
+    info:
+      path: Resources/NFCCardReaderProvider_Info.plist
+    sources:
+      - Sources/NFCCardReaderProvider
+    dependencies:
+      - target: HealthCardAccess_iOS
+      - framework: Carthage/Build/GemCommonsKit.xcframework
+      - sdk: CoreNFC.framework
+    scheme:
+      testTargets:
+        - NFCCardReaderProviderTests
+      gatherCoverageData: true
+  NFCCardReaderProviderTests:
+    type: bundle.unit-test
+    platform: iOS
+    info:
+      path: Resources/NFCCardReaderProviderTests_Info.plist
+    sources:
+      - Tests/NFCCardReaderProviderTests
+    dependencies:
+      - target: NFCCardReaderProvider
+      - framework: Carthage/Build/Nimble.xcframework
+
+buildImplicitDependencies: true

@@ -1,0 +1,102 @@
+include::config.adoc[]
+
+[#HealthCardAccess]
+=== HealthCardAccess
+This library contains the classes for cards, commands, card file systems and error handling.
+
+==== HealthCardAccess API
+
+The HealthCardAccessKit API Structure contains the `HealthCard` class representing all supported card types,
+the `Commands` and `Responses` groups with all supported commands and responses for health cards,
+the `CardObjects` group with the possible objects on a health cards
+and the `Operation` group for cascading and executing commands on health cards.
+
+===== Health Cards
+The class `HealthCard` represents the potential types of health cards by storing a `HealthCardStatus` property which in
+case of being _valid_ by itself stores a `HealthCardPropertyType` which at the time of writing is represented by either
+one of the following
+
+- egk ("elektronische Gesundheitskarte")
+- hba ("Heilberufeausweis")
+- smcb ("Security Module Card Typ B").
+
+The `HealthCardPropertyType` by itself stores the `CardGeneration` (G1, G1P, G2, G2.1) as well.
+
+Furthermore the `HealthCard` object contains the physical card from a card reader and the current card channel.
+
+===== Commands
+
+The `Commands` groups contains all available `HealthCardCommand` objects for health cards through the `HealthCardCommandBuilder`.
+
+
+==== Code Samples
+
+===== Create a command
+The design of this API follows the link:https://en.wikipedia.org/wiki/Command_pattern[command design pattern]
+leveraging Swift's https://developer.apple.com/documentation/combine/[Combine Framework].
+The command objects are designed to fulfil the use-cases described in the link:https://www.vesta-gematik.de/standards/detail/standards/spezifikation-des-card-operating-system-cos-elektrische-schnittstelle-1/[Gematik COS specification].
+After creating a command object resp. sequence you can execute it on a Healthcard with the help of `publisher(for:)`.
+More information on how to configure the commands can also be found in the Gematik COS specification.
+
+Following example shall send a +SELECT+ and a +READ+ command to a smart card
+in order to select and read the certificate stored in the file +EF.C.CH.AUT.R2048+ in the application +ESIGN+.
+
+First we want to to create a `SelectCommand` object passing a `ApplicationIdentifier`. We use one of the predefined
+helper functions by using `HealthCardCommand.Select`.
+
+One could also use the `HealthCardCommandBuilder` to construct a customized `HealthCardCommand`
+by setting the APDU-bytes manually.
+
+[source,swift]
+----
+include::{integrationitestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=createCommand,indent=0]
+----
+
+===== Setting an execution target
+
+We execute the created command `CardType` instance which has been typically provided by a `CardReaderType`.
+
+In the next example we use a `HealthCard` object representing an eGK (elektronische Gesundheitskarte)
+as one kind of a `HealthCardType` implementing the `CardType` protocol.
+
+[source,swift]
+----
+include::{integrationitestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=setExecutionTarget,indent=0]
+----
+
+A created command can be lifted to the Combine framework with `publisher(for:writetimeout:readtimeout)`.
+The result of the command execution can be validated against an expected `ResponseStatus`,
+e.g. +SUCCESS+ (+0x9000+).
+
+[source,swift]
+----
+include::{integrationitestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=evaluateResponseStatus,indent=0]
+----
+
+===== Create a Command Sequence
+
+It is possible to chain further commands via the `flatMap` operator for subsequent execution:
+First create a command and lift it onto a Combine monad, then create a publisher using the `flatMap` operator, e.g.
+
+```
+Just(AnyHealthCardCommand.build())
+    .flatMap { command in command.pusblisher(for: card) }
+```
+
+Eventually use `eraseToAnyPublisher()`.
+
+[source,swift]
+----
+include::{integrationitestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=createCommandSequence,indent=0]
+----
+
+===== Process Execution result
+
+When the whole command chain is set up we have to subscribe to it.
+We really only will receive one value before completion, so something as simple as this `sink()`
+convenience publisher is useful.
+
+[source,swift]
+----
+include::{integrationitestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=processExecutionResult,indent=0]
+----
