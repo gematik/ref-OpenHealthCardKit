@@ -1,3 +1,13 @@
+# Release 3.0.5
+
+## feature
+
+- App Icon
+
+## bugfix
+
+- fix dependencies for app target
+
 # Release 3.0.3
 
 ## Features

@@ -68,6 +68,7 @@ targets:
       - target: CardReaderAccess_iOS
       - target: NFCCardReaderProvider
       - framework: Carthage/Build/ASN1Kit.xcframework
+      - framework: Carthage/Build/OpenSSL.xcframework
       - target: HealthCardAccess_iOS
       - target: HealthCardControl_iOS
       - sdk: CoreNFC.framework

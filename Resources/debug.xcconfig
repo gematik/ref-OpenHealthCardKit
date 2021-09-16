@@ -1,1 +1,4 @@
 SWIFT_COMPILATION_MODE = incremental
+
+CODE_SIGN_IDENTITY = Apple Development
+CODE_SIGN_STYLE = Automatic

@@ -122,7 +122,7 @@ extension Publisher where Output == HealthCardType, Self.Failure == Swift.Error 
                      secureCard.sign(data: payload)
                         .tryMap { response in
                             if response.responseStatus == ResponseStatus.success, let signature = response.data {
-                                Swift.print("SIGNATURE: \(signature.utf8string ?? "<NO SIGNATURE>")")
+                                Swift.print("SIGNATURE: \(signature.hexString())")
                                 return signature
                             } else {
                                 throw NFCLoginController.Error.signatureFailure
