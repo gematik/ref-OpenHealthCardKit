@@ -1,0 +1,75 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/tst_tt_build/jenkins/workspace/OpenHealthCardKit-GitHub-Publish-Prepare/Sources/Helper/CommandLogger.swift",
+      "line": 13,
+      "symbol": "Command",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tst_tt_build/jenkins/workspace/OpenHealthCardKit-GitHub-Publish-Prepare/Sources/Helper/CommandLogger.swift",
+      "line": 14,
+      "symbol": "Command.CommunicationType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tst_tt_build/jenkins/workspace/OpenHealthCardKit-GitHub-Publish-Prepare/Sources/Helper/CommandLogger.swift",
+      "line": 15,
+      "symbol": "Command.CommunicationType.send",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tst_tt_build/jenkins/workspace/OpenHealthCardKit-GitHub-Publish-Prepare/Sources/Helper/CommandLogger.swift",
+      "line": 16,
+      "symbol": "Command.CommunicationType.sendSecureChannel",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tst_tt_build/jenkins/workspace/OpenHealthCardKit-GitHub-Publish-Prepare/Sources/Helper/CommandLogger.swift",
+      "line": 17,
+      "symbol": "Command.CommunicationType.response",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tst_tt_build/jenkins/workspace/OpenHealthCardKit-GitHub-Publish-Prepare/Sources/Helper/CommandLogger.swift",
+      "line": 18,
+      "symbol": "Command.CommunicationType.responseSecureChannel",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tst_tt_build/jenkins/workspace/OpenHealthCardKit-GitHub-Publish-Prepare/Sources/Helper/CommandLogger.swift",
+      "line": 19,
+      "symbol": "Command.CommunicationType.description",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tst_tt_build/jenkins/workspace/OpenHealthCardKit-GitHub-Publish-Prepare/Sources/Helper/CommandLogger.swift",
+      "line": 23,
+      "symbol": "Command.type",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tst_tt_build/jenkins/workspace/OpenHealthCardKit-GitHub-Publish-Prepare/Sources/Helper/CommandLogger.swift",
+      "line": 24,
+      "symbol": "Command.message",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/tst_tt_build/jenkins/workspace/OpenHealthCardKit-GitHub-Publish-Prepare/Sources/Helper/CommandLogger.swift",
+      "line": 26,
+      "symbol": "Command.init(message:type:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/tst_tt_build/jenkins/workspace/OpenHealthCardKit-GitHub-Publish-Prepare"
+}
