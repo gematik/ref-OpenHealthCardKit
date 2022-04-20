@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 import Combine
 import Foundation
 import HealthCardAccess
+import Helper
 
 /// MF/DF.ESIGN.EF.C.CH.AUT type
 public enum AutCertInfo {
@@ -66,6 +67,7 @@ extension HealthCardType {
     ///
     /// - Returns: Publisher that tries to read the authentication certificate file and ESignInfo associated to it
     public func readAutCertificate() -> AnyPublisher<AutCertificateResponse, Error> {
+        CommandLogger.commands.append(Command(message: "Read Auth Certificate", type: .description))
         let expectedFcpLength = currentCardChannel.maxResponseLength
         return Deferred { () -> AnyPublisher<AutCertificateResponse, Error> in
             guard let info = self.status.type?.autCertInfo else {

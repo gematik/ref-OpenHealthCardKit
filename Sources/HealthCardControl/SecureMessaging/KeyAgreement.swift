@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import HealthCardAccess
 import OpenSSL
 
 /// Holds functionality to negotiate a common key with a given `HealthCard` and a `CardAccessNumber`.
-public class KeyAgreement { // swiftlint:disable:this type_body_length
+public enum KeyAgreement { // swiftlint:disable:this type_body_length
     public enum Error: Swift.Error, Equatable {
         case illegalArgument
         case unexpectedFormedAnswerFromCard
@@ -182,7 +182,7 @@ public class KeyAgreement { // swiftlint:disable:this type_body_length
             }
             .tryMap { (response: HealthCardResponseType) -> Data in
                 guard let responseData = response.data,
-                    let nonceZ = try? KeyAgreement.extractPrimitive(constructedAsn1: responseData) else {
+                      let nonceZ = try? KeyAgreement.extractPrimitive(constructedAsn1: responseData) else {
                     throw KeyAgreement.Error.unexpectedFormedAnswerFromCard
                 }
                 return nonceZ
@@ -303,8 +303,8 @@ public class KeyAgreement { // swiftlint:disable:this type_body_length
 
     static func extractPrimitive(constructedAsn1: Data) throws -> Data {
         guard let asn1 = try? ASN1Decoder.decode(asn1: constructedAsn1),
-            let asn1First = asn1.data.items?.first,
-            let primitiveData = asn1First.data.primitive else {
+              let asn1First = asn1.data.items?.first,
+              let primitiveData = asn1First.data.primitive else {
             throw Error.unexpectedFormedAnswerFromCard
         }
         return primitiveData
@@ -312,9 +312,9 @@ public class KeyAgreement { // swiftlint:disable:this type_body_length
 
     static func extractProtocolIdentifier(from efAccessResponse: Data) throws -> Data {
         guard let asn1 = try? ASN1Decoder.decode(asn1: efAccessResponse),
-            let asn1FirstSet = asn1.data.items?.first,
-            let asn1Oid = asn1FirstSet.data.items?.first,
-            let `protocol` = asn1Oid.data.primitive else {
+              let asn1FirstSet = asn1.data.items?.first,
+              let asn1Oid = asn1FirstSet.data.items?.first,
+              let `protocol` = asn1Oid.data.primitive else {
             throw Error.unexpectedFormedAnswerFromCard
         }
         return `protocol`

@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import Foundation
 
 extension HealthCardCommand {
     /// These builders represent the commands in gemSpec_COS#14.7 "Komponentenauthentisierung".
-    public struct Authentication {
+    public enum Authentication {
         /// Use-case 14.7.1 External Mutual Authentication command - gemSpec_COS#14.7.1
         /// - Parameters:
         ///     - cmdData: data from the external entity to verify on the target card (N083.402 or N083.600)
@@ -28,12 +28,12 @@ extension HealthCardCommand {
         /// - Returns: the external mutual authentication command
         public static func externalMutualAuthentication(_ cmdData: Data, expectResponse flag: Bool = false) throws
             -> HealthCardCommand {
-                try builder()
-                    .set(data: cmdData)
-                    .set(ne: flag ? APDU.expectedLengthWildcardShort : nil)
-                    .set(responseStatuses: externalResponseMessages)
-                    .build()
-            }
+            try builder()
+                .set(data: cmdData)
+                .set(ne: flag ? APDU.expectedLengthWildcardShort : nil)
+                .set(responseStatuses: externalResponseMessages)
+                .build()
+        }
 
         private static let externalResponseMessages: [UInt16: ResponseStatus] = [
             ResponseStatus.success.code: .success,
@@ -78,7 +78,7 @@ extension HealthCardCommand {
     }
 
     /// Use-case ELC #14.7.2.2 and #14.7.2.3
-    public struct ELC {
+    public enum ELC {
         /// Mutual authentication with ELC - step 1 #14.7.2.2.1
         /// - Parameter keyRef: 12-bytes long public key reference
         /// - Returns: the ELC step 1 command
@@ -148,7 +148,7 @@ extension HealthCardCommand {
     }
 
     /// Use-case PACE #14.7.2.1 and #14.7.2.4
-    public struct PACE {
+    public enum PACE {
         /// Start PACE General authenticate - step 1a #14.7.2.1.1
         /// - Returns: Step 1a command
         public static func step1a() -> HealthCardCommand {
@@ -278,7 +278,7 @@ extension HealthCardCommand {
     }
 
     /// Use-cases for getting the security status for particular objects/references gemSpec_COS#14.7.3
-    public struct SecurityStatus {
+    public enum SecurityStatus {
         /// Read the security status for a given symmetric key - gemSpec_COS#14.7.3.1
         /// - Returns: the command
         public static func readStatusFor(symmetricKey: Key, dfSpecific: Bool) throws -> HealthCardCommand {
@@ -307,26 +307,26 @@ extension HealthCardCommand {
         /// - Returns: the command
         public static func readStatusFor(bitList flags: Data, oid: ASN1Kit.ObjectIdentifier) throws
             -> HealthCardCommand {
-                guard oid == oidCvcFlCms || oid == oidCvcFlTi else {
-                    throw HealthCardCommandBuilder.InvalidArgument.illegalOid(oid)
-                }
-                guard flags.count == 7 else {
-                    throw HealthCardCommandBuilder.InvalidArgument.illegalSize(flags.count, expected: 7)
-                }
-                let tag = try ASN1Kit.create(
-                    tag: .applicationTag(76),
-                    data: .constructed(
-                        [
-                            try oid.asn1encode(tag: nil),
-                            ASN1Kit.create(tag: .applicationTag(0x13), data: .primitive(flags)),
-                        ]
-                    )
-                )
-                .serialize()
-                return try builder()
-                    .set(data: tag)
-                    .build()
+            guard oid == oidCvcFlCms || oid == oidCvcFlTi else {
+                throw HealthCardCommandBuilder.InvalidArgument.illegalOid(oid)
             }
+            guard flags.count == 7 else {
+                throw HealthCardCommandBuilder.InvalidArgument.illegalSize(flags.count, expected: 7)
+            }
+            let tag = try ASN1Kit.create(
+                tag: .applicationTag(76),
+                data: .constructed(
+                    [
+                        try oid.asn1encode(tag: nil),
+                        ASN1Kit.create(tag: .applicationTag(0x13), data: .primitive(flags)),
+                    ]
+                )
+            )
+            .serialize()
+            return try builder()
+                .set(data: tag)
+                .build()
+        }
 
         // swiftlint:disable force_try
         private static let oidCvcFlCms = try! ObjectIdentifier.from(string: "{1.2.276.0.76.4.153}")

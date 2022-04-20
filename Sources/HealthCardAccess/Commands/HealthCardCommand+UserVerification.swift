@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import Foundation
 /// These commands represent the User Verification Commands (Benutzerverifikation) in gemSpec_COS#14.6
 extension HealthCardCommand {
     /// Command representing Change/Set Reference Data Command gemSpec_COS#14.6.1
-    public struct ChangeReferenceData {
+    public enum ChangeReferenceData {
         static let cla: UInt8 = 0x0
         static let ins: UInt8 = 0x24
         static let passwordChange: UInt8 = 0x0
@@ -76,7 +76,7 @@ extension HealthCardCommand {
     }
 
     /// Command representing Disable Verification Requirement Command gemSpec_COS#14.6.2
-    public struct DisableVerificationRequirement {
+    public enum DisableVerificationRequirement {
         static let cla: UInt8 = 0x0
         static let ins: UInt8 = 0x26
 
@@ -94,20 +94,20 @@ extension HealthCardCommand {
         /// - Returns: Command for a set password secret command
         public static func disable(password parameter: VerificationRequirementPasswordParameter) throws
             -> HealthCardCommand {
-                let p1: UInt8 = parameter.verificationData != nil ? 0x0 : 0x1 // swiftlint:disable:this identifier_name
-                return try HealthCardCommandBuilder()
-                    .set(cla: cla)
-                    .set(ins: ins)
-                    .set(p1: p1)
-                    .set(p2: parameter.password.calculateKeyReference(dfSpecific: parameter.dfSpecific))
-                    .set(data: parameter.verificationData?.pin)
-                    .set(responseStatuses: responseMessagesVerificationRequirement)
-                    .build()
-            }
+            let p1: UInt8 = parameter.verificationData != nil ? 0x0 : 0x1 // swiftlint:disable:this identifier_name
+            return try HealthCardCommandBuilder()
+                .set(cla: cla)
+                .set(ins: ins)
+                .set(p1: p1)
+                .set(p2: parameter.password.calculateKeyReference(dfSpecific: parameter.dfSpecific))
+                .set(data: parameter.verificationData?.pin)
+                .set(responseStatuses: responseMessagesVerificationRequirement)
+                .build()
+        }
     }
 
     /// Command representing Enable Verification Requirement Command gemSpec_COS#14.6.3
-    public struct EnableVerificationRequirement {
+    public enum EnableVerificationRequirement {
         static let cla: UInt8 = 0x0
         static let ins: UInt8 = 0x28
 
@@ -125,20 +125,20 @@ extension HealthCardCommand {
         /// - Returns: Command for a set password secret command
         public static func enable(password parameter: VerificationRequirementPasswordParameter) throws
             -> HealthCardCommand {
-                let p1: UInt8 = parameter.verificationData != nil ? 0x0 : 0x1 // swiftlint:disable:this identifier_name
-                return try HealthCardCommandBuilder()
-                    .set(cla: cla)
-                    .set(ins: ins)
-                    .set(p1: p1)
-                    .set(p2: parameter.password.calculateKeyReference(dfSpecific: parameter.dfSpecific))
-                    .set(data: parameter.verificationData?.pin)
-                    .set(responseStatuses: responseMessagesVerificationRequirement)
-                    .build()
-            }
+            let p1: UInt8 = parameter.verificationData != nil ? 0x0 : 0x1 // swiftlint:disable:this identifier_name
+            return try HealthCardCommandBuilder()
+                .set(cla: cla)
+                .set(ins: ins)
+                .set(p1: p1)
+                .set(p2: parameter.password.calculateKeyReference(dfSpecific: parameter.dfSpecific))
+                .set(data: parameter.verificationData?.pin)
+                .set(responseStatuses: responseMessagesVerificationRequirement)
+                .build()
+        }
     }
 
     /// Command representing Get Pin Status Command gemSpec_COS#14.6.4
-    public struct Status {
+    public enum Status {
         static let cla: UInt8 = 0x80
         static let ins: UInt8 = 0x20
         static let p1: UInt8 = 0x0 // swiftlint:disable:this identifier_name
@@ -191,7 +191,7 @@ extension HealthCardCommand {
     }
 
     /// Command representing Verify Secret Command gemSpec_COS#14.6.6
-    public struct Verify {
+    public enum Verify {
         static let cla: UInt8 = 0x0
         static let ins: UInt8 = 0x20
         static let p1: UInt8 = 0x0 // swiftlint:disable:this identifier_name

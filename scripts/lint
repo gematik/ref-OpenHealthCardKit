@@ -10,4 +10,5 @@ cd "$(dirname "$0")/.."
 
 echo "==> Running static analysis…"
 
-bundle exec fastlane static_code_analysis
+mint run swiftformat . --config .swiftformat --lint
+mint run swiftlint lint --strict --quiet

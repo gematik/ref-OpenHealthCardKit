@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ extension CardChannelType {
         let cardAidPublisher: AnyPublisher<CardAid, Error>
         if let cardAid = cardAid {
             cardAidPublisher = Just(cardAid)
-                .mapError { $0 as Error }
+                .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
         } else {
             cardAidPublisher = channel.determineCardAid()
@@ -84,8 +84,8 @@ extension ASN1Kit.ObjectIdentifier {
     // swiftlint:disable:next strict_fileprivate
     fileprivate static func protocolOid(from readEfCardAccessResponse: Data) throws -> ASN1Kit.ObjectIdentifier {
         guard let asn1 = try? ASN1Decoder.decode(asn1: readEfCardAccessResponse),
-            let asn1FirstSet = asn1.data.items?.first,
-            let asn1Oid = asn1FirstSet.data.items?.first else {
+              let asn1FirstSet = asn1.data.items?.first,
+              let asn1Oid = asn1FirstSet.data.items?.first else {
             throw KeyAgreement.Error.unexpectedFormedAnswerFromCard
         }
         return try ObjectIdentifier(from: asn1Oid)

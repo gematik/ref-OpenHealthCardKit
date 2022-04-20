@@ -1,0 +1,71 @@
+/*
+  Localizable.strings
+  NFCDemo
+*/
+
+/*
+  CAN
+*/
+"can_txt_title" = "Zugangsnummer";
+"can_txt_can_intro" = "Bitte geben Sie Ihre Zugangsnummer (CAN) ein.";
+"can_edt_can_enter_can" = "CAN";
+"can_btn_next" = "Weiter";
+"can_txt_help_title" = "Wo kann ich meine CAN finden?";
+"can_txt_help_explanation" = "Falls sie auf Ihrer Karte keine Zugangsnummer (CAN) sehen benötigen Sie eine neue Gesundheitskarte mit NFC-Chip.";
+
+/*
+  PIN
+*/
+"pin_txt_title" = "PIN";
+"pin_txt_intro" = "Bitte geben Sie die PIN Ihrer Karte ein.";
+"pin_edt_enter_pin" = "PIN-code";
+"pin_btn_next" = "Weiter";
+"pin_txt_help" = "Ich habe keine PIN";
+"pin_txt_explanation" = "Eine PIN erhalten Sie von ihrer Krankenkasse nachdem Sie ihre NFC fähigen Gesundheitskarte erhalten haben";
+
+/*
+ StartNFC
+*/
+
+"nfc_txt_placement" = "Oberhalb der Linie anlegen 👆";
+"nfc_txt_placement_hint" = "Legen Sie jetzt Ihre Karte auf das Display und drücken Sie auf “Karte verbinden”";
+"nfc_btn_start_nfc" = "Karte verbinden";
+"nfc_btn_cancel" = "Abbrechen";
+"nfc_btn_reading_results" = "Kartenlese-Ergebnisse";
+
+
+/*
+ NFC Reader
+ */
+
+"nfc_txt_discoveryMessage" = "Bitte legen Sie die Karte auf Ihr iPhone";
+"nfc_txt_connectMessage" = "Verbinden";
+"nfc_txt_noCardMessage" = "Keine Karte gefunden";
+"nfc_txt_multipleCardsMessage" = "Es wurden mehrere Karten gefunden";
+"nfc_txt_unsupportedCardMessage" = "Karte wird nicht unterstützt";
+"nfc_txt_connectionErrorMessage" = "NFC Kommunikationsfehler";
+"nfc_txt_msg_secure_channel" = "Sichere Verbindung aufbauen...";
+"nfc_txt_msg_verify_pin" = "PIN verifizieren...";
+"nfc_txt_msg_reading_auth_cert"= "Zertifikat lesen...";
+"nfc_txt_msg_signing" = "Signieren...";
+"nfc_txt_msg_success" = "Erfolgreich signiert!";
+"nfc_txt_msg_failure" = "Fehler!";
+
+
+/*
+  Reading Results
+ */
+"rdr_txt_sec_title_commands" = "Kommandos";
+"rdr_txt_sec_title_overview" = "Übersicht";
+"rdr_txt_date" = "Datum:   ";
+"rdr_txt_result" = "Ergebnis:";
+"rdr_btn_copy" = "Kopieren";
+"rdr_txt_detail_title" = "Details";
+
+
+/*
+  Error
+*/
+"alert_error_title" = "Fehler";
+"alert_error_message_unknown" = "Unbekannter Fehler";
+"alert_btn_ok" = "Ok";

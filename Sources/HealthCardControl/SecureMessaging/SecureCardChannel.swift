@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ import CardReaderProviderApi
 import Foundation
 import GemCommonsKit
 import HealthCardAccess
+import Helper
 
 internal class SecureCardChannel: CardChannelType {
     private let channel: CardChannelType
@@ -50,12 +51,22 @@ internal class SecureCardChannel: CardChannelType {
 
     func transmit(command: CommandType, writeTimeout: TimeInterval, readTimeout: TimeInterval) throws -> ResponseType {
         DLog(">> \(command.bytes.hexString())")
+        // we only log the header bytes to prevent logging user's PIN
+        CommandLogger.commands.append(
+            Command(message: ">> \(command.bytes.prefix(4).hexString())", type: .sendSecureChannel)
+        )
         let encryptedCommand = try session.encrypt(command: command)
         let encryptedResponse = try channel.transmit(command: encryptedCommand,
                                                      writeTimeout: writeTimeout,
                                                      readTimeout: readTimeout)
         let decryptedAPDU = try session.decrypt(response: encryptedResponse)
         DLog("<< \(decryptedAPDU.sw.hexString()) | [\(decryptedAPDU.data?.hexString() ?? "")]")
+        CommandLogger.commands.append(
+            Command(
+                message: "<< \(decryptedAPDU.sw.hexString()) | [\(decryptedAPDU.data?.hexString() ?? "")]",
+                type: .responseSecureChannel
+            )
+        )
         return decryptedAPDU
     }
 

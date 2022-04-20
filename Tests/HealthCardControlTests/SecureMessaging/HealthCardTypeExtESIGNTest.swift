@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
         }
 
         var channelNumber: Int = 0
-        var extendedLengthSupported: Bool = false
+        var extendedLengthSupported = false
         var maxMessageLength: Int = 0x1000
         var maxResponseLength: Int = 0x1000
 
@@ -42,8 +42,8 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
 
         func transmit(command: CommandType, writeTimeout: TimeInterval, readTimeout: TimeInterval)
             throws -> ResponseType {
-                try handler(command, self, writeTimeout, readTimeout)
-            }
+            try handler(command, self, writeTimeout, readTimeout)
+        }
 
         func close() throws {}
     }
@@ -63,7 +63,7 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
     }
 
     func testReadAutCertificate() {
-        let fcpResourcesPath: URL =
+        let fcpResourcesPath =
             URL(fileURLWithPath: #file)
                 .deletingLastPathComponent()
                 .deletingLastPathComponent()

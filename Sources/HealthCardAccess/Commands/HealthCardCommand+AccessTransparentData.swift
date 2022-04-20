@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ extension HealthCardCommand {
     static let byteModulo = 256
 
     /// Commands representing the commands in gemSpec_COS#14.3.1
-    public struct Erase {
+    public enum Erase {
         static let eraseCommandResponseMessages: [UInt16: ResponseStatus] = [
             ResponseStatus.success.code: .success,
             ResponseStatus.updateRetryWarningCount00.code: .updateRetryWarningCount00,
@@ -66,20 +66,20 @@ extension HealthCardCommand {
         /// Use cases Erase Binary with `ShortFileIdentifier`
         public static func eraseFileCommand(with sfid: ShortFileIdentifier, offset: Int = 0) throws ->
             HealthCardCommand {
-                try HealthCardCommandBuilder.checkValidity(offset: offset, usingShortFileIdentifier: true)
+            try HealthCardCommandBuilder.checkValidity(offset: offset, usingShortFileIdentifier: true)
 
-                let p1Value = HealthCardCommandBuilder.sfidMarker + UInt8(sfid.rawValue[0])
-                let p2Value = UInt8(offset)
+            let p1Value = HealthCardCommandBuilder.sfidMarker + UInt8(sfid.rawValue[0])
+            let p2Value = UInt8(offset)
 
-                return try Erase.builder()
-                    .set(p1: p1Value)
-                    .set(p2: p2Value)
-                    .build()
-            }
+            return try Erase.builder()
+                .set(p1: p1Value)
+                .set(p2: p2Value)
+                .build()
+        }
     }
 
     /// Commands representing the commands in gemSpec_COS#14.3.2
-    public struct Read {
+    public enum Read {
         static let readCommandResponseMessages: [UInt16: ResponseStatus] = [
             ResponseStatus.success.code: .success,
             ResponseStatus.corruptDataWarning.code: .corruptDataWarning,
@@ -125,22 +125,22 @@ extension HealthCardCommand {
         public static func readFileCommand(with sfid: ShortFileIdentifier, ne: Int, offset: Int = 0) throws ->
             // swiftlint:disable:previous identifier_name
             HealthCardCommand {
-                try HealthCardCommandBuilder.checkValidity(offset: offset, usingShortFileIdentifier: true)
-                try ne.isNot(0, else: HealthCardCommandBuilder.InvalidArgument.expectedLengthMustNotBeZero)
+            try HealthCardCommandBuilder.checkValidity(offset: offset, usingShortFileIdentifier: true)
+            try ne.isNot(0, else: HealthCardCommandBuilder.InvalidArgument.expectedLengthMustNotBeZero)
 
-                let p1Value = HealthCardCommandBuilder.sfidMarker + UInt8(sfid.rawValue[0])
-                let p2Value = UInt8(offset)
+            let p1Value = HealthCardCommandBuilder.sfidMarker + UInt8(sfid.rawValue[0])
+            let p2Value = UInt8(offset)
 
-                return try Read.builder()
-                    .set(p1: p1Value)
-                    .set(p2: p2Value)
-                    .set(ne: ne)
-                    .build()
-            }
+            return try Read.builder()
+                .set(p1: p1Value)
+                .set(p2: p2Value)
+                .set(ne: ne)
+                .build()
+        }
     }
 
     /// Commands representing the commands in gemSpec_COS#14.3.4
-    public struct SetLogicalEof {
+    public enum SetLogicalEof {
         static let setLogicalEofCommandResponseMessages: [UInt16: ResponseStatus] = [
             ResponseStatus.success.code: .success,
             ResponseStatus.updateRetryWarningCount00.code: .updateRetryWarningCount00,
@@ -185,20 +185,20 @@ extension HealthCardCommand {
         /// Use cases Set Logical EOF with `ShortFileIdentifier`
         public static func setLogicalEofCommand(with sfid: ShortFileIdentifier, offset: Int = 0) throws ->
             HealthCardCommand {
-                try HealthCardCommandBuilder.checkValidity(offset: offset, usingShortFileIdentifier: true)
+            try HealthCardCommandBuilder.checkValidity(offset: offset, usingShortFileIdentifier: true)
 
-                let p1Value = HealthCardCommandBuilder.sfidMarker + UInt8(sfid.rawValue[0])
-                let p2Value = UInt8(offset)
+            let p1Value = HealthCardCommandBuilder.sfidMarker + UInt8(sfid.rawValue[0])
+            let p2Value = UInt8(offset)
 
-                return try SetLogicalEof.builder()
-                    .set(p1: p1Value)
-                    .set(p2: p2Value)
-                    .build()
-            }
+            return try SetLogicalEof.builder()
+                .set(p1: p1Value)
+                .set(p2: p2Value)
+                .build()
+        }
     }
 
     /// Commands representing the commands in gemSpec_COS#14.3.5
-    public struct Update {
+    public enum Update {
         static let updateCommandResponseMessages: [UInt16: ResponseStatus] = [
             ResponseStatus.success.code: .success,
             ResponseStatus.updateRetryWarningCount00.code: .updateRetryWarningCount00,
@@ -243,21 +243,21 @@ extension HealthCardCommand {
         /// Use cases Update Binary with `ShortFileIdentifier`
         public static func updateCommand(with sfid: ShortFileIdentifier, data: Data, offset: Int = 0) throws ->
             HealthCardCommand {
-                try HealthCardCommandBuilder.checkValidity(offset: offset, usingShortFileIdentifier: true)
+            try HealthCardCommandBuilder.checkValidity(offset: offset, usingShortFileIdentifier: true)
 
-                let p1Value = HealthCardCommandBuilder.sfidMarker + UInt8(sfid.rawValue[0])
-                let p2Value = UInt8(offset)
+            let p1Value = HealthCardCommandBuilder.sfidMarker + UInt8(sfid.rawValue[0])
+            let p2Value = UInt8(offset)
 
-                return try Update.builder()
-                    .set(p1: p1Value)
-                    .set(p2: p2Value)
-                    .set(data: data)
-                    .build()
-            }
+            return try Update.builder()
+                .set(p1: p1Value)
+                .set(p2: p2Value)
+                .set(data: data)
+                .build()
+        }
     }
 
     /// Commands representing the commands in gemSpec_COS#14.3.6
-    public struct Write {
+    public enum Write {
         static let writeCommandResponseMessages: [UInt16: ResponseStatus] = [
             ResponseStatus.success.code: .success,
             ResponseStatus.updateRetryWarningCount00.code: .updateRetryWarningCount00,

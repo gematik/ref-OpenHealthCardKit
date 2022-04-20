@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import Combine
 import Foundation
 import GemCommonsKit
 import HealthCardAccess
+import Helper
 
 /// Extensions on CardType to negotiate a PACE session key for further secure
 extension CardType {
@@ -34,8 +35,9 @@ extension CardType {
     ///     - readTimeout: time in seconds. Default 30
     /// - Returns: Publisher that negotiates a secure session when scheduled to run.
     public func openSecureSession(can: CAN, writeTimeout: TimeInterval = 30, readTimeout: TimeInterval = 30)
-        -> AnyPublisher<SecureHealthCardType, Error> {
-        Deferred { () -> AnyPublisher<CardChannelType, Error> in
+        -> AnyPublisher<HealthCardType, Error> {
+        CommandLogger.commands.append(Command(message: "Open secure Session", type: .description))
+        return Deferred { () -> AnyPublisher<CardChannelType, Error> in
             do {
                 return try Just(self.openBasicChannel()).setFailureType(to: Error.self).eraseToAnyPublisher()
             } catch {

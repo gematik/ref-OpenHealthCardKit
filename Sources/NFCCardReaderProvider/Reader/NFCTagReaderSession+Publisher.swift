@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -154,7 +154,7 @@ extension NFCTagReaderSession.Publisher {
             self.messages = messages
             self.queue = queue
             super.init()
-            if let mNfcReaderSession = NFCTagReaderSession(pollingOption: pollingOption, delegate: self) {
+            if let mNfcReaderSession = NFCTagReaderSession(pollingOption: pollingOption, delegate: self, queue: queue) {
                 session = mNfcReaderSession
                 mNfcReaderSession.alertMessage = messages.discoveryMessage
                 DLog("Starting session: \(mNfcReaderSession)")
@@ -217,8 +217,9 @@ extension NFCTagReaderSession.Publisher {
 
         func tagReaderSession(_: NFCTagReaderSession, didInvalidateWithError error: Swift.Error) {
             DLog("NFC reader session was invalidated: \(error)")
-            if (error as NSError).code == 200 {
-                if self.card != nil {
+            if (error as NSError).code == 200 { // error on session.invalidate()
+                if card != nil {
+                    // If there is a card the process finished successful
                     complete(with: nil)
                 } else {
                     complete(with: .userCancelled(error: error))
@@ -233,11 +234,17 @@ extension NFCTagReaderSession.Publisher {
             DLog("tagReaderSession:didDetect - [\(tags)]")
             if tags.count > 1 {
                 session.alertMessage = messages.multipleCardsMessage
+                DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(500)) {
+                    session.restartPolling()
+                }
                 return
             }
 
             guard let tag = tags.first else {
                 session.alertMessage = messages.noCardMessage
+                DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(500)) {
+                    session.restartPolling()
+                }
                 return
             }
             guard case let .iso7816(nfcTag) = tag else {

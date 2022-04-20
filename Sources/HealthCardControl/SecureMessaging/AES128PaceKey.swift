@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -49,10 +49,10 @@ class AES128PaceKey: SecureMessaging {
     func encrypt(command: CommandType) throws -> CommandType {
         secureMessagingSsc = AES128PaceKey.incrementSsc(ssc: secureMessagingSsc)
         let encryptedMessage = try AES128PaceKey.encrypt(
-                command: command,
-                enc: enc,
-                mac: mac,
-                ssc: secureMessagingSsc
+            command: command,
+            enc: enc,
+            mac: mac,
+            ssc: secureMessagingSsc
         )
         secureMessagingSsc = AES128PaceKey.incrementSsc(ssc: secureMessagingSsc)
         return encryptedMessage
@@ -196,7 +196,7 @@ class AES128PaceKey: SecureMessaging {
                 // Encrypted data - N033.800
                 let initVector = try AES.CBC128.encrypt(data: ssc, key: enc)
                 let paddedDecryptedData =
-                        try AES.CBC128.decrypt(data: messageBodyData[1...], key: enc, initVector: initVector)
+                    try AES.CBC128.decrypt(data: messageBodyData[1...], key: enc, initVector: initVector)
                 let decryptedData = paddedDecryptedData.removePadding()
                 return try APDU.Response(apdu: decryptedData + statusBytes)
             } else if messageBody.tagNo == 0x1 {
@@ -240,6 +240,7 @@ class AES128PaceKey: SecureMessaging {
 
 extension Data {
     // ISO/IEC 7816-4 padding functions
+    // swiftlint:disable:next strict_fileprivate
     fileprivate func addPadding(_ delimiter: UInt8 = AES128PaceKey.paddingDelimiter,
                                 blockSize: Int = AES128PaceKey.blockSize) -> Data {
         var padded = self + Data(repeating: 0x0, count: blockSize - count % blockSize)
@@ -249,6 +250,7 @@ extension Data {
         return padded
     }
 
+    // swiftlint:disable:next strict_fileprivate
     fileprivate func removePadding(afterLast delimiter: UInt8 = AES128PaceKey.paddingDelimiter) -> Data {
         let result: Data
         if let lastIndex = lastIndex(of: delimiter) {

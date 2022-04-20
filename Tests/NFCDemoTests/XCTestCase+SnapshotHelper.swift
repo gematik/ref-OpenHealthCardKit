@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -14,14 +14,18 @@
 //  limitations under the License.
 //
 
+import SnapshotTesting
 import SwiftUI
+import XCTest
 
-struct BackgroundView: View {
-    var body: some View {
-        LinearGradient(
-            gradient: Gradient(colors: [Colors.primaryBlue, Colors.secondaryBlue1]),
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        ).edgesIgnoringSafeArea(.vertical)
+extension XCTestCase {
+    func snapshotModi<T>() -> [String: Snapshotting<T, UIImage>] where T: SwiftUI.View {
+        [
+            "light": .image,
+            "dark": .image(precision: 1, traits: UITraitCollection(userInterfaceStyle: .dark)),
+            "XXXL": .image(traits:
+                UITraitCollection(preferredContentSizeCategory: .extraExtraExtraLarge)),
+            "XS": .image(traits: UITraitCollection(preferredContentSizeCategory: .extraSmall)),
+        ]
     }
 }

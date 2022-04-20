@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 import Foundation
 
-enum ViewState<Value, Failure: Error> {
+enum ViewState<Value, Failure> {
     case idle
     case loading(Value?)
     case value(Value)
@@ -24,6 +24,13 @@ enum ViewState<Value, Failure: Error> {
 
     var isLoading: Bool {
         if case .loading = self {
+            return true
+        }
+        return false
+    }
+
+    var isIdle: Bool {
+        if case .idle = self {
             return true
         }
         return false

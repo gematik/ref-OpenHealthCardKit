@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import GemCommonsKit
 
 extension HealthCardCommand {
     /// Use case Manage Security Environment - gemSpec_COS#14.9.9
-    public struct ManageSE {
+    public enum ManageSE {
         private static let cla: UInt8 = 0x0
         private static let ins: UInt8 = 0x22
 
@@ -47,12 +47,12 @@ extension HealthCardCommand {
         /// - Returns: The select key command
         public static func selectInternal(symmetricKey: Key, dfSpecific: Bool, algorithm: PSOAlgorithm) throws
             -> HealthCardCommand {
-                try select(key: symmetricKey.calculateKeyReference(dfSpecific: dfSpecific).bytes,
-                           algorithm: algorithm,
-                           tag: .taggedTag(3))
-                    .set(p1: 0x41)
-                    .build()
-            }
+            try select(key: symmetricKey.calculateKeyReference(dfSpecific: dfSpecific).bytes,
+                       algorithm: algorithm,
+                       tag: .taggedTag(3))
+                .set(p1: 0x41)
+                .build()
+        }
 
         /// Select internal key for asymmetric authentication - gemSpec_COS#14.9.9.3
         /// - Parameters:
@@ -62,12 +62,12 @@ extension HealthCardCommand {
         /// - Returns: The select key command
         public static func selectInternal(asymmetricKey: Key, dfSpecific: Bool, algorithm: PSOAlgorithm) throws
             -> HealthCardCommand {
-                try select(key: asymmetricKey.calculateKeyReference(dfSpecific: dfSpecific).bytes,
-                           algorithm: algorithm,
-                           tag: .taggedTag(4))
-                    .set(p1: 0x41)
-                    .build()
-            }
+            try select(key: asymmetricKey.calculateKeyReference(dfSpecific: dfSpecific).bytes,
+                       algorithm: algorithm,
+                       tag: .taggedTag(4))
+                .set(p1: 0x41)
+                .build()
+        }
 
         /// Select external key for symmetric authentication - gemSpec_COS#14.9.9.4
         /// - Parameters:
@@ -77,12 +77,12 @@ extension HealthCardCommand {
         /// - Returns: The select key command
         public static func selectExternal(symmetricKey: Key, dfSpecific: Bool, algorithm: PSOAlgorithm) throws
             -> HealthCardCommand {
-                try select(key: symmetricKey.calculateKeyReference(dfSpecific: dfSpecific).bytes,
-                           algorithm: algorithm,
-                           tag: .taggedTag(3))
-                    .set(p1: 0x81)
-                    .build()
-            }
+            try select(key: symmetricKey.calculateKeyReference(dfSpecific: dfSpecific).bytes,
+                       algorithm: algorithm,
+                       tag: .taggedTag(3))
+                .set(p1: 0x81)
+                .build()
+        }
 
         /// Select external key for asymmetric authentication - gemSpec_COS#14.9.9.5
         /// - Parameters:
@@ -93,13 +93,13 @@ extension HealthCardCommand {
         /// - Returns: The select key command
         public static func selectExternal(referenceKey: Data, algorithm: PSOAlgorithm) throws
             -> HealthCardCommand {
-                guard referenceKey.count == 12 else {
-                    throw HealthCardCommandBuilder.InvalidArgument.illegalSize(referenceKey.count, expected: 12)
-                }
-                return try select(key: referenceKey, algorithm: algorithm, tag: .taggedTag(3))
-                    .set(p1: 0x81)
-                    .build()
+            guard referenceKey.count == 12 else {
+                throw HealthCardCommandBuilder.InvalidArgument.illegalSize(referenceKey.count, expected: 12)
             }
+            return try select(key: referenceKey, algorithm: algorithm, tag: .taggedTag(3))
+                .set(p1: 0x81)
+                .build()
+        }
 
         /// Select symmetric key for mutual authentication - gemSpec_COS#14.9.9.6
         /// - Parameters:
@@ -109,30 +109,30 @@ extension HealthCardCommand {
         /// - Returns: The select key command
         public static func selectMutual(symmetricKey: Key, dfSpecific: Bool, algorithm: PSOAlgorithm) throws
             -> HealthCardCommand {
-                try select(key: symmetricKey.calculateKeyReference(dfSpecific: dfSpecific).bytes,
-                           algorithm: algorithm,
-                           tag: .taggedTag(3))
-                    .set(p1: 0x81)
-                    .build()
-            }
+            try select(key: symmetricKey.calculateKeyReference(dfSpecific: dfSpecific).bytes,
+                       algorithm: algorithm,
+                       tag: .taggedTag(3))
+                .set(p1: 0x81)
+                .build()
+        }
 
         private static func select(key: Data, algorithm: PSOAlgorithm?, tag: ASN1DecodedTag) throws
             -> HealthCardCommandBuilder {
-                let keySerialized = try ASN1Kit.create(tag: tag, data: .primitive(key)).serialize()
-                let algIdSerialized: Data?
-                if let algorithm = algorithm {
-                    algIdSerialized = try ASN1Kit.create(
-                        tag: .taggedTag(0),
-                        data: .primitive(algorithm.identifier.bytes)
-                    )
-                    .serialize()
-                } else {
-                    algIdSerialized = nil
-                }
-                return builder()
-                    .set(data: keySerialized + (algIdSerialized ?? Data()))
-                    .set(p2: 0xA4)
+            let keySerialized = try ASN1Kit.create(tag: tag, data: .primitive(key)).serialize()
+            let algIdSerialized: Data?
+            if let algorithm = algorithm {
+                algIdSerialized = try ASN1Kit.create(
+                    tag: .taggedTag(0),
+                    data: .primitive(algorithm.identifier.bytes)
+                )
+                .serialize()
+            } else {
+                algIdSerialized = nil
             }
+            return builder()
+                .set(data: keySerialized + (algIdSerialized ?? Data()))
+                .set(p2: 0xA4)
+        }
 
         /// Select symmetric key for PACE authentication without specifying the curve - gemSpec_COS#14.9.9.7
         /// - Parameters:
@@ -142,20 +142,20 @@ extension HealthCardCommand {
         /// - Returns: The select key command
         public static func selectPACE(symmetricKey: Key, dfSpecific: Bool, oid: ASN1Kit.ObjectIdentifier) throws
             -> HealthCardCommand {
-                let serializedOID = try ASN1Kit.create(tag: .taggedTag(0), data: oid.asn1encode(tag: nil).data)
-                    .serialize()
-                let serializedKey =
-                    try ASN1Kit.create(
-                        tag: .taggedTag(3),
-                        data: .primitive(symmetricKey.calculateKeyReference(dfSpecific: dfSpecific).bytes)
-                    )
-                    .serialize()
-                return try builder()
-                    .set(p1: 0xC1)
-                    .set(p2: 0xA4)
-                    .set(data: serializedOID + serializedKey)
-                    .build()
-            }
+            let serializedOID = try ASN1Kit.create(tag: .taggedTag(0), data: oid.asn1encode(tag: nil).data)
+                .serialize()
+            let serializedKey =
+                try ASN1Kit.create(
+                    tag: .taggedTag(3),
+                    data: .primitive(symmetricKey.calculateKeyReference(dfSpecific: dfSpecific).bytes)
+                )
+                .serialize()
+            return try builder()
+                .set(p1: 0xC1)
+                .set(p2: 0xA4)
+                .set(data: serializedOID + serializedKey)
+                .build()
+        }
 
         /// Domain Id parameter = gemSpec_COS#14.9.9.8 N102.454
         public enum DomainId: UInt8 {
@@ -194,13 +194,13 @@ extension HealthCardCommand {
         /// - Returns: The select key command
         public static func selectSigning(key: Key, dfSpecific: Bool, algorithm: PSOAlgorithm) throws
             -> HealthCardCommand {
-                try select(key: key.calculateKeyReference(dfSpecific: dfSpecific).bytes,
-                           algorithm: algorithm,
-                           tag: .taggedTag(4))
-                    .set(p1: 0x41)
-                    .set(p2: 0xB6)
-                    .build()
-            }
+            try select(key: key.calculateKeyReference(dfSpecific: dfSpecific).bytes,
+                       algorithm: algorithm,
+                       tag: .taggedTag(4))
+                .set(p1: 0x41)
+                .set(p2: 0xB6)
+                .build()
+        }
 
         /// Select CVC key - gemSpec_COS#14.9.9.10
         /// - Parameters:
@@ -209,14 +209,14 @@ extension HealthCardCommand {
         /// - Returns: The select key command
         public static func selectCVC(referenceKey: Data) throws
             -> HealthCardCommand {
-                guard referenceKey.count == 8 else {
-                    throw HealthCardCommandBuilder.InvalidArgument.illegalSize(referenceKey.count, expected: 8)
-                }
-                return try select(key: referenceKey, algorithm: nil, tag: .taggedTag(3))
-                    .set(p1: 0x81)
-                    .set(p2: 0xB6)
-                    .build()
+            guard referenceKey.count == 8 else {
+                throw HealthCardCommandBuilder.InvalidArgument.illegalSize(referenceKey.count, expected: 8)
             }
+            return try select(key: referenceKey, algorithm: nil, tag: .taggedTag(3))
+                .set(p1: 0x81)
+                .set(p2: 0xB6)
+                .build()
+        }
 
         /// Select decipher key for decrypting - gemSpec_COS#14.9.9.11
         /// - Parameters:
@@ -226,13 +226,13 @@ extension HealthCardCommand {
         /// - Returns: The select decipher key command
         public static func selectDecipher(key: Key, dfSpecific: Bool, algorithm: PSOAlgorithm) throws
             -> HealthCardCommand {
-                try select(key: key.calculateKeyReference(dfSpecific: dfSpecific).bytes,
-                           algorithm: algorithm,
-                           tag: .taggedTag(4))
-                    .set(p1: 0x41)
-                    .set(p2: 0xB8)
-                    .build()
-            }
+            try select(key: key.calculateKeyReference(dfSpecific: dfSpecific).bytes,
+                       algorithm: algorithm,
+                       tag: .taggedTag(4))
+                .set(p1: 0x41)
+                .set(p2: 0xB8)
+                .build()
+        }
 
         /// Select encipher key for encrypting - gemSpec_COS#14.9.9.12
         /// - Parameters:

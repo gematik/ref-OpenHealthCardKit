@@ -3,7 +3,7 @@ options:
   bundleIdPrefix: de.gematik.ti.ohcapp4ios
   deploymentTarget:
     macOS: 10.15
-    iOS: 13.0
+    iOS: 14.0
   minimumXcodeGenVersion: 2.3.0
 schemes:
   AllTests_iOS:
@@ -20,6 +20,7 @@ schemes:
         - HealthCardAccessTests_iOS
         - HealthCardControlTests_iOS
         - NFCCardReaderProviderTests
+        - NFCDemoTests
   AllTests_macOS:
     build:
       targets:
@@ -31,6 +32,21 @@ schemes:
         - CardReaderAccessTests_macOS
         - HealthCardAccessTests_macOS
         - HealthCardControlTests_macOS
+  AllSnapshotTests:
+    build:
+      targets:
+        NFCDemo: all
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - NFCDemo
+      targets:
+        - NFCDemoTests
+
+packages:
+  SnapshotTesting:
+    url: https://github.com/pointfreeco/swift-snapshot-testing
+    majorVersion: 1.9.0
 settings:
   base:
     CODE_SIGN_IDENTITY: ""
@@ -61,12 +77,15 @@ targets:
       - Sources/NFCDemo
     scheme:
       testTargets:
+        - NFCDemoTests
+      gatherCoverageData: false
     dependencies:
       - framework: Carthage/Build/DataKit.xcframework
       - framework: Carthage/Build/GemCommonsKit.xcframework
       - target: CardReaderProviderApi_iOS
       - target: CardReaderAccess_iOS
       - target: NFCCardReaderProvider
+      - target: Helper_iOS
       - framework: Carthage/Build/ASN1Kit.xcframework
       - framework: Carthage/Build/OpenSSL.xcframework
       - target: HealthCardAccess_iOS
@@ -74,6 +93,18 @@ targets:
       - sdk: CoreNFC.framework
       - sdk: Combine.framework
       - sdk: SwiftUI.framework
+  NFCDemoTests:
+    type: bundle.unit-test
+    platform: iOS
+    info:
+      path: Tests/NFCDemoTests/Resources/Info.plist
+    sources:
+      - path: Tests/NFCDemoTests
+        excludes:
+          - "**/__Snapshots__/**"
+    dependencies:
+      - target: NFCDemo
+      - package: SnapshotTesting 
   CardReaderProviderApi:
     type: framework
     platform: [iOS,macOS]
@@ -83,6 +114,7 @@ targets:
       path: Resources/CardReaderProviderApi_Info.plist
     dependencies:
       - framework: Carthage/Build/GemCommonsKit.xcframework
+      - target: Helper_${platform}
     scheme:
       testTargets:
         - CardReaderProviderApiTests_${platform}
@@ -96,10 +128,20 @@ targets:
       path: Resources/CardReaderAccess_Info.plist
     dependencies:
       - target: CardReaderProviderApi_${platform}
+      - target: Helper_${platform}
     scheme:
       testTargets:
         - CardReaderAccessTests_${platform}
       gatherCoverageData: true
+  Helper:
+    type: framework
+    platform: [iOS,macOS]
+    sources:
+      - Sources/Helper
+    info:
+      path: Resources/Helper_Info.plist
+    scheme:
+      gatherCoverageData: true 
   CardReaderProviderApiTests:
     type: bundle.unit-test
     platform: [macOS,iOS]
@@ -159,6 +201,7 @@ targets:
       - path: Sources/HealthCardControl
     dependencies:
       - target: HealthCardAccess_${platform}
+      - target: Helper_${platform}
       - framework: Carthage/Build/OpenSSL.xcframework
     transitivelyLinkDependencies: true
     scheme:
@@ -186,6 +229,7 @@ targets:
       - Sources/NFCCardReaderProvider
     dependencies:
       - target: HealthCardAccess_iOS
+      - target: Helper_iOS
       - framework: Carthage/Build/GemCommonsKit.xcframework
       - sdk: CoreNFC.framework
     scheme:

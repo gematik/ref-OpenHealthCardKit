@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import GemCommonsKit
 
 extension HealthCardCommand {
     /// Builder representing Miscellaneous Commands in gemSpec_COS#14.9
-    public struct Misc {
+    public enum Misc {
         /// Use case verify COS Fingerprint gemSpec_COS#14.9.2.1
         /// - Parameter prefix: the prefix data 128 bytes
         /// - Throws: when prefix is not 128 long

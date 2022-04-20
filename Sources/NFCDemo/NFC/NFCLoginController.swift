@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -20,14 +20,32 @@ import CoreNFC
 import Foundation
 import HealthCardAccess
 import HealthCardControl
+import Helper
 import NFCCardReaderProvider
 
-class NFCLoginController: LoginController {
-    enum Error: Swift.Error {
+public class NFCLoginController: LoginController {
+    public enum Error: Swift.Error, LocalizedError {
         /// In case the PIN or CAN could not be constructed from input
+        case cardError(NFCTagReaderSession.Error)
         case invalidCanOrPinFormat
         case wrongPin(retryCount: Int)
-        case signatureFailure
+        case signatureFailure(ResponseStatus)
+        case invalidAlgorithm(PSOAlgorithm)
+
+        public var errorDescription: String? {
+            switch self {
+            case let .cardError(error):
+                return error.localizedDescription
+            case .invalidCanOrPinFormat:
+                return "invalid CAN or PIN format"
+            case let .wrongPin(retryCount: retryCount):
+                return "wrong pin with retry count \(retryCount)."
+            case let .signatureFailure(status):
+                return "signatureFailure with response status code: \(status.code)"
+            case let .invalidAlgorithm(algorithm):
+                return "SmartCard is not using a brainpoolP256r1 algorithm for signing. Uses: \(algorithm)"
+            }
+        }
     }
 
     @Published
@@ -46,86 +64,122 @@ class NFCLoginController: LoginController {
         }
     }
 
-    func login(can: String, pin: String) {
-        if case .loading = pState {
-            return
-        }
+    let messages = NFCTagReaderSession.Messages(
+        discoveryMessage: NSLocalizedString("nfc_txt_discoveryMessage", comment: ""),
+        connectMessage: NSLocalizedString("nfc_txt_connectMessage", comment: ""),
+        noCardMessage: NSLocalizedString("nfc_txt_noCardMessage", comment: ""),
+        multipleCardsMessage: NSLocalizedString("nfc_txt_multipleCardsMessage", comment: ""),
+        unsupportedCardMessage: NSLocalizedString("nfc_txt_unsupportedCardMessage", comment: ""),
+        connectionErrorMessage: NSLocalizedString("nfc_txt_connectionErrorMessage", comment: "")
+    )
+
+    // swiftlint:disable:next function_body_length
+    func login(can: String, pin: String, checkBrainpoolAlgorithm: Bool) {
+        if case .loading = pState { return }
         callOnMainThread {
             self.pState = .loading(nil)
         }
+        let canData: CAN
+        let format2Pin: Format2Pin
+        do {
+            canData = try CAN.from(Data(can.utf8))
+            format2Pin = try Format2Pin(pincode: pin)
+        } catch {
+            callOnMainThread {
+                self.pState = .error(Error.invalidCanOrPinFormat)
+            }
+            return
+        }
 
-        cancellable = NFCTagReaderSession.publisher(messages: NFCTagReaderSession.Messages(
-            discoveryMessage: "Please tap your eGK to your iPhone",
-            connectMessage: "Connecting",
-            noCardMessage: "No Card Found",
-            multipleCardsMessage: "Multiple cards found",
-            unsupportedCardMessage: "Unsupported card",
-            connectionErrorMessage: "NFC Communication error"
-        ))
-            .mapError { $0 as Swift.Error }
+        cancellable = NFCTagReaderSession.publisher(messages: messages)
+            .mapError { Error.cardError($0) as Swift.Error }
             .flatMap { (session: NFCCardSession) -> AnyPublisher<ViewState<Bool, Swift.Error>, Swift.Error> in
-                let canData: CAN
-                let format2Pin: Format2Pin
-                do {
-                    canData = try CAN.from(Data(can.utf8))
-                    format2Pin = try Format2Pin(pincode: pin)
-                } catch {
-                    return Fail(error: Error.invalidCanOrPinFormat as Swift.Error)
-                        .eraseToAnyPublisher()
-                }
+                session.updateAlert(message: NSLocalizedString("nfc_txt_msg_secure_channel", comment: ""))
                 return session.card // swiftlint:disable:this trailing_closure
                     .openSecureSession(can: canData, writeTimeout: 0, readTimeout: 0)
-                    .map { $0 as HealthCardType }
+                    .userMessage(session: session, message: NSLocalizedString("nfc_txt_msg_verify_pin", comment: ""))
                     .verifyPin(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome, in: session)
-                    .sign(payload: "ABC".data(using: .utf8)!) // swiftlint:disable:this force_unwrapping
-                    .map { _ in return true }
+                    .userMessage(session: session, message: NSLocalizedString("nfc_txt_msg_signing", comment: ""))
+                    .sign(payload: "ABC".data(using: .utf8)!, // swiftlint:disable:this force_unwrapping
+                          in: session,
+                          checkAlgorithm: checkBrainpoolAlgorithm)
+                    .map { _ in true }
                     .map(ViewState.value)
                     .handleEvents(receiveOutput: { state in
-                        session.invalidateSession(with: state.value?.asPinVerifyErrorMessage)
+                        if let value = state.value, value == true {
+                            session.updateAlert(message: NSLocalizedString("nfc_txt_msg_success", comment: ""))
+                            session.invalidateSession(with: nil)
+                        } else {
+                            session.invalidateSession(
+                                with: state.error?.localizedDescription ?? NSLocalizedString(
+                                    "nfc_txt_msg_failure",
+                                    comment: ""
+                                )
+                            )
+                        }
                     })
+                    .mapError { error in
+                        session.invalidateSession(with: error.localizedDescription)
+                        return error
+                    }
                     .eraseToAnyPublisher()
             }
-            .catch { (error: Swift.Error) in
-                Just(.error(error))
-            }
-            .subscribe(on: DispatchQueue.global(qos: .userInteractive))
             .receive(on: DispatchQueue.main)
-            .assign(to: \.pState, on: self)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case let .failure(error) = completion {
+                    self?.pState = .error(error)
+                }
+                self?.cancellable?.cancel()
+            }, receiveValue: { [weak self] value in
+                self?.pState = value
+            })
+    }
+}
+
+extension Publisher {
+    func userMessage(session: NFCCardSession, message: String) -> AnyPublisher<Self.Output, Self.Failure> {
+        handleEvents(receiveOutput: { _ in
+            // swiftlint:disable:previous trailing_closure
+            session.updateAlert(message: message)
+        })
+            .eraseToAnyPublisher()
     }
 }
 
 extension Publisher where Output == HealthCardType, Self.Failure == Swift.Error {
     func verifyPin(pin: Format2Pin,
                    type: EgkFileSystem.Pin,
-                   in session: NFCCardSession
-    ) -> AnyPublisher<HealthCardType, Swift.Error> {
+                   in _: NFCCardSession) -> AnyPublisher<HealthCardType, Swift.Error> {
         flatMap { secureCard in
-            secureCard.verify(pin: pin, type: type) // swiftlint:disable:this trailing_closure
+            secureCard.verify(pin: pin, type: type)
                 .tryMap { response in
                     if case let VerifyPinResponse.failed(retryCount: count) = response {
                         throw NFCLoginController.Error.wrongPin(retryCount: count)
                     }
                     return secureCard
                 }
-                .handleEvents(receiveSubscription: { _ in
-                    session.updateAlert(message: "Verifying pin...")
-                })
         }.eraseToAnyPublisher()
     }
 
-    func sign(payload: Data) -> AnyPublisher<Data, Swift.Error> {
+    func sign(payload: Data, in _: NFCCardSession, checkAlgorithm: Bool) -> AnyPublisher<Data, Swift.Error> {
         flatMap { secureCard -> AnyPublisher<Data, Swift.Error> in
             secureCard
                 .readAutCertificate()
-                .flatMap { _ -> AnyPublisher<Data, Swift.Error> in
+                .flatMap { certificate -> AnyPublisher<Data, Swift.Error> in
                     // Check AutCertificateResponse here ...
-                     secureCard.sign(data: payload)
+                    if checkAlgorithm, !certificate.info.algorithm.isBp256r1 {
+                        return Fail(error: NFCLoginController.Error.invalidAlgorithm(certificate.info.algorithm))
+                            .eraseToAnyPublisher()
+                    }
+
+                    CommandLogger.commands.append(Command(message: "Sign payload with card", type: .description))
+                    return secureCard.sign(data: payload)
                         .tryMap { response in
                             if response.responseStatus == ResponseStatus.success, let signature = response.data {
                                 Swift.print("SIGNATURE: \(signature.hexString())")
                                 return signature
                             } else {
-                                throw NFCLoginController.Error.signatureFailure
+                                throw NFCLoginController.Error.signatureFailure(response.responseStatus)
                             }
                         }
                         .eraseToAnyPublisher()
@@ -133,6 +187,16 @@ extension Publisher where Output == HealthCardType, Self.Failure == Swift.Error 
                 .eraseToAnyPublisher()
         }
         .eraseToAnyPublisher()
+    }
+}
+
+extension PSOAlgorithm {
+    // [REQ:gemSpec_Krypt:A_17207] Assure only brainpoolP256r1 is used
+    var isBp256r1: Bool {
+        if case .signECDSA = self {
+            return true
+        }
+        return false
     }
 }
 

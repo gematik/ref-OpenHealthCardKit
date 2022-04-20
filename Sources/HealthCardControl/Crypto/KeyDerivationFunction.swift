@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ import Foundation
 import Security
 
 /// This class provides functionality to derive (de-/ encryption) keys from given data.
-public class KeyDerivationFunction {
+public enum KeyDerivationFunction {
     /// Type of en-/decryption function
     public enum KeyFuncType {
         /// Target function of family AES128

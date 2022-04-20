@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ extension HealthCardCommand {
     public static let expectedLengthWildcard = 0
 
     /// Builder representing Compute Cryptographic Checksum in gemSpec_COS#14.8.1
-    public struct PsoChecksum {
+    public enum PsoChecksum {
         static let cla: UInt8 = 0x0
         static let ins: UInt8 = 0x2A
         static let p1: UInt8 = 0x8E // swiftlint:disable:this identifier_name
@@ -99,7 +99,7 @@ extension HealthCardCommand {
 
     /// Builder representing Compute Digital Signature in gemSpec_COS#14.8.2
     /// And Verify Digital Signature in gemSpec_COS#14.8.9
-    public struct PsoDSA {
+    public enum PsoDSA {
         static let cla: UInt8 = 0x0
         static let ins: UInt8 = 0x2A
         static let p1: UInt8 = 0x9E // swiftlint:disable:this identifier_name
@@ -181,7 +181,7 @@ extension HealthCardCommand {
     }
 
     /// Builders representing Decipher command in gemSpec_COS#14.8.3
-    public struct PsoDecipher {
+    public enum PsoDecipher {
         static let cla: UInt8 = 0x0
         static let ins: UInt8 = 0x2A
         static let p1: UInt8 = 0x80 // swiftlint:disable:this identifier_name
@@ -241,7 +241,7 @@ extension HealthCardCommand {
     }
 
     /// Builders representing Encipher command in gemSpec_COS#14.8.4
-    public struct PsoEncipher {
+    public enum PsoEncipher {
         static let cla: UInt8 = 0x0
         static let ins: UInt8 = 0x2A
         static let p1: UInt8 = 0x86 // swiftlint:disable:this identifier_name
@@ -264,12 +264,12 @@ extension HealthCardCommand {
         /// - Returns: The command
         public static func encipherUsingTransmittedRsaKeyPkcs1_v1_5(rsaPublicKey: SecKey, data: Data) throws
             -> HealthCardCommand {
-                let plainDo = try computePlainDoForRsaEncipher(algId: 0x1, publicKey: rsaPublicKey, data: data)
-                return try builder()
-                    .set(data: plainDo)
-                    .set(ne: 0)
-                    .build()
-            }
+            let plainDo = try computePlainDoForRsaEncipher(algId: 0x1, publicKey: rsaPublicKey, data: data)
+            return try builder()
+                .set(data: plainDo)
+                .set(ne: 0)
+                .build()
+        }
 
         /// Use case Encipher using transmitted RSA key Oaep gemSpec_COS#14.8.4.1_2
         /// - Parameters:
@@ -279,12 +279,12 @@ extension HealthCardCommand {
         /// - Returns: The command
         public static func encipherUsingTransmittedRsaKeyOaep(rsaPublicKey: SecKey, data: Data) throws
             -> HealthCardCommand {
-                let plainDo = try computePlainDoForRsaEncipher(algId: 0x5, publicKey: rsaPublicKey, data: data)
-                return try builder()
-                    .set(data: plainDo)
-                    .set(ne: 0)
-                    .build()
-            }
+            let plainDo = try computePlainDoForRsaEncipher(algId: 0x5, publicKey: rsaPublicKey, data: data)
+            return try builder()
+                .set(data: plainDo)
+                .set(ne: 0)
+                .build()
+        }
 
         /// Use case Encipher using transmitted ELC key gemSpec_COS#14.8.4.2
         /// - Parameters:
@@ -293,12 +293,12 @@ extension HealthCardCommand {
         /// - Returns: The command
         public static func encipherUsingTransmittedElcKey(elcPublicKey: SecKey, data: Data) throws
             -> HealthCardCommand {
-                let plainDo = try computePlainDoElcEncipher(publicKey: elcPublicKey, data: data)
-                return try builder()
-                    .set(data: plainDo)
-                    .set(ne: APDU.expectedLengthWildcardExtended)
-                    .build()
-            }
+            let plainDo = try computePlainDoElcEncipher(publicKey: elcPublicKey, data: data)
+            return try builder()
+                .set(data: plainDo)
+                .set(ne: APDU.expectedLengthWildcardExtended)
+                .build()
+        }
 
         /// Use cases Encipher using a RSA key saved on card gemSpec_COS#14.8.4.3
         /// - Parameters:
@@ -347,10 +347,10 @@ extension HealthCardCommand {
                                                          data: Data) throws -> Data {
             // Extract values from SecKey, key must be public and of type RSA
             guard let pubKeyAttributes = SecKeyCopyAttributes(publicKey) as? [String: Any],
-                let valueData = pubKeyAttributes[kSecValueData as String] as? Data,
-                let keySizeInBits = pubKeyAttributes[kSecAttrKeySizeInBits as String] as? Int,
-                pubKeyAttributes[kSecAttrType as String] as? String == kSecAttrKeyTypeRSA as String,
-                pubKeyAttributes[kSecAttrKeyClass as String] as? String == kSecAttrKeyClassPublic as String else {
+                  let valueData = pubKeyAttributes[kSecValueData as String] as? Data,
+                  let keySizeInBits = pubKeyAttributes[kSecAttrKeySizeInBits as String] as? Int,
+                  pubKeyAttributes[kSecAttrType as String] as? String == kSecAttrKeyTypeRSA as String,
+                  pubKeyAttributes[kSecAttrKeyClass as String] as? String == kSecAttrKeyClassPublic as String else {
                 throw HealthCardCommandBuilder.InvalidArgument.unsupportedKey(publicKey)
             }
 
@@ -378,9 +378,9 @@ extension HealthCardCommand {
         private static func computePlainDoElcEncipher(publicKey: SecKey, data: Data) throws -> Data {
             // Extract values from SecKey, key must be public and of type EC
             guard let pubKeyAttributes = SecKeyCopyAttributes(publicKey) as? [String: Any],
-                let keySizeInBits = pubKeyAttributes[kSecAttrKeySizeInBits as String] as? Int,
-                pubKeyAttributes[kSecAttrType as String] as? String == kSecAttrKeyTypeEC as String,
-                pubKeyAttributes[kSecAttrKeyClass as String] as? String == kSecAttrKeyClassPublic as String else {
+                  let keySizeInBits = pubKeyAttributes[kSecAttrKeySizeInBits as String] as? Int,
+                  pubKeyAttributes[kSecAttrType as String] as? String == kSecAttrKeyTypeEC as String,
+                  pubKeyAttributes[kSecAttrKeyClass as String] as? String == kSecAttrKeyClassPublic as String else {
                 throw HealthCardCommandBuilder.InvalidArgument.unsupportedKey(publicKey)
             }
 
@@ -399,7 +399,7 @@ extension HealthCardCommand {
     }
 
     /// Builder(s) representing Verify Certificate in gemSpec_COS#14.8.7
-    public struct PsoCertificate {
+    public enum PsoCertificate {
         static let cla: UInt8 = 0x0
         static let ins: UInt8 = 0x2A
         static let p1: UInt8 = 0x0 // swiftlint:disable:this identifier_name
@@ -447,5 +447,3 @@ extension HealthCardCommand {
         ]
     }
 }
-
-// swiftlint:disable:this file_length

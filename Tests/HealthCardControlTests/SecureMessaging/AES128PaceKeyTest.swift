@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -99,7 +99,8 @@ final class AES128PaceKeyTest: XCTestCase {
         //
         let data4 = try! Data(hex: "830D44454356434141543030303031")
         let command4 = try! APDU.Command(cla: 0x0, ins: 0x22, p1: 0x81, p2: 0xB6, data: data4, ne: 8)
-        let expected4 = try! Data(hex: "0C2281B6000020871101B86BC36EBADED003068B831CC70D8E0E9701088E08972AE4B01DB329930000")
+        let expected4 =
+            try! Data(hex: "0C2281B6000020871101B86BC36EBADED003068B831CC70D8E0E9701088E08972AE4B01DB329930000")
         expect {
             try paceKey.encrypt(command: command4).bytes
         } == expected4

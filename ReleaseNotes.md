@@ -1,3 +1,25 @@
+# Release 3.0.7
+
+## Added
+
+ - Add list of NFC reading results
+ - Add details of a reading result with state and sent commandos 
+ - Add share functionality of NFC reading result
+ - Add new NFC reading layout
+ 
+## Fixed
+
+ - Fix CAN with leading zero
+ - Fix dark mode 
+
+## Changed
+
+ - Change layout to use more standard elements and colors 
+
+## Other
+
+ - Update OpenSSL-swift dependency (uses OpenSSL 1.1.1n)
+
 # Release 3.0.5
 
 ## feature

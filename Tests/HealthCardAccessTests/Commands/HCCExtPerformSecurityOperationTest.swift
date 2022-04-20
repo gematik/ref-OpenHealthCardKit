@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -152,10 +152,10 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
 
         // test statuses
         let statusKeys = try HealthCardCommand.PsoEncipher
-                .encipherUsingTransmittedRsaKeyPkcs1_v1_5(rsaPublicKey: publicKey,
-                                                          data: dataToBeEnciphered)
-                .responseStatuses.keys
-        expect(statusKeys) .to(contain([0x9000, 0x6400, 0x6982, 0x6A81, 0x6A88]))
+            .encipherUsingTransmittedRsaKeyPkcs1_v1_5(rsaPublicKey: publicKey,
+                                                      data: dataToBeEnciphered)
+            .responseStatuses.keys
+        expect(statusKeys).to(contain([0x9000, 0x6400, 0x6982, 0x6A81, 0x6A88]))
     }
 
     func testPsoEncipher_usingTransmittedElcKey() {
@@ -226,10 +226,10 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
         } == expectedAPDU
 
         let statusKeys = try HealthCardCommand.PsoCertificate.verify(cvc: try GemCvCertificate.from(data: certData))
-                .responseStatuses.keys
+            .responseStatuses.keys
         expect(statusKeys).to(contain(
-                [0x63C0, 0x63C1, 0x63C2, 0x63C3, 0x63C4, 0x63C5, 0x63C6, 0x63C7, 0x63C8, 0x63C9, 0x63CA, 0x63CB,
-                      0x63CC, 0x63CD, 0x63CE, 0x63CF, 0x9000, 0x6581, 0x6982, 0x6983, 0x6985, 0x6A80, 0x6A88]
+            [0x63C0, 0x63C1, 0x63C2, 0x63C3, 0x63C4, 0x63C5, 0x63C6, 0x63C7, 0x63C8, 0x63C9, 0x63CA, 0x63CB,
+             0x63CC, 0x63CD, 0x63CE, 0x63CF, 0x9000, 0x6581, 0x6982, 0x6983, 0x6985, 0x6A80, 0x6A88]
         ))
     }
 
@@ -369,11 +369,11 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
         //
         // Check response codes
         let statusKeys = try HealthCardCommand.PsoDSA.verify(
-                        signature: normalizedSignature,
-                        hash: hashData,
-                        publicKey: publicKey
-                )
-                        .responseStatuses.keys
+            signature: normalizedSignature,
+            hash: hashData,
+            publicKey: publicKey
+        )
+        .responseStatuses.keys
         expect(statusKeys).to(contain([0x9000, 0x6A80]))
     }
 
@@ -483,5 +483,3 @@ func throwError<T>() -> Predicate<T> {
 }
 
 extension String: Error {}
-
-// swiftlint:disable:this file_length

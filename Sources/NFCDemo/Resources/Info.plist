@@ -15,13 +15,13 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.1.1</string>
 	<key>CFBundleVersion</key>
-	<string>13</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
+	<string>17</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
 	<key>NFCReaderUsageDescription</key>
 	<string>Allows you to identify and authenticate yourself by using your health insurance card</string>
 	<key>UIApplicationSceneManifest</key>

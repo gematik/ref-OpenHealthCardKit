@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -21,104 +21,90 @@ import SwiftUI
 struct RegisterPINView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     var can: String = ""
-    @State var pin: String = ""
+    @State var showStartNFCView = false
+    #if DEBUG
+    @AppStorage("pin") var storedPin: String = ""
+    #else
+    @State var storedPin: String = ""
+    #endif
     @ObservedObject var keyboardHeight = KeyboardHeight()
-    @State var buttonEnabled = false
-    @ObservedObject var loginState = NFCLoginViewModel()
-    @State var error: Swift.Error?
-    @State private var showAlert = false
-    @State var loading = false
-    @State var loggedIn = false
-
-    private func startLogin() {
-        loginState.login(can: can, pin: pin)
+    var buttonEnabled: Bool {
+        storedPin.count > 3 ? true : false
     }
 
     var body: some View {
-        ZStack {
-            BackgroundView()
-            GeometryReader { geometry in
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack(alignment: .leading) {
-                        Text("onb_txt_sign_up_pin_intro")
-                            .font(.system(size: 15))
-                            .foregroundColor(Colors.lightText)
-                            .padding(.vertical)
-                            .accessibility(identifier: "onb_txt_sign_up_pin_intro")
+        ScrollView(.vertical, showsIndicators: false) {
+            Section(header: HeaderView(), footer: FooterView()) {
+                VStack(spacing: 20) {
+                    SecureField("pin_edt_enter_pin", text: $storedPin)
+                        .keyboardType(.numberPad)
+                        .padding()
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Colors.grayBorder, lineWidth: 1))
+                        .accessibility(identifier: "pin_edt_enter_pin")
 
-                        VStack {
-                            SecureField("onb_edt_sign_up_pin_enter_pin", text: self.$pin)
-                                .foregroundColor(.black)
-                                .keyboardType(.numberPad)
-                                .disabled(self.loading)
-                                .padding()
-                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Colors.grayBorder, lineWidth: 1))
-                                .padding(20)
-                                .accessibility(identifier: "onb_edt_sign_up_pin_enter_pin")
-                            Button(action: self.startLogin) {
-                                GTextButton(label: "onb_btn_connect", enabled: self.buttonEnabled && !self.loading)
-                                    .padding(.horizontal, 30)
-                                    .accessibility(identifier: "onb_btn_connect")
-                            }.disabled(!self.buttonEnabled || self.loading)
-                                .padding(.bottom, 20)
-                        }
-                        .background(LinearGradient(
-                            gradient: Gradient(colors: [Color.white, Colors.secondary]),
-                            startPoint: .top,
-                            endPoint: .bottom
-                        ))
-                        .cornerRadius(15)
-                        .padding(.bottom)
-
-                        Text("onb_txt_sign_up_pin_help")
-                            .font(.system(size: 15))
-                            .foregroundColor(Colors.lightText)
-                            .padding(.vertical)
-                            .accessibility(identifier: "onb_txt_sign_up_pin_help")
-
-                        Text("onb_txt_sign_up_pin_explanation")
-                            .font(.system(size: 15))
-                            .lineSpacing(1.7)
-                            .foregroundColor(Colors.lightText)
-                            .accessibility(identifier: "onb_txt_sign_up_pin_explanation")
-
-                        Spacer()
-                    }.padding()
+                    Button {
+                        UIApplication.shared.dismissKeyboard()
+                        showStartNFCView = true
+                    } label: {
+                        GTextButton(label: "pin_btn_next", enabled: self.buttonEnabled)
+                            .accessibility(identifier: "pin_btn_next")
+                            .disabled(!buttonEnabled)
+                    }
+                    .disabled(!buttonEnabled)
                 }
-                .frame(minWidth: geometry.size.width, minHeight: geometry.size.height, maxHeight: .infinity)
+                .fixedSize(horizontal: false, vertical: true)
             }
-            .padding(.bottom, self.keyboardHeight.height)
-            .edgesIgnoringSafeArea(.bottom)
         }
-        .alert(isPresented: $showAlert) {
-            Alert(
-                title: Text("alert_error_title"),
-                message: Text(error?.localizedDescription ?? "alert_error_message_unknown"),
-                dismissButton: .default(Text("alert_btn_ok")) {
-                    self.loginState.dismissError()
-                }
-            )
+        .padding(.horizontal)
+        .background(Color(.secondarySystemBackground).ignoresSafeArea())
+        .padding(.bottom, self.keyboardHeight.height)
+        .edgesIgnoringSafeArea(.bottom)
+        .navigationTitle("pin_txt_title")
+        .fullScreenCover(isPresented: $showStartNFCView,
+                         onDismiss: {
+                             showStartNFCView = false
+                         }, content: {
+                             NavigationView {
+                                 StartNFCView(can: can, pin: storedPin)
+                             }
+                         })
+    }
+
+    struct HeaderView: View {
+        var body: some View {
+            HStack {
+                Text("pin_txt_intro")
+                    .font(.subheadline)
+                    .accessibility(identifier: "pin_txt_intro")
+                Spacer()
+            }.padding(.vertical)
         }
-        .onReceive(Just(pin)) { number in
-            // Enable/disable next button based on pin input
-            self.buttonEnabled = number.count > 3
-        }
-        .onReceive(loginState.$state) { state in
-            self.loading = state.isLoading
-            if let success = state.value {
-                self.loggedIn = success
+    }
+
+    struct FooterView: View {
+        var body: some View {
+            VStack(alignment: .leading) {
+                Text("pin_txt_help")
+                    .font(.subheadline)
+                    .padding(.vertical, 4)
+                    .accessibility(identifier: "pin_txt_help")
+
+                Text("pin_txt_explanation")
+                    .font(.footnote)
+                    .accessibility(identifier: "pin_txt_explanation")
             }
-            self.error = state.error
-            self.showAlert = state.error != nil
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .fixedSize(horizontal: false, vertical: true)
         }
-        .navigationBarTitle("onb_txt_title_sign_up", displayMode: .inline)
     }
 }
 
 #if DEBUG
 struct RegisterPINView_Previews: PreviewProvider {
     static var previews: some View {
-        RegisterPINView(can: "1234")
+        RegisterPINView(
+            can: "1234"
+        )
     }
 }
 #endif

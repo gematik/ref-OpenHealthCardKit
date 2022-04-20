@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -20,86 +20,71 @@ import SwiftUI
 
 struct RegisterCANView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @ObservedObject var can = WrappedObservableObject("")
-    @State var buttonEnabled = false
+    var buttonEnabled: Bool {
+        storedCan.count > 5 ? true : false
+    }
+
     @ObservedObject var keyboardHeight = KeyboardHeight()
+    @AppStorage("can") var storedCan: String = ""
 
     var canTextInput: Binding<String> {
-        Binding(get: { self.can.value }, set: {
-            if $0.isDigitsOnly {
-                self.can.value = $0
-            } else {
-                self.can.value = self.can.value
+        Binding(
+            get: { storedCan },
+            set: {
+                if $0.allSatisfy(Set("0123456789").contains) {
+                    storedCan = $0
+                } else {
+                    storedCan = storedCan
+                }
             }
-        })
+        )
     }
 
     var body: some View {
-        ZStack {
-            BackgroundView()
-            GeometryReader { geometry in
-                ScrollView(.vertical, showsIndicators: false) {
-                    VStack(alignment: .leading) {
-                        Text("onb_txt_sign_up_can_intro")
-                            .font(.system(size: 15))
-                            .foregroundColor(Colors.lightText)
-                            .padding(.vertical)
-                            .accessibility(identifier: "onb_txt_sign_up_can_intro")
+        NavigationView {
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(alignment: .leading) {
+                    Text("can_txt_can_intro")
+                        .font(.subheadline)
+                        .padding(.vertical)
+                        .accessibility(identifier: "can_txt_can_intro")
 
-                        VStack {
-                            TextField("onb_edt_sign_up_can_enter_can", text: self.canTextInput)
-                                .foregroundColor(.black)
-                                .keyboardType(.numberPad)
-                                .padding()
-                                .overlay(RoundedRectangle(cornerRadius: 8).stroke(Colors.grayBorder, lineWidth: 1))
-                                .padding(20)
-                                .accessibility(identifier: "onb_edt_sign_up_can_enter_can")
-                            NavigationLink(destination: RegisterPINView(can: self.can.value)) {
-                                GTextButton(label: "onb_btn_next", enabled: self.buttonEnabled)
-                                    .padding(.horizontal, 30)
-                                    .accessibility(identifier: "onb_btn_next")
-                            }
-                            .disabled(!self.buttonEnabled)
-                            .padding(.bottom, 20)
+                    VStack(spacing: 20) {
+                        TextField("can_edt_can_enter_can", text: self.canTextInput)
+                            .keyboardType(.numberPad)
+                            .padding()
+                            .overlay(RoundedRectangle(cornerRadius: 8).stroke(Colors.grayBorder, lineWidth: 1))
+                            .accessibility(identifier: "can_edt_can_enter_can")
+                        NavigationLink(destination: RegisterPINView(can: storedCan)) {
+                            GTextButton(label: "can_btn_next", enabled: self.buttonEnabled)
+                                .accessibility(identifier: "can_btn_next")
                         }
-                        .background(LinearGradient(
-                            gradient: Gradient(colors: [Color.white, Colors.secondary]),
-                            startPoint: .top,
-                            endPoint: .bottom
-                        ))
+                        .disabled(!buttonEnabled)
+                    }
+
+                    Text("can_txt_help_title")
+                        .font(.subheadline)
+                        .padding(.vertical)
+                        .accessibility(identifier: "can_txt_help_title")
+
+                    Image(decorative: "find_can")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
                         .cornerRadius(15)
-                        .padding(.bottom)
 
-                        Text("onb_txt_sign_up_can_help")
-                            .font(.system(size: 15))
-                            .foregroundColor(Colors.lightText)
-                            .padding(.vertical)
-                            .accessibility(identifier: "onb_txt_sign_up_can_help")
+                    Text("can_txt_help_explanation")
+                        .font(.footnote)
+                        .accessibility(identifier: "can_txt_help_explanation")
 
-                        Image(decorative: "find_can")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .cornerRadius(15)
-
-                        Text("onb_txt_sign_up_can_help_explanation")
-                            .font(.system(size: 15))
-                            .lineSpacing(1.7)
-                            .foregroundColor(Colors.lightText)
-                            .accessibility(identifier: "onb_txt_sign_up_can_help_explanation")
-
-                        Spacer()
-                    }.padding()
+                    Spacer()
                 }
-                .frame(minWidth: geometry.size.width, minHeight: geometry.size.height, maxHeight: .infinity)
             }
+            .padding(.horizontal)
+            .background(Color(.secondarySystemBackground).ignoresSafeArea())
             .padding(.bottom, self.keyboardHeight.height)
             .edgesIgnoringSafeArea(.bottom)
+            .navigationTitle("can_txt_title")
         }
-        .onReceive(self.can.$value) { number in
-            // Enable/disable next button based on can input
-            self.buttonEnabled = number.count > 5
-        }
-        .navigationBarTitle("onb_txt_title_sign_up", displayMode: .inline)
     }
 }
 

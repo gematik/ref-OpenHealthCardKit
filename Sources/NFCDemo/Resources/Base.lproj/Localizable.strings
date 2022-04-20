@@ -6,26 +6,60 @@
 /*
   CAN
 */
-"onb_txt_sign_up_can_intro" = "Please enter your card's CAN.";
-"onb_edt_sign_up_can_enter_can" = "CAN";
-"onb_btn_next" = "Next";
-"onb_btn_connect" = "Connect";
-"onb_txt_sign_up_can_help" = "Where can I find my CAN?";
-"onb_txt_sign_up_can_help_explanation" = "Don't see a CAN printed on your card?\nThen you'll need a new health insurance card. You can request one from your statutory health insurer.";
-"onb_txt_title_sign_up" = "Sign up";
+"can_txt_title" = "CAN";
+"can_txt_can_intro" = "Please enter your card's CAN.";
+"can_edt_can_enter_can" = "CAN";
+"can_btn_next" = "Next";
+"can_txt_help_title" = "Where can I find my CAN?";
+"can_txt_help_explanation" = "Don't see a CAN printed on your card?\nThen you'canneed a new health insurance card. You can request one from your statutory health insurer.";
 
 /*
   PIN
 */
-"onb_txt_sign_up_pin_intro" = "Please enter your card's PIN.";
-"onb_edt_sign_up_pin_enter_pin" = "PIN-code";
-"onb_txt_sign_up_pin_help" = "I don't have a PIN";
-"onb_txt_sign_up_pin_explanation" = "A Pin code will be mailed to you by your statutory health insurer shortly after you've received your health card.";
+"pin_txt_title" = "PIN";
+"pin_txt_intro" = "Please enter your card's PIN.";
+"pin_edt_enter_pin" = "PIN-code";
+"pin_btn_next" = "Next";
+"pin_txt_help" = "I don't have a PIN";
+"pin_txt_explanation" = "A Pin code will be mailed to you by your statutory health insurer shortly after you've received your health card.";
 
 /*
-  NFC Sheet
+ StartNFC
 */
-"nfc_connect_egk_sign_up" = "Hold your health insurance card to the back of your iPhone.";
+
+"nfc_txt_placement" = "Place card above this line 👆";
+"nfc_txt_placement_hint" = "Place your card now on the display and touch “Connect card”";
+"nfc_btn_start_nfc" = "Connect card";
+"nfc_btn_cancel" = "Cancel";
+"nfc_btn_reading_results" = "Card Reading Results";
+
+
+/*
+ NFC Reader
+ */
+
+"nfc_txt_discoveryMessage" = "Please tap your eGK on top of your iPhone";
+"nfc_txt_connectMessage"= "Connecting";
+"nfc_txt_noCardMessage"= "No Card Found";
+"nfc_txt_multipleCardsMessage" = "Multiple cards found";
+"nfc_txt_unsupportedCardMessage" = "Unsupported card";
+"nfc_txt_connectionErrorMessage" = "NFC Communication error";
+"nfc_txt_msg_secure_channel" = "Establishing secure connection..";
+"nfc_txt_msg_verify_pin" = "Verifying pin...";
+"nfc_txt_msg_reading_auth_cert"= "Reading authentication certificate...";
+"nfc_txt_msg_signing" = "Signing...";
+"nfc_txt_msg_success" = "Successful signing!";
+"nfc_txt_msg_failure" = "Error!";
+
+/*
+  Reading Results
+ */
+"rdr_txt_sec_title_commands" = "Commands";
+"rdr_txt_sec_title_overview" = "Overview";
+"rdr_txt_date" = "Date:  ";
+"rdr_txt_result" = "Result:";
+"rdr_btn_copy" = "Copy";
+"rdr_txt_detail_title" = "Details";
 
 /*
   Error

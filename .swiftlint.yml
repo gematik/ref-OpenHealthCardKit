@@ -1,5 +1,6 @@
 disabled_rules: # rule identifiers to exclude from running
   - trailing_comma
+  - operator_whitespace
 opt_in_rules:
   - attributes
   - empty_count
@@ -7,6 +8,7 @@ opt_in_rules:
   - unneeded_parentheses_in_closure_argument
   - unavailable_function
   - trailing_closure
+  - strict_fileprivate
   - sorted_imports
   - sorted_first_last
   - single_test_class
@@ -28,7 +30,6 @@ opt_in_rules:
   - file_name
   - fatal_error_message
   - explicit_init
-  - empty_xctest_method
   - empty_string
   - discouraged_optional_collection
   - closure_end_indentation
@@ -37,12 +38,19 @@ excluded: # paths to ignore during linting. Takes precedence over `included`.
   - .build/
   - vendor/
   - Carthage/
-  - .idea/
   - DerivedData/
+  - Sources/eRpApp/Generated/*
 nesting:
   type_level: 3
 line_length: 120
+file_length:
+  warning: 500
+  error: 1200
 type_name:
+  min_length: 3
+  max_length:
+    warning: 40
+    error: 50
   allowed_symbols: ["_Previews"]
 custom_rules:
   nimble_fail_with_description:
@@ -59,3 +67,4 @@ custom_rules:
     regex: "(\/\/[[:space:]]*Created by)"
     message: "Source must not contain author"
     severity: warning
+

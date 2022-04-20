@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 final class KeyboardHeight: ObservableObject {
     private var notificationCenter: NotificationCenter
@@ -46,5 +47,12 @@ final class KeyboardHeight: ObservableObject {
     @objc
     func keyBoardWillHide(notification _: Notification) {
         height = 0
+    }
+}
+
+// extension to dismiss keyboard
+extension UIApplication {
+    func dismissKeyboard() {
+        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -62,9 +62,9 @@ struct ECCurveInfo {
 
     static func parse(publicKey: SecKey) throws -> ECCurve {
         guard let attrs = SecKeyCopyAttributes(publicKey) as? [CFString: Any?],
-            let valueData = attrs[kSecValueData] as? Data,
-            kSecAttrKeyClassPublic == attrs[kSecAttrKeyClass] as! CFString, // swiftlint:disable:this force_cast
-            !valueData.isEmpty else {
+              let valueData = attrs[kSecValueData] as? Data,
+              kSecAttrKeyClassPublic == attrs[kSecAttrKeyClass] as! CFString, // swiftlint:disable:this force_cast
+              !valueData.isEmpty else {
             throw InvalidArgument.invalidSecKey
         }
 
@@ -91,8 +91,8 @@ struct ECCurveInfo {
         // Make sure the decoded ValueData is formatted correctly
         // e.g. DER PublicKeyInfo
         guard let items = asn1.data.items, items.count > 1,
-            let identifiers = items[0].data.items,
-            identifiers.count > 1 else {
+              let identifiers = items[0].data.items,
+              identifiers.count > 1 else {
             throw InvalidArgument.missingParameters
         }
 

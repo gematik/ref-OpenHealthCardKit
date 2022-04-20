@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import Foundation
 /// These Commands represent the commands in gemSpec_COS#14.4 "Zugriff auf strukturierte Daten".
 extension HealthCardCommand {
     /// Commands representing Activate Record command in gemSpec_COS#14.4.1
-    public struct ActivateRecord {
+    public enum ActivateRecord {
         static let ins: UInt8 = 0x08
         static let activateResponseMessages = ResponseMessages.deActivateResponseMessages
 
@@ -38,7 +38,7 @@ extension HealthCardCommand {
     }
 
     /// Commands representing Append Record command in gemSpec_COS#14.4.2
-    public struct AppendRecord {
+    public enum AppendRecord {
         static let cla: UInt8 = 0x0
         static let ins: UInt8 = 0xE2
         static let pNoMeaning: UInt8 = 0x0
@@ -73,7 +73,7 @@ extension HealthCardCommand {
     }
 
     /// Commands representing Deactivate Record command in gemSpec_COS#14.4.3
-    public struct DeactivateRecord {
+    public enum DeactivateRecord {
         static let ins: UInt8 = 0x06
         static let deactivateResponseMessages = ResponseMessages.deActivateResponseMessages
 
@@ -92,7 +92,7 @@ extension HealthCardCommand {
     }
 
     /// Commands representing Delete Record command in gemSpec_COS#14.4.4
-    public struct DeleteRecord {
+    public enum DeleteRecord {
         static let cla: UInt8 = 0x80
         static let ins: UInt8 = 0x0C
         static let deleteRecordResponseMessages = ResponseMessages.deleteOrEraseRecordResponseMessages
@@ -109,7 +109,7 @@ extension HealthCardCommand {
     }
 
     /// Commands representing Erase Record command in gemSpec_COS#14.4.5
-    public struct EraseRecord {
+    public enum EraseRecord {
         static let ins: UInt8 = 0xC
         static let eraseResponseMessages = ResponseMessages.deleteOrEraseRecordResponseMessages
 
@@ -125,7 +125,7 @@ extension HealthCardCommand {
     }
 
     /// Commands representing Read Record command in gemSpec_COS#14.4.6
-    public struct ReadRecord {
+    public enum ReadRecord {
         static let ins: UInt8 = 0xB2
         static let readResponseMessages = ResponseMessages.readRecordResponseMessages
 
@@ -143,7 +143,7 @@ extension HealthCardCommand {
     }
 
     /// Commands representing Search Record command in gemSpec_COS#14.4.7
-    public struct SearchRecord {
+    public enum SearchRecord {
         static let ins: UInt8 = 0xA2
         static let searchResponseMessages = ResponseMessages.searchRecordResponseMessages
 
@@ -168,7 +168,7 @@ extension HealthCardCommand {
     }
 
     /// Commands representing Update Record command in gemSpec_COS#14.4.8
-    public struct UpdateRecord {
+    public enum UpdateRecord {
         static let ins: UInt8 = 0xDC
         static let updateRecordResponseMessages = ResponseMessages.updateRecordResponseMessages
 
@@ -187,7 +187,7 @@ extension HealthCardCommand {
 
     /// Internal helper struct for commands ActivateRecord, DeactivateRecord, ...
     /// They share the same APDU-bytes - except INS
-    struct AlterRecord {
+    enum AlterRecord {
         static let cla: UInt8 = 0x0
         static let ins: UInt8 = 0x00
 
@@ -211,7 +211,7 @@ extension HealthCardCommand {
         }
     }
 
-    struct ResponseMessages {
+    enum ResponseMessages {
         static let deActivateResponseMessages: [UInt16: ResponseStatus] = [
             ResponseStatus.success.code: .success,
             ResponseStatus.updateRetryWarningCount00.code: .updateRetryWarningCount00,

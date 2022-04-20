@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -22,20 +22,6 @@ import GemCommonsKit
 import HealthCardAccess
 
 class NFCCard: CardType {
-    enum Error: Swift.Error {
-        case noCardPresent
-        case transferException(name: String)
-        case sendTimeout
-
-        var connectionError: CardError {
-            CardError.connectionError(self)
-        }
-
-        var illegalState: CardError {
-            CardError.illegalState(self)
-        }
-    }
-
     var tag: NFCISO7816Tag?
     private weak var basicChannel: NFCCardChannel?
 
@@ -56,7 +42,7 @@ class NFCCard: CardType {
             return channel
         }
         guard let tag = tag else {
-            throw Error.noCardPresent.illegalState
+            throw NFCCardError.noCardPresent.illegalState
         }
         let nfcChannel = NFCCardChannel(card: self, tag: tag)
         basicChannel = nfcChannel
@@ -65,7 +51,7 @@ class NFCCard: CardType {
 
     func openLogicChannel() throws -> CardChannelType {
         guard let tag = tag else {
-            throw Error.noCardPresent.illegalState
+            throw NFCCardError.noCardPresent.illegalState
         }
 
         let manageChannelCommandOpen = try APDU.Command(cla: 0x00, ins: 0x70, p1: 0x00, p2: 0x00, ne: 0x01)
@@ -74,12 +60,12 @@ class NFCCard: CardType {
         let response = try openBasicChannel()
             .transmit(command: manageChannelCommandOpen, writeTimeout: 0, readTimeout: 0)
         guard response.sw == responseSuccess else {
-            throw Error.transferException(
+            throw NFCCardError.transferException(
                 name: String(format: "openLogicalChannel failed, response code: 0x%04x", response.sw)
             )
         }
         guard let rspData = response.data else {
-            throw Error.transferException(
+            throw NFCCardError.transferException(
                 name: String(format: "openLogicalChannel failed, no channel number received")
             )
         }

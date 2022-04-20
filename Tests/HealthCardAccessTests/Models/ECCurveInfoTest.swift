@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ final class ECCurveInfoTest: XCTestCase {
     let normalizingCasesExpectFailure: [ECCurveNormalizeTest] = [
         (test: "signature sequence too long", curve: ansix9p256r1, signature:
             "ansix9p256r1_signature_invalid_toolongsequence.dat",
-         normalized: "ansix9p256r1_signature_normalized.dat"),
+            normalized: "ansix9p256r1_signature_normalized.dat"),
     ]
 
     func testNormalizingSignature() {

@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 import Combine
 import Foundation
 import HealthCardAccess
+import Helper
 
 /// Response to a Verify Pin command on a HealthCard
 /// - SeeAlso: `HealthCardType.verify(pin:type:)`
@@ -42,6 +43,7 @@ extension HealthCardType {
     ///
     /// - Note: Only supports eGK Card types
     public func verify(pin: Format2Pin, type: EgkFileSystem.Pin) -> AnyPublisher<VerifyPinResponse, Error> {
+        CommandLogger.commands.append(Command(message: "Verify PIN", type: .description))
         let verifyPasswordParameter = (type.rawValue, false, pin)
         return HealthCardCommand.Verify.verify(password: verifyPasswordParameter)
             .publisher(for: self)

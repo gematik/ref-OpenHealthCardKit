@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -71,9 +71,7 @@ public class CardReaderControllerManager: CardReaderControllerManagerType {
 extension CardReaderControllerManagerType {
     /// An array of all names of each card reader provider available
     public var cardReaderProviderNames: [String] {
-        cardReaderProviderDescriptors.map {
-            $0.name
-        }
+        cardReaderProviderDescriptors.map(\.name)
     }
 }
 
@@ -81,7 +79,7 @@ extension CardReaderControllerManager {
     private class func loadCardReaderProviders() -> [CardReaderProviderType.Type] {
         loadClassesConformingTo(protocol: CardReaderProviderType.self)
             .compactMap {
-                ($0 as? CardReaderProviderType.Type)
+                $0 as? CardReaderProviderType.Type
             }
     }
 }

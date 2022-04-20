@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2021 gematik GmbH
+//  Copyright (c) 2022 gematik GmbH
 //  
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import CoreNFC
 import DataKit
 import Foundation
 import GemCommonsKit
+import Helper
 
 class NFCCardChannel: CardChannelType {
     let maxMessageLength = 0x10000
@@ -40,6 +41,7 @@ class NFCCardChannel: CardChannelType {
         nfcCard
     }
 
+    // swiftlint:disable:next function_body_length
     func transmit(command: CommandType, writeTimeout _: TimeInterval,
                   readTimeout: TimeInterval) throws -> ResponseType {
         let commandApdu: CommandType
@@ -50,7 +52,7 @@ class NFCCardChannel: CardChannelType {
         }
 
         guard let tag = tag else {
-            throw NFCCard.Error.noCardPresent.illegalState
+            throw NFCCardError.noCardPresent.illegalState
         }
 
         let semaphore = DispatchSemaphore(value: 0)
@@ -63,7 +65,9 @@ class NFCCardChannel: CardChannelType {
         let sendHeader = Data([apdu.instructionClass] + [apdu.instructionCode] + [apdu.p1Parameter] + [apdu
                 .p2Parameter]).hexString()
 
-        DLog("SEND:     [\(sendHeader)\(apdu.data?.hexString() ?? "")|ne:\(String(apdu.expectedResponseLength))]")
+        let send = "[\(sendHeader)\(apdu.data?.hexString() ?? "")|ne:\(String(apdu.expectedResponseLength))]"
+        DLog("SEND:     \(send)")
+        CommandLogger.commands.append(Command(message: send, type: .send))
 
         tag.sendCommand(apdu: apdu) { lData, lSw1, lSw2, err in
             data = lData
@@ -81,12 +85,15 @@ class NFCCardChannel: CardChannelType {
 
         if case .timedOut = semaphore.wait(timeout: timeoutTime) {
             DLog("NFC send timed out [\(sendHeader)]")
-            throw NFCCard.Error.sendTimeout.connectionError
+            throw NFCCardError.sendTimeout.connectionError
         }
         if let error = error {
             throw error
         }
-        DLog("RESPONSE: [\(Data(data + [sw1, sw2]).hexString())]")
+
+        let response = "[\(Data(data + [sw1, sw2]).hexString())]"
+        DLog("RESPONSE: \(response)")
+        CommandLogger.commands.append(Command(message: response, type: .response))
 
         do {
             return try APDU.Response(body: data, sw1: sw1, sw2: sw2)
@@ -100,7 +107,7 @@ class NFCCardChannel: CardChannelType {
             tag = nil
         }
         guard tag != nil else {
-            throw NFCCard.Error.transferException(name:
+            throw NFCCardError.transferException(name:
                 "Basic channel cannot be closed or channel already closed").illegalState
         }
         guard channelNumber != 0 else {
@@ -113,7 +120,7 @@ class NFCCardChannel: CardChannelType {
 
         let response = try transmit(command: manageChannelCommandClose, writeTimeout: 0, readTimeout: 0)
         if response.sw != responseSuccess {
-            throw NFCCard.Error.transferException(name:
+            throw NFCCardError.transferException(name:
                 String(format: "closing logical channel %d failed, response: 0x%04x", channelNumber, response.sw))
         }
     }
