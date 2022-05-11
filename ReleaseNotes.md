@@ -1,3 +1,14 @@
+# Release 4.0.0
+
+## Changed
+
+  - Update to OpenSSL version 3.0.3 
+  - Update to GemCommonsKit version 1.3
+  - Update to ASN1Kit version 1.1.0
+  - Change Xcode version to 13.3.1
+  - Change OpenSSL Dependency to use Github (to enable binary download)
+
+
 # Release 3.0.7
 
 ## Added
