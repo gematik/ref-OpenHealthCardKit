@@ -190,6 +190,109 @@ extension HealthCardCommand {
         ]
     }
 
+    /// Command representing Reset Retry Counter gemSpec_Cos#14.6.5
+    public enum ResetRetryCounter {
+        static let cla: UInt8 = 0x0
+        static let ins: UInt8 = 0x2C
+
+        /// Use case Reset Retry Counter WITH using a PUK and WITH setting a new Secret (Pin) gemSpec_COS#14.6.5.1
+        public static func resetRetryCounterWithPukWithNewSecret(
+            password: Password,
+            dfSpecific: Bool,
+            puk: Format2Pin,
+            newPin: Format2Pin
+        ) throws -> HealthCardCommand {
+            let p1: UInt8 = 0x0 // swiftlint:disable:this identifier_name
+            return try HealthCardCommandBuilder()
+                .set(cla: cla)
+                .set(ins: ins)
+                .set(p1: p1)
+                .set(p2: password.calculateKeyReference(dfSpecific: dfSpecific))
+                .set(data: puk.pin + newPin.pin)
+                .set(ne: nil)
+                .set(responseStatuses: resetRetryCounterResponses)
+                .build()
+        }
+
+        /// Use case Reset Retry Counter WITH using a PUK WITHOUT setting a new Secret (Pin) gemSpec_COS#14.6.5.2
+        public static func resetRetryCounterWithPukWithoutNewSecret(
+            password: Password,
+            dfSpecific: Bool,
+            puk: Format2Pin
+        ) throws -> HealthCardCommand {
+            let p1: UInt8 = 0x01 // swiftlint:disable:this identifier_name
+            return try HealthCardCommandBuilder()
+                .set(cla: cla)
+                .set(ins: ins)
+                .set(p1: p1)
+                .set(p2: password.calculateKeyReference(dfSpecific: dfSpecific))
+                .set(data: puk.pin)
+                .set(ne: nil)
+                .set(responseStatuses: resetRetryCounterResponses)
+                .build()
+        }
+
+        /// Use case Reset Retry Counter WITHOUT using a PUK and WITH setting a new Secret (Pin) gemSpec_COS#14.6.5.3
+        public static func resetRetryCounterWithoutPukWithNewSecret(
+            password: Password,
+            dfSpecific: Bool,
+            newPin: Format2Pin
+        ) throws -> HealthCardCommand {
+            let p1: UInt8 = 0x02 // swiftlint:disable:this identifier_name
+            return try HealthCardCommandBuilder()
+                .set(cla: cla)
+                .set(ins: ins)
+                .set(p1: p1)
+                .set(p2: password.calculateKeyReference(dfSpecific: dfSpecific))
+                .set(data: newPin.pin)
+                .set(ne: nil)
+                .set(responseStatuses: resetRetryCounterResponses)
+                .build()
+        }
+
+        /// Use case Reset Retry Counter WITHOUT using a PUK and WITHOUT setting a new Secret (Pin) gemSpec_COS#14.6.5.4
+        public static func resetRetryCounterWithoutPukWithoutNewSecret(
+            password: Password,
+            dfSpecific: Bool
+        ) throws -> HealthCardCommand {
+            let p1: UInt8 = 0x03 // swiftlint:disable:this identifier_name
+            return try HealthCardCommandBuilder()
+                .set(cla: cla)
+                .set(ins: ins)
+                .set(p1: p1)
+                .set(p2: password.calculateKeyReference(dfSpecific: dfSpecific))
+                .set(ne: nil)
+                .set(responseStatuses: resetRetryCounterResponses)
+                .build()
+        }
+
+        /// Response codes for Reset Retry Counter gemSpec_COS#14.6.5.5
+        static let resetRetryCounterResponses: [UInt16: ResponseStatus] = [
+            ResponseStatus.success.code: .success,
+            ResponseStatus.wrongSecretWarningCount00.code: .wrongSecretWarningCount00,
+            ResponseStatus.wrongSecretWarningCount01.code: .wrongSecretWarningCount01,
+            ResponseStatus.wrongSecretWarningCount02.code: .wrongSecretWarningCount02,
+            ResponseStatus.wrongSecretWarningCount03.code: .wrongSecretWarningCount03,
+            ResponseStatus.wrongSecretWarningCount04.code: .wrongSecretWarningCount04,
+            ResponseStatus.wrongSecretWarningCount05.code: .wrongSecretWarningCount05,
+            ResponseStatus.wrongSecretWarningCount06.code: .wrongSecretWarningCount06,
+            ResponseStatus.wrongSecretWarningCount07.code: .wrongSecretWarningCount07,
+            ResponseStatus.wrongSecretWarningCount08.code: .wrongSecretWarningCount08,
+            ResponseStatus.wrongSecretWarningCount09.code: .wrongSecretWarningCount09,
+            ResponseStatus.wrongSecretWarningCount10.code: .wrongSecretWarningCount10,
+            ResponseStatus.wrongSecretWarningCount11.code: .wrongSecretWarningCount11,
+            ResponseStatus.wrongSecretWarningCount12.code: .wrongSecretWarningCount12,
+            ResponseStatus.wrongSecretWarningCount13.code: .wrongSecretWarningCount13,
+            ResponseStatus.wrongSecretWarningCount14.code: .wrongSecretWarningCount14,
+            ResponseStatus.wrongSecretWarningCount15.code: .wrongSecretWarningCount15,
+            ResponseStatus.memoryFailure.code: .memoryFailure,
+            ResponseStatus.securityStatusNotSatisfied.code: .securityStatusNotSatisfied,
+            ResponseStatus.commandBlocked.code: .commandBlocked,
+            ResponseStatus.wrongPasswordLength.code: .wrongPasswordLength,
+            ResponseStatus.passwordNotFound.code: .passwordNotFound,
+        ]
+    }
+
     /// Command representing Verify Secret Command gemSpec_COS#14.6.6
     public enum Verify {
         static let cla: UInt8 = 0x0

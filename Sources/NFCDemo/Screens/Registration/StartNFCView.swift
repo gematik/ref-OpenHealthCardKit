@@ -20,14 +20,22 @@ import SwiftUI
 
 struct StartNFCView: View {
     let can: String
+    let puk: String
     let pin: String
+    let useCase: UseCase
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @StateObject var loginState = NFCLoginViewModel()
+    @StateObject var resetRetryCounterState = NFCResetRetryCounterViewModel()
     @State var error: Swift.Error?
     @State private var showAlert = false
     @State var loading = false
     @State var loggedIn = false
     @State var checkBrainpoolAlgorithm = false
+
+    var readingResults: [ReadingResult] {
+        (loginState.results + resetRetryCounterState.results)
+            .sorted { $0.timestamp > $1.timestamp }
+    }
 
     static let height: CGFloat = {
         // Compensate display scaling (Settings -> Display & Brightness -> Display -> Standard vs. Zoomed
@@ -74,21 +82,29 @@ struct StartNFCView: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             #if DEBUG
-            Toggle("Check for brainpool algorithm", isOn: $checkBrainpoolAlgorithm).padding()
+            if useCase == .login {
+                Toggle("Check for brainpool algorithm", isOn: $checkBrainpoolAlgorithm).padding()
+            }
             #endif
             Spacer(minLength: 0)
 
             NavigationLink(
                 "nfc_btn_reading_results",
-                destination: ReadingResultsView(readingResults: loginState.results)
+                destination: ReadingResultsView(readingResults: readingResults)
             )
             .padding()
-            .disabled(loginState.results.isEmpty)
+            .disabled(readingResults.isEmpty)
 
             Divider()
 
             Button {
-                loginState.login(can: can, pin: pin, checkBrainpoolAlgorithm: checkBrainpoolAlgorithm)
+                switch useCase {
+                case .login: loginState.login(can: can, pin: pin, checkBrainpoolAlgorithm: checkBrainpoolAlgorithm)
+                case .resetRetryCounter: resetRetryCounterState.resetRetryCounter(can: can, puk: puk)
+                case .resetRetryCounterWithNewPin: resetRetryCounterState
+                    .resetRetryCounterWithNewPin(can: can, puk: puk, newPin: pin)
+                }
+
             } label: {
                 Label {
                     Text("nfc_btn_start_nfc")
@@ -144,6 +160,12 @@ struct StartNFCView: View {
             return path
         }
     }
+
+    enum UseCase {
+        case login
+        case resetRetryCounter
+        case resetRetryCounterWithNewPin
+    }
 }
 
 #if DEBUG
@@ -151,7 +173,9 @@ struct StartNFCView_Previews: PreviewProvider {
     static var previews: some View {
         StartNFCView(
             can: "123456",
-            pin: "123456"
+            puk: "",
+            pin: "123456",
+            useCase: .login
         )
     }
 }

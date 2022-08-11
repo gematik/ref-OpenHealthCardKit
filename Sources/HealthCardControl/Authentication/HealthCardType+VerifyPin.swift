@@ -23,14 +23,12 @@ import Helper
 /// - SeeAlso: `HealthCardType.verify(pin:type:)`
 /// - success: when the pin verified as correct
 /// - failed: when the pin was incorrect
-public enum VerifyPinResponse {
+public enum VerifyPinResponse: Equatable {
     /// Pin verification succeeded
     case success
     /// Pin verification failed, retry count is the number of retries left for the given `EgkFileSystem.Pin` type
-    case failed(retryCount: Int)
+    case failed(retryCount: Int) // TODO: not complete // swiftlint:disable:this todo
 }
-
-extension VerifyPinResponse: Equatable {}
 
 extension HealthCardType {
     /// Verify Password for a Pin type
@@ -51,23 +49,11 @@ extension HealthCardType {
                 if response.responseStatus == .success {
                     return .success
                 } else {
+                    // TODO: not complete // swiftlint:disable:this todo
+                    // is also wrong for failures that were not wrongSecret
                     return .failed(retryCount: response.responseStatus.retryCount)
                 }
             }
             .eraseToAnyPublisher()
-    }
-}
-
-extension ResponseStatus {
-    var retryCount: Int {
-        switch self {
-        case .wrongSecretWarningCount06: return 6
-        case .wrongSecretWarningCount05: return 5
-        case .wrongSecretWarningCount04: return 4
-        case .wrongSecretWarningCount03: return 3
-        case .wrongSecretWarningCount02: return 2
-        case .wrongSecretWarningCount01: return 1
-        default: return 0
-        }
     }
 }

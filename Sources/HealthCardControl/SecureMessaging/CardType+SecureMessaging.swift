@@ -74,4 +74,26 @@ extension CardType {
         }
         .eraseToAnyPublisher()
     }
+
+    /// Open a secure session with a Card for further scheduling/attaching Publisher commands
+    ///
+    /// - Note: The healthCard provided by the Combine operation chain should be used for the commands
+    ///   to be executed on the secure channel.
+    ///   After the chain has completed the session should be invalidated/closed.
+    ///
+    /// - Parameters:
+    ///     - can: The Channel access number for the session
+    ///     - writeTimeout: time in seconds. Default: 30
+    ///     - readTimeout: time in seconds. Default 30
+    /// - Returns: Publisher that negotiates a secure session when scheduled to run.
+    public func openSecureSession(can: String, writeTimeout: TimeInterval = 30, readTimeout: TimeInterval = 30)
+        -> AnyPublisher<HealthCardType, Error> {
+        let parsedCan: CAN
+        do {
+            parsedCan = try CAN.from(Data(can.utf8))
+        } catch {
+            return Fail(error: error).eraseToAnyPublisher()
+        }
+        return openSecureSession(can: parsedCan, writeTimeout: writeTimeout, readTimeout: readTimeout)
+    }
 }

@@ -14,15 +14,15 @@
 //  limitations under the License.
 //
 
-@testable import NFCDemo
-import SnapshotTesting
 import SwiftUI
-import XCTest
 
-class StartNFCViewSnapshotTests: XCTestCase {
-    func testStartNFCViewSnapshotTests() throws {
-        let sut = NavigationView { StartNFCView(can: "123456", puk: "12345678", pin: "123", useCase: .login) }
-            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        assertSnapshots(matching: sut, as: snapshotModi())
+struct ResetRetryCounterControllerKey: EnvironmentKey {
+    static let defaultValue: ResetRetryCounter = NFCResetRetryCounterController()
+}
+
+extension EnvironmentValues {
+    var resetRetryCounterController: ResetRetryCounter {
+        get { self[ResetRetryCounterControllerKey.self] }
+        set { self[ResetRetryCounterControllerKey.self] = newValue }
     }
 }

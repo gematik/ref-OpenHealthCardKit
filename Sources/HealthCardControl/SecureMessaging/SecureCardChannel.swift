@@ -63,7 +63,7 @@ internal class SecureCardChannel: CardChannelType {
         DLog("<< \(decryptedAPDU.sw.hexString()) | [\(decryptedAPDU.data?.hexString() ?? "")]")
         CommandLogger.commands.append(
             Command(
-                message: "<< \(decryptedAPDU.sw.hexString()) | [\(decryptedAPDU.data?.hexString() ?? "")]",
+                message: "<< \(decryptedAPDU.sw.hexString())",
                 type: .responseSecureChannel
             )
         )

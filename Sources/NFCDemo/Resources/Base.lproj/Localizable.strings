@@ -9,9 +9,11 @@
 "can_txt_title" = "CAN";
 "can_txt_can_intro" = "Please enter your card's CAN.";
 "can_edt_can_enter_can" = "CAN";
-"can_btn_next" = "Next";
+"can_btn_next_login_test" = "Login-Test";
+"can_btn_next_reset_pin" = "Unlock card";
+"can_btn_next_reset_pin_with_new_pin" = "Set custom PIN";
 "can_txt_help_title" = "Where can I find my CAN?";
-"can_txt_help_explanation" = "Don't see a CAN printed on your card?\nThen you'canneed a new health insurance card. You can request one from your statutory health insurer.";
+"can_txt_help_explanation" = "Don't see a CAN printed on your card?\nThen you need a new health insurance card. You can request one from your statutory health insurer.";
 
 /*
   PIN
@@ -24,7 +26,18 @@
 "pin_txt_explanation" = "A Pin code will be mailed to you by your statutory health insurer shortly after you've received your health card.";
 
 /*
- StartNFC
+  RESET
+*/
+"reset_txt_title" = "Change PIN";
+"reset_txt_intro" = "Authorize yourself with your PUK and enter your new PIN.";
+"reset_edt_enter_puk" = "PUK-code";
+"reset_edt_enter_new_pin" = "New PIN";
+"reset_btn_next" = "Next";
+"reset_txt_help" = "I don't have a PUK";
+"reset_txt_explanation" = "A PUK code will be mailed to you by your statutory health insurer shortly after you've received your health card.";
+
+/*
+  StartNFC
 */
 
 "nfc_txt_placement" = "Place card above this line 👆";
@@ -35,7 +48,7 @@
 
 
 /*
- NFC Reader
+  NFC Reader
  */
 
 "nfc_txt_discoveryMessage" = "Please tap your eGK on top of your iPhone";
@@ -50,6 +63,10 @@
 "nfc_txt_msg_signing" = "Signing...";
 "nfc_txt_msg_success" = "Successful signing!";
 "nfc_txt_msg_failure" = "Error!";
+
+"nfc_txt_msg_reset_withoutNewPin" = "Reset retry counter";
+"nfc_txt_msg_reset_withNewPin" = "Reset retry counter with new PIN";
+"nfc_txt_msg_reset_success" = "Successful";
 
 /*
   Reading Results

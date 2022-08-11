@@ -1,3 +1,9 @@
+# Release 4.1.0
+
+## Added
+
+  - Add reset retry counter for password
+
 # Release 4.0.0
 
 ## Changed

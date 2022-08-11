@@ -55,9 +55,22 @@ struct RegisterCANView: View {
                             .padding()
                             .overlay(RoundedRectangle(cornerRadius: 8).stroke(Colors.grayBorder, lineWidth: 1))
                             .accessibility(identifier: "can_edt_can_enter_can")
+
+                        NavigationLink(destination: ResetRetryCounterView(can: storedCan)) {
+                            GTextButton(label: "can_btn_next_reset_pin", enabled: buttonEnabled)
+                                .accessibility(identifier: "can_btn_next_reset_pin")
+                        }
+                        .disabled(!buttonEnabled)
+
+                        NavigationLink(destination: ResetRetryCounterWithNewPINView(can: storedCan)) {
+                            GTextButton(label: "can_btn_next_reset_pin_with_new_pin", enabled: buttonEnabled)
+                                .accessibility(identifier: "can_btn_next_reset_pin_with_new_pin")
+                        }
+                        .disabled(!buttonEnabled)
+
                         NavigationLink(destination: RegisterPINView(can: storedCan)) {
-                            GTextButton(label: "can_btn_next", enabled: self.buttonEnabled)
-                                .accessibility(identifier: "can_btn_next")
+                            GTextButton(label: "can_btn_next_login_test", enabled: buttonEnabled)
+                                .accessibility(identifier: "can_btn_next_login_test")
                         }
                         .disabled(!buttonEnabled)
                     }
