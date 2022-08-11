@@ -81,6 +81,12 @@
                 <a class="nav-group-task-link" href="../Enums/ReadError.html">ReadError</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ResetRetryCounterAffectedPassword.html">ResetRetryCounterAffectedPassword</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ResetRetryCounterResponse.html">ResetRetryCounterResponse</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/SelectError.html">SelectError</a>
               </li>
               <li class="nav-group-task">
@@ -238,6 +244,88 @@ After the chain has completed the session should be invalidated/closed.</p>
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:21CardReaderProviderApi0A4TypeP06HealthA7ControlE17openSecureSession3can12writeTimeout04readM07Combine12AnyPublisherVy0fA6Access0faE0_ps5Error_pGSS_S2dtF"></a>
+                    <a name="//apple_ref/swift/Method/openSecureSession(can:writeTimeout:readTimeout:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:21CardReaderProviderApi0A4TypeP06HealthA7ControlE17openSecureSession3can12writeTimeout04readM07Combine12AnyPublisherVy0fA6Access0faE0_ps5Error_pGSS_S2dtF">openSecureSession(can:<wbr>writeTimeout:<wbr>readTimeout:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Open a secure session with a Card for further scheduling/attaching Publisher commands</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    <p>The healthCard provided by the Combine operation chain should be used for the commands
+to be executed on the secure channel.
+After the chain has completed the session should be invalidated/closed.</p>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">openSecureSession</span><span class="p">(</span><span class="nv">can</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">writeTimeout</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span> <span class="nv">readTimeout</span><span class="p">:</span> <span class="kt">TimeInterval</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span>
+    <span class="o">-&gt;</span> <span class="kt">AnyPublisher</span><span class="o">&lt;</span><span class="kt">HealthCardType</span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>can</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The Channel access number for the session</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>writeTimeout</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>time in seconds. Default: 30</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>readTimeout</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>time in seconds. Default 30</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Publisher that negotiates a secure session when scheduled to run.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
           </div>
@@ -246,7 +334,7 @@ After the chain has completed the session should be invalidated/closed.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://www.gematik.de" target="_blank" rel="external noopener">gematik GmbH</a>. All rights reserved. (Last updated: 2022-05-11)</p>
+      <p>&copy; 2022 <a class="link" href="https://www.gematik.de" target="_blank" rel="external noopener">gematik GmbH</a>. All rights reserved. (Last updated: 2022-08-11)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
     </section>
   </body>

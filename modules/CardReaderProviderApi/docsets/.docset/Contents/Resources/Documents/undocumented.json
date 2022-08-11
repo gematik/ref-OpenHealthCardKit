@@ -1,19 +1,6 @@
 {
   "warnings": [
-    {
-      "file": "/Users/tst_tt_build/jenkins/workspace/OpenHealthCardKit-GitHub-Publish-Prepare/Sources/CardReaderProviderApi/Command/APDU.swift",
-      "line": 9,
-      "symbol": "APDU.Error",
-      "symbol_kind": "source.lang.swift.decl.enum",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/tst_tt_build/jenkins/workspace/OpenHealthCardKit-GitHub-Publish-Prepare/Sources/CardReaderProviderApi/Model/ProviderDescriptor.swift",
-      "line": 15,
-      "symbol": "ProviderDescriptor.init(_:_:_:_:_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    }
+
   ],
   "source_directory": "/Users/tst_tt_build/jenkins/workspace/OpenHealthCardKit-GitHub-Publish-Prepare"
 }

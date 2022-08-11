@@ -81,6 +81,12 @@
                 <a class="nav-group-task-link" href="../Enums/ReadError.html">ReadError</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ResetRetryCounterAffectedPassword.html">ResetRetryCounterAffectedPassword</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ResetRetryCounterResponse.html">ResetRetryCounterResponse</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/SelectError.html">SelectError</a>
               </li>
               <li class="nav-group-task">
@@ -317,6 +323,338 @@ Defaults to a hash function according to the <code><a href="../Enums/AutCertInfo
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:16HealthCardAccess0aB4TypeP0aB7ControlE17resetRetryCounter3puk4type10dfSpecific7Combine12AnyPublisherVyAD05ResetgH8ResponseOs5Error_pGAA10Format2PinV_AA13EgkFileSystemV0T0OSbtF"></a>
+                    <a name="//apple_ref/swift/Method/resetRetryCounter(puk:type:dfSpecific:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB4TypeP0aB7ControlE17resetRetryCounter3puk4type10dfSpecific7Combine12AnyPublisherVyAD05ResetgH8ResponseOs5Error_pGAA10Format2PinV_AA13EgkFileSystemV0T0OSbtF">resetRetryCounter(puk:<wbr>type:<wbr>dfSpecific:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Reset the retry counter of a password object to its start value.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    HealthCardCommandBuilderError
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">resetRetryCounter</span><span class="p">(</span>
+    <span class="nv">puk</span><span class="p">:</span> <span class="kt">Format2Pin</span><span class="p">,</span>
+    <span class="nv">type</span><span class="p">:</span> <span class="kt">EgkFileSystem</span><span class="o">.</span><span class="kt">Pin</span> <span class="o">=</span> <span class="kt">EgkFileSystem</span><span class="o">.</span><span class="kt">Pin</span><span class="o">.</span><span class="n">mrpinHome</span><span class="p">,</span>
+    <span class="nv">dfSpecific</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">AnyPublisher</span><span class="o">&lt;</span><span class="kt"><a href="../Enums/ResetRetryCounterResponse.html">ResetRetryCounterResponse</a></span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>puk</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Secret which authorizes the action</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>type</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Password reference</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dfSpecific</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>is Password reference dfSpecific</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Publisher that tries to reset the password&rsquo;s retry counter</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB4TypeP0aB7ControlE17resetRetryCounter3puk16affectedPassWord7Combine12AnyPublisherVyAD05ResetgH8ResponseOs5Error_pGSS_AD0pgH16AffectedPasswordOtF"></a>
+                    <a name="//apple_ref/swift/Method/resetRetryCounter(puk:affectedPassWord:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB4TypeP0aB7ControlE17resetRetryCounter3puk16affectedPassWord7Combine12AnyPublisherVyAD05ResetgH8ResponseOs5Error_pGSS_AD0pgH16AffectedPasswordOtF">resetRetryCounter(puk:<wbr>affectedPassWord:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Reset the retry counter of a password object to its start value.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    HealthCardAccessError
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">resetRetryCounter</span><span class="p">(</span>
+    <span class="nv">puk</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">affectedPassWord</span><span class="p">:</span> <span class="kt"><a href="../Enums/ResetRetryCounterAffectedPassword.html">ResetRetryCounterAffectedPassword</a></span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">AnyPublisher</span><span class="o">&lt;</span><span class="kt"><a href="../Enums/ResetRetryCounterResponse.html">ResetRetryCounterResponse</a></span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>puk</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Secret which authorizes the action</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>affectedPassWord</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>convenient <code><a href="../Enums/ResetRetryCounterAffectedPassword.html">ResetRetryCounterAffectedPassword</a></code> selector</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Publisher that tries to reset the password&rsquo;s retry counter</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB4TypeP0aB7ControlE29resetRetryCounterAndSetNewPin3puk03newL04type10dfSpecific7Combine12AnyPublisherVyAD05ResetgH8ResponseOs5Error_pGAA07Format2L0V_ArA13EgkFileSystemV0L0OSbtF"></a>
+                    <a name="//apple_ref/swift/Method/resetRetryCounterAndSetNewPin(puk:newPin:type:dfSpecific:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB4TypeP0aB7ControlE29resetRetryCounterAndSetNewPin3puk03newL04type10dfSpecific7Combine12AnyPublisherVyAD05ResetgH8ResponseOs5Error_pGAA07Format2L0V_ArA13EgkFileSystemV0L0OSbtF">resetRetryCounterAndSetNewPin(puk:<wbr>newPin:<wbr>type:<wbr>dfSpecific:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Reset the retry counter of a password object to its start value while assigning a new secret.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    HealthCardCommandBuilderError
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">resetRetryCounterAndSetNewPin</span><span class="p">(</span>
+    <span class="nv">puk</span><span class="p">:</span> <span class="kt">Format2Pin</span><span class="p">,</span>
+    <span class="nv">newPin</span><span class="p">:</span> <span class="kt">Format2Pin</span><span class="p">,</span>
+    <span class="nv">type</span><span class="p">:</span> <span class="kt">EgkFileSystem</span><span class="o">.</span><span class="kt">Pin</span> <span class="o">=</span> <span class="kt">EgkFileSystem</span><span class="o">.</span><span class="kt">Pin</span><span class="o">.</span><span class="n">mrpinHome</span><span class="p">,</span>
+    <span class="nv">dfSpecific</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">AnyPublisher</span><span class="o">&lt;</span><span class="kt"><a href="../Enums/ResetRetryCounterResponse.html">ResetRetryCounterResponse</a></span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>puk</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Secret which authorizes the action</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>newPin</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The new secret of the password object</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>type</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Password reference</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dfSpecific</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>is Password reference dfSpecific</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Publisher that tries to reset the password&rsquo;s retry counter while setting a new secret</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB4TypeP0aB7ControlE29resetRetryCounterAndSetNewPin3puk03newL016affectedPassWord7Combine12AnyPublisherVyAD05ResetgH8ResponseOs5Error_pGSS_SSAD0ugH16AffectedPasswordOtF"></a>
+                    <a name="//apple_ref/swift/Method/resetRetryCounterAndSetNewPin(puk:newPin:affectedPassWord:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB4TypeP0aB7ControlE29resetRetryCounterAndSetNewPin3puk03newL016affectedPassWord7Combine12AnyPublisherVyAD05ResetgH8ResponseOs5Error_pGSS_SSAD0ugH16AffectedPasswordOtF">resetRetryCounterAndSetNewPin(puk:<wbr>newPin:<wbr>affectedPassWord:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Reset the retry counter of a password object to its start value while assigning a new secret.</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    HealthCardAccessError
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">resetRetryCounterAndSetNewPin</span><span class="p">(</span>
+    <span class="nv">puk</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">newPin</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">affectedPassWord</span><span class="p">:</span> <span class="kt"><a href="../Enums/ResetRetryCounterAffectedPassword.html">ResetRetryCounterAffectedPassword</a></span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">AnyPublisher</span><span class="o">&lt;</span><span class="kt"><a href="../Enums/ResetRetryCounterResponse.html">ResetRetryCounterResponse</a></span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>puk</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Secret which authorizes the action</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>newPin</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The new secret of the password object</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>affectedPassWord</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>convenient <code><a href="../Enums/ResetRetryCounterAffectedPassword.html">ResetRetryCounterAffectedPassword</a></code> selector</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Publisher that tries to reset the password&rsquo;s retry counter</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:16HealthCardAccess0aB4TypeP0aB7ControlE6verify3pin4type7Combine12AnyPublisherVyAD17VerifyPinResponseOs5Error_pGAA07Format2M0V_AA13EgkFileSystemV0M0OtF"></a>
                     <a name="//apple_ref/swift/Method/verify(pin:type:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:16HealthCardAccess0aB4TypeP0aB7ControlE6verify3pin4type7Combine12AnyPublisherVyAD17VerifyPinResponseOs5Error_pGAA07Format2M0V_AA13EgkFileSystemV0M0OtF">verify(pin:<wbr>type:<wbr>)</a>
@@ -546,7 +884,7 @@ the file is read in chunks and returned as a whole.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://www.gematik.de" target="_blank" rel="external noopener">gematik GmbH</a>. All rights reserved. (Last updated: 2022-05-11)</p>
+      <p>&copy; 2022 <a class="link" href="https://www.gematik.de" target="_blank" rel="external noopener">gematik GmbH</a>. All rights reserved. (Last updated: 2022-08-11)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
     </section>
   </body>
