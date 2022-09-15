@@ -23,7 +23,7 @@ import HealthCardControl
 import Helper
 import NFCCardReaderProvider
 
-public class NFCResetRetryCounterController: ResetRetryCounter {
+public class NFCChangeReferenceDataController: ChangeReferenceData {
     public enum Error: Swift.Error, LocalizedError {
         /// In case the PIN, PUK or CAN could not be constructed from input
         case cardError(NFCTagReaderSession.Error)
@@ -37,11 +37,11 @@ public class NFCResetRetryCounterController: ResetRetryCounter {
             case let .cardError(error):
                 return error.localizedDescription
             case .invalidCanOrPinFormat:
-                return "Invalid CAN, PUK or PIN format"
+                return "Invalid CAN or PIN format"
             case let .wrongPin(retryCount: retryCount):
-                return "Wrong pin with retry count \(retryCount)."
+                return "Wrong PIN with retry count \(retryCount)."
             case .commandBlocked:
-                return "PUK cannot be used anymore! \n (PUK usage counter exhausted)"
+                return "PIN usage counter exhausted"
             case .otherError:
                 return "An unexpected error occurred."
             }
@@ -74,16 +74,18 @@ public class NFCResetRetryCounterController: ResetRetryCounter {
     )
 
     // swiftlint:disable:next function_body_length
-    func resetRetryCounter(can: String, puk: String) {
+    func changeReferenceDataSetNewPin(can: String, oldPin: String, newPin: String) {
         if case .loading = pState { return }
         callOnMainThread {
             self.pState = .loading(nil)
         }
         let canData: CAN
-        let format2Puk: Format2Pin
+        let format2OldPin: Format2Pin
+        let format2NewPin: Format2Pin
         do {
             canData = try CAN.from(Data(can.utf8))
-            format2Puk = try Format2Pin(pincode: puk)
+            format2OldPin = try Format2Pin(pincode: oldPin)
+            format2NewPin = try Format2Pin(pincode: newPin)
         } catch {
             callOnMainThread {
                 self.pState = .error(Error.invalidCanOrPinFormat)
@@ -99,10 +101,11 @@ public class NFCResetRetryCounterController: ResetRetryCounter {
                     .openSecureSession(can: canData, writeTimeout: 0, readTimeout: 0)
                     .userMessage(
                         session: session,
-                        message: NSLocalizedString("nfc_txt_msg_reset_withoutNewPin", comment: "")
+                        message: NSLocalizedString("nfc_txt_msg_reset_withNewPin", comment: "")
                     )
-                    .resetRetryCounter(
-                        puk: format2Puk,
+                    .changeReferenceDataSetNewPin(
+                        oldPin: format2OldPin,
+                        newPin: format2NewPin,
                         type: EgkFileSystem.Pin.mrpinHome,
                         dfSpecific: false
                     )
@@ -111,7 +114,9 @@ public class NFCResetRetryCounterController: ResetRetryCounter {
                     .map(ViewState.value)
                     .handleEvents(receiveOutput: { state in
                         if let value = state.value, value == true {
-                            session.updateAlert(message: NSLocalizedString("nfc_txt_msg_reset_success", comment: ""))
+                            session
+                                .updateAlert(message: NSLocalizedString("nfc_txt_msg_reset_success",
+                                                                        comment: ""))
                             session.invalidateSession(with: nil)
                         } else {
                             session.invalidateSession(
@@ -143,133 +148,34 @@ public class NFCResetRetryCounterController: ResetRetryCounter {
                 }
             )
     }
-
-    // swiftlint:disable:next function_body_length
-    func resetRetryCounterWithNewPin(can: String, puk: String, newPin: String) {
-        if case .loading = pState { return }
-        callOnMainThread {
-            self.pState = .loading(nil)
-        }
-        let canData: CAN
-        let format2Puk: Format2Pin
-        let format2Pin: Format2Pin
-        do {
-            canData = try CAN.from(Data(can.utf8))
-            format2Puk = try Format2Pin(pincode: puk)
-            format2Pin = try Format2Pin(pincode: newPin)
-        } catch {
-            callOnMainThread {
-                self.pState = .error(Error.invalidCanOrPinFormat)
-            }
-            return
-        }
-
-        cancellable = NFCTagReaderSession.publisher(messages: messages)
-            .mapError { Error.cardError($0) as Swift.Error }
-            .flatMap { (session: NFCCardSession) -> AnyPublisher<ViewState<Bool, Swift.Error>, Swift.Error> in
-                session.updateAlert(message: NSLocalizedString("nfc_txt_msg_secure_channel", comment: ""))
-                return session.card // swiftlint:disable:this trailing_closure
-                    .openSecureSession(can: canData, writeTimeout: 0, readTimeout: 0)
-                    .userMessage(
-                        session: session,
-                        message: NSLocalizedString("nfc_txt_msg_reset_withNewPin", comment: "")
-                    )
-                    .resetRetryCounterAndSetNewPin(
-                        puk: format2Puk,
-                        newPin: format2Pin,
-                        type: EgkFileSystem.Pin.mrpinHome,
-                        dfSpecific: false
-                    )
-
-                    .map { _ in true }
-                    .map(ViewState.value)
-                    .handleEvents(receiveOutput: { state in
-                        if let value = state.value, value == true {
-                            session.updateAlert(message: NSLocalizedString("nfc_txt_msg_reset_success", comment: ""))
-                            session.invalidateSession(with: nil)
-                        } else {
-                            session.invalidateSession(
-                                with: state.error?.localizedDescription ?? NSLocalizedString(
-                                    "nfc_txt_msg_failure",
-                                    comment: ""
-                                )
-                            )
-                        }
-                    })
-                    .mapError { error in
-                        session.invalidateSession(with: error.localizedDescription)
-                        return error
-                    }
-                    .eraseToAnyPublisher()
-            }
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case let .failure(error) = completion {
-                    self?.pState = .error(error)
-                } else {
-                    self?.pState = .idle
-                }
-                self?.cancellable?.cancel()
-            }, receiveValue: { [weak self] value in
-                self?.pState = value
-            })
-    }
 }
 
 extension Publisher where Output == HealthCardType, Self.Failure == Swift.Error {
-    func resetRetryCounter(
-        puk: Format2Pin,
-        type: EgkFileSystem.Pin,
-        dfSpecific: Bool
-    ) -> AnyPublisher<HealthCardType, Swift.Error> {
-        flatMap { secureCard in
-            secureCard.resetRetryCounter(
-                puk: puk,
-                type: type,
-                dfSpecific: dfSpecific
-            )
-            .tryMap { response in
-                if case ResetRetryCounterResponse.success = response {
-                    return secureCard
-                }
-                if case let ResetRetryCounterResponse.wrongSecretWarning(retryCount: count) = response {
-                    throw NFCResetRetryCounterController.Error.wrongPin(retryCount: count)
-                }
-                if case ResetRetryCounterResponse.commandBlocked = response {
-                    throw NFCResetRetryCounterController.Error.commandBlocked
-                }
-                // else
-                throw NFCResetRetryCounterController.Error.otherError
-            }
-        }
-        .eraseToAnyPublisher()
-    }
-
-    func resetRetryCounterAndSetNewPin(
-        puk: Format2Pin,
+    func changeReferenceDataSetNewPin(
+        oldPin: Format2Pin,
         newPin: Format2Pin,
         type: EgkFileSystem.Pin,
         dfSpecific: Bool
     ) -> AnyPublisher<HealthCardType, Swift.Error> {
         flatMap { secureCard in
-            secureCard.resetRetryCounterAndSetNewPin(
-                puk: puk,
-                newPin: newPin,
+            secureCard.changeReferenceDataSetNewPin(
+                old: oldPin,
+                new: newPin,
                 type: type,
                 dfSpecific: dfSpecific
             )
             .tryMap { response in
-                if case ResetRetryCounterResponse.success = response {
+                if case ChangeReferenceDataResponse.success = response {
                     return secureCard
                 }
-                if case let ResetRetryCounterResponse.wrongSecretWarning(retryCount: count) = response {
-                    throw NFCResetRetryCounterController.Error.wrongPin(retryCount: count)
+                if case let ChangeReferenceDataResponse.wrongSecretWarning(retryCount: count) = response {
+                    throw NFCChangeReferenceDataController.Error.wrongPin(retryCount: count)
                 }
-                if case ResetRetryCounterResponse.commandBlocked = response {
-                    throw NFCResetRetryCounterController.Error.commandBlocked
+                if case ChangeReferenceDataResponse.commandBlocked = response {
+                    throw NFCChangeReferenceDataController.Error.commandBlocked
                 }
                 // else
-                throw NFCResetRetryCounterController.Error.otherError
+                throw NFCChangeReferenceDataController.Error.otherError
             }
         }
         .eraseToAnyPublisher()

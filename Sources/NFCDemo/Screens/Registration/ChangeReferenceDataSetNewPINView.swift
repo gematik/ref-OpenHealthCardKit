@@ -18,36 +18,39 @@ import Combine
 import Foundation
 import SwiftUI
 
-struct ResetRetryCounterView: View {
+struct ChangeReferenceDataSetNewPINView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     var can: String = ""
     @State var showStartNFCView = false
-    #if DEBUG
-    @AppStorage("puk") var puk: String = ""
-    #else
-    @State var puk: String = ""
-    #endif
+    @State var oldPin: String = ""
+    @State var newPin: String = ""
     @ObservedObject var keyboardHeight = KeyboardHeight()
     var buttonEnabled: Bool {
-        puk.count > 5 && puk.count <= 10
+        newPin.count >= 5 && newPin.count <= 6 && oldPin.count > 5 && oldPin.count <= 6
     }
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {
-            Section(header: HeaderView(), footer: FooterView()) {
+            Section(header: HeaderView()) {
                 VStack(spacing: 20) {
-                    SecureField("reset_edt_enter_puk", text: $puk)
+                    SecureField("change_edt_enter_old_pin", text: $oldPin)
                         .keyboardType(.numberPad)
                         .padding()
                         .overlay(RoundedRectangle(cornerRadius: 8).stroke(Colors.grayBorder, lineWidth: 1))
-                        .accessibility(identifier: "reset_edt_enter_puk")
+                        .accessibility(identifier: "change_edt_enter_old_pin")
+
+                    SecureField("change_edt_enter_new_pin", text: $newPin)
+                        .keyboardType(.numberPad)
+                        .padding()
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Colors.grayBorder, lineWidth: 1))
+                        .accessibility(identifier: "change_edt_enter_new_pin")
 
                     Button {
                         UIApplication.shared.dismissKeyboard()
                         showStartNFCView = true
                     } label: {
-                        GTextButton(label: "reset_btn_next", enabled: self.buttonEnabled)
-                            .accessibility(identifier: "reset_btn_next")
+                        GTextButton(label: "change_btn_next", enabled: buttonEnabled)
+                            .accessibility(identifier: "change_btn_next")
                             .disabled(!buttonEnabled)
                     }
                     .disabled(!buttonEnabled)
@@ -57,17 +60,21 @@ struct ResetRetryCounterView: View {
         }
         .padding(.horizontal)
         .background(Color(.secondarySystemBackground).ignoresSafeArea())
-        .padding(.bottom, self.keyboardHeight.height)
+        .padding(.bottom, keyboardHeight.height)
         .edgesIgnoringSafeArea(.bottom)
-        .navigationTitle("reset_txt_title")
+        .navigationTitle("change_txt_title")
         .fullScreenCover(
             isPresented: $showStartNFCView,
-            onDismiss: {
-                showStartNFCView = false
-            },
+            onDismiss: { showStartNFCView = false },
             content: {
                 NavigationView {
-                    StartNFCView(can: can, puk: puk, oldPin: "", pin: "", useCase: .resetRetryCounter)
+                    StartNFCView(
+                        can: can,
+                        puk: "",
+                        oldPin: oldPin,
+                        pin: newPin,
+                        useCase: .changeReferenceDataSetNewPin
+                    )
                 }
             }
         )
@@ -76,36 +83,19 @@ struct ResetRetryCounterView: View {
     struct HeaderView: View {
         var body: some View {
             HStack {
-                Text("Authorisieren Sie sich mit Ihrer PUK")
+                Text("change_txt_intro")
                     .font(.subheadline)
-                    .accessibility(identifier: "Authorisieren Sie sich mit Ihrer PUK")
+                    .accessibility(identifier: "change_txt_intro")
                 Spacer()
             }.padding(.vertical)
-        }
-    }
-
-    struct FooterView: View {
-        var body: some View {
-            VStack(alignment: .leading) {
-                Text("reset_txt_help")
-                    .font(.subheadline)
-                    .padding(.vertical, 4)
-                    .accessibility(identifier: "reset_txt_help")
-
-                Text("reset_txt_explanation")
-                    .font(.footnote)
-                    .accessibility(identifier: "reset_txt_explanation")
-            }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .fixedSize(horizontal: false, vertical: true)
         }
     }
 }
 
 #if DEBUG
-struct ResetRetryCounterView_Previews: PreviewProvider {
+struct ChangeReferenceDataSetNewPIN_Previews: PreviewProvider {
     static var previews: some View {
-        ResetRetryCounterWithNewPINView(
+        ChangeReferenceDataSetNewPINView(
             can: "1234"
         )
     }

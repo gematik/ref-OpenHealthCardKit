@@ -87,8 +87,8 @@ class NFCCardChannel: CardChannelType {
             DLog("NFC send timed out [\(sendHeader)]")
             throw NFCCardError.sendTimeout.connectionError
         }
-        if let error = error {
-            throw error
+        if let error = error?.asCoreNFCError() {
+            throw NFCCardError.nfcTag(error: error)
         }
 
         let response = "[\(Data(data + [sw1, sw2]).hexString())]"

@@ -28,13 +28,23 @@
 /*
   RESET
 */
-"reset_txt_title" = "Change PIN";
+"reset_txt_title" = "Unlock card";
+"reset_txt_title_with_new_pin" = "Change PIN";
 "reset_txt_intro" = "Authorize yourself with your PUK and enter your new PIN.";
 "reset_edt_enter_puk" = "PUK-code";
 "reset_edt_enter_new_pin" = "New PIN";
 "reset_btn_next" = "Next";
 "reset_txt_help" = "I don't have a PUK";
 "reset_txt_explanation" = "A PUK code will be mailed to you by your statutory health insurer shortly after you've received your health card.";
+
+/*
+  CHANGE PIN
+*/
+"change_txt_title" = "Change PIN";
+"change_txt_intro" = "Enter your current PIN and a new PIN.";
+"change_edt_enter_old_pin" = "Current PIN";
+"change_edt_enter_new_pin" = "New PIN";
+"change_btn_next" = "Next";
 
 /*
   StartNFC

@@ -18,6 +18,7 @@ import CardReaderProviderApi
 import Foundation
 
 public enum NFCCardError: Swift.Error {
+    case nfcTag(error: CoreNFCError)
     case noCardPresent
     case transferException(name: String)
     case sendTimeout

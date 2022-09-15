@@ -31,6 +31,8 @@ public class NFCLoginController: LoginController {
         case wrongPin(retryCount: Int)
         case signatureFailure(ResponseStatus)
         case invalidAlgorithm(PSOAlgorithm)
+        case passwordBlocked
+        case verifyPinResponse
 
         public var errorDescription: String? {
             switch self {
@@ -44,6 +46,10 @@ public class NFCLoginController: LoginController {
                 return "signatureFailure with response status code: \(status.code)"
             case let .invalidAlgorithm(algorithm):
                 return "SmartCard is not using a brainpoolP256r1 algorithm for signing. Uses: \(algorithm)"
+            case .passwordBlocked:
+                return "PIN usage counter exhausted"
+            case .verifyPinResponse:
+                return "Unexpected VerifyPinResponse"
             }
         }
     }
@@ -128,6 +134,8 @@ public class NFCLoginController: LoginController {
             .sink(receiveCompletion: { [weak self] completion in
                 if case let .failure(error) = completion {
                     self?.pState = .error(error)
+                } else {
+                    self?.pState = .idle
                 }
                 self?.cancellable?.cancel()
             }, receiveValue: { [weak self] value in
@@ -153,8 +161,14 @@ extension Publisher where Output == HealthCardType, Self.Failure == Swift.Error 
         flatMap { secureCard in
             secureCard.verify(pin: pin, type: type)
                 .tryMap { response in
-                    if case let VerifyPinResponse.failed(retryCount: count) = response {
+                    if case let VerifyPinResponse.wrongSecretWarning(retryCount: count) = response {
                         throw NFCLoginController.Error.wrongPin(retryCount: count)
+                    }
+                    if case VerifyPinResponse.passwordBlocked = response {
+                        throw NFCLoginController.Error.passwordBlocked
+                    }
+                    if response != VerifyPinResponse.success {
+                        throw NFCLoginController.Error.verifyPinResponse
                     }
                     return secureCard
                 }

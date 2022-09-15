@@ -1,3 +1,22 @@
+# Release 5.0.0
+
+## Breaking
+
+  - Change `VerifyPinResponse` to bridge all possible verify responses
+
+## Added
+
+  - Add error type `CoreNFCError` for all errors occurring in CoreNFC
+  - Add convenience interfaces for PIN-verification
+
+## Changed
+
+  - Change ResetRetryCounter to set a new PIN with ChangeReferenceDate
+
+## Internals
+
+ - Revive Integration Tests
+
 # Release 4.1.0
 
 ## Added

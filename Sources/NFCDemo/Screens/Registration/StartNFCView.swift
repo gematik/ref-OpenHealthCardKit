@@ -21,11 +21,13 @@ import SwiftUI
 struct StartNFCView: View {
     let can: String
     let puk: String
+    let oldPin: String
     let pin: String
     let useCase: UseCase
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @StateObject var loginState = NFCLoginViewModel()
     @StateObject var resetRetryCounterState = NFCResetRetryCounterViewModel()
+    @StateObject var changeReferenceDataState = NFCChangeReferenceDataViewModel()
     @State var error: Swift.Error?
     @State private var showAlert = false
     @State var loading = false
@@ -103,6 +105,8 @@ struct StartNFCView: View {
                 case .resetRetryCounter: resetRetryCounterState.resetRetryCounter(can: can, puk: puk)
                 case .resetRetryCounterWithNewPin: resetRetryCounterState
                     .resetRetryCounterWithNewPin(can: can, puk: puk, newPin: pin)
+                case .changeReferenceDataSetNewPin: changeReferenceDataState
+                    .changeReferenceDataSetNewPin(can: can, oldPin: oldPin, newPin: pin)
                 }
 
             } label: {
@@ -164,7 +168,8 @@ struct StartNFCView: View {
     enum UseCase {
         case login
         case resetRetryCounter
-        case resetRetryCounterWithNewPin
+        case resetRetryCounterWithNewPin // do not use this for solely setting a new PIN value
+        case changeReferenceDataSetNewPin
     }
 }
 
@@ -174,6 +179,7 @@ struct StartNFCView_Previews: PreviewProvider {
         StartNFCView(
             can: "123456",
             puk: "",
+            oldPin: "123456",
             pin: "123456",
             useCase: .login
         )

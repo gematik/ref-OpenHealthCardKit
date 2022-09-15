@@ -28,13 +28,23 @@
 /*
   RESET
 */
-"reset_txt_title" = "Wunsch-PIN";
-"reset_txt_intro" = "Authorisieren Sie sich mit Ihrer PUK und geben sie ihre neue Wunsch-PIN ein.";
+"reset_txt_title" = "Karte entsperren";
+"reset_txt_title_with_new_pin" = "Wunsch-PIN";
+"reset_txt_intro" = "Authorisieren Sie sich mit Ihrer PUK und geben Sie Ihre neue Wunsch-PIN ein.";
 "reset_edt_enter_puk" = "PUK-code";
 "reset_edt_enter_new_pin" = "Wunsch-PIN";
 "reset_btn_next" = "Weiter";
 "reset_txt_help" = "Ich habe keine PUK";
 "reset_txt_explanation" = "Eine PUK erhalten Sie von ihrer Krankenkasse, nachdem Sie ihre NFC-fähige Gesundheitskarte erhalten haben.";
+
+/*
+  CHANGE PIN
+*/
+"change_txt_title" = "Wunsch-PIN";
+"change_txt_intro" = "Geben Sie Ihre bisherige und Ihre neue Wunsch-PIN ein.";
+"change_edt_enter_old_pin" = "Aktuelle PIN";
+"change_edt_enter_new_pin" = "Neue Wunsch-PIN";
+"change_btn_next" = "Weiter";
 
 /*
   StartNFC

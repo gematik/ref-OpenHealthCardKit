@@ -20,33 +20,38 @@ import HealthCardAccess
 import Nimble
 import XCTest
 
-final class HealthCardTypeExtVerifyPinTest: CardSimulationTerminalTestCase {
+final class HealthCardTypeExtChangeReferenceDataIntegrationTest: CardSimulationTerminalTestCase {
     override class var configFileInput: String {
         "Configuration/configuration_EGK_G2_1_80276883110000095711_GuD_TCP.xml"
     }
 
     override class var healthCardStatusInput: HealthCardStatus { .valid(cardType: .egk(generation: .g2_1)) }
 
-    func testVerifyMrPinHomeEgk21() {
-        let pinCode = "123456"
-        expect {
-            let format2Pin = try Format2Pin(pincode: pinCode)
-            return try Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
-                .test()
-        } == VerifyPinResponse.success
+    func testChangeReferenceDataEgk21_success() throws {
+        let old = "123456" as Format2Pin
+        let new = "654321" as Format2Pin
+
+        expect(
+            try Self.healthCard.changeReferenceDataSetNewPin(
+                old: old,
+                new: new
+            )
+            .test()
+        ) == ChangeReferenceDataResponse.success
     }
 
-    func testVerifyMrPinHomeEgk21_WarningRetryCounter() {
-        let pinCode = "654321"
-        expect {
-            let format2Pin = try Format2Pin(pincode: pinCode)
-            return try Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
-                .test()
-        } == VerifyPinResponse.wrongSecretWarning(retryCount: 2)
-    }
+    func testChangeReferenceDataEgk21_wrongPasswordLength() throws {
+        let old = "123456" as Format2Pin
+        let new = "654321123456" as Format2Pin
 
-    static let allTests = [
-        ("testVerifyMrPinHomeEgk21", testVerifyMrPinHomeEgk21),
-        ("testVerifyMrPinHomeEgk21Failing", testVerifyMrPinHomeEgk21_WarningRetryCounter),
-    ]
+        expect(
+            try Self.healthCard.changeReferenceDataSetNewPin(
+                old: old,
+                new: new,
+                type: EgkFileSystem.Pin.mrpinHome,
+                dfSpecific: false
+            )
+            .test()
+        ) == ChangeReferenceDataResponse.wrongPasswordLength
+    }
 }

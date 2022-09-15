@@ -39,8 +39,7 @@ extension NFCTagReaderSession {
     public enum Error: Swift.Error {
         case couldNotInitializeSession
         case unsupportedTag
-        case nfcTag(error: Swift.Error)
-        case userCancelled(error: Swift.Error)
+        case nfcTag(error: CoreNFCError)
     }
 
     public struct Publisher: Combine.Publisher {
@@ -217,16 +216,8 @@ extension NFCTagReaderSession.Publisher {
 
         func tagReaderSession(_: NFCTagReaderSession, didInvalidateWithError error: Swift.Error) {
             DLog("NFC reader session was invalidated: \(error)")
-            if (error as NSError).code == 200 { // error on session.invalidate()
-                if card != nil {
-                    // If there is a card the process finished successful
-                    complete(with: nil)
-                } else {
-                    complete(with: .userCancelled(error: error))
-                }
-            } else {
-                complete(with: .nfcTag(error: error))
-            }
+            let coreNFCError = error.asCoreNFCError()
+            complete(with: .nfcTag(error: coreNFCError))
             demand = .none
         }
 
@@ -259,7 +250,7 @@ extension NFCTagReaderSession.Publisher {
             // Connect to tag
             session.connect(to: tag) { [weak self] (error: Swift.Error?) in
                 guard let self = self else { return }
-                if let error = error {
+                if let error = error?.asCoreNFCError() {
                     session.invalidate(errorMessage: self.messages.connectionErrorMessage)
                     self.complete(with: .nfcTag(error: error))
                     return

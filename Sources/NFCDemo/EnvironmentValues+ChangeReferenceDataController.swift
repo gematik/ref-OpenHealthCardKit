@@ -14,17 +14,15 @@
 //  limitations under the License.
 //
 
-@testable import NFCDemo
-import SnapshotTesting
 import SwiftUI
-import XCTest
 
-class StartNFCViewSnapshotTests: XCTestCase {
-    func testStartNFCViewSnapshotTests() throws {
-        let sut = NavigationView {
-            StartNFCView(can: "123456", puk: "12345678", oldPin: "123456", pin: "654321", useCase: .login)
-        }
-        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        assertSnapshots(matching: sut, as: snapshotModi())
+struct ChangeReferenceDataControllerKey: EnvironmentKey {
+    static let defaultValue: ChangeReferenceData = NFCChangeReferenceDataController()
+}
+
+extension EnvironmentValues {
+    var changeReferenceDataController: ChangeReferenceData {
+        get { self[ChangeReferenceDataControllerKey.self] }
+        set { self[ChangeReferenceDataControllerKey.self] = newValue }
     }
 }

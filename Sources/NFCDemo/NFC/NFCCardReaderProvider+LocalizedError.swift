@@ -26,9 +26,29 @@ extension NFCTagReaderSession.Error: LocalizedError {
         case .unsupportedTag:
             return "NFCTagReaderSession.Error: The read tag is not supported"
         case let .nfcTag(error: error):
-            return error.localizedDescription
-        case let .userCancelled(error: error):
-            return error.localizedDescription
+            switch error {
+            case let .tagConnectionLost(nFCReaderError):
+                return nFCReaderError.localizedDescription
+            case let .sessionTimeout(nFCReaderError):
+                return nFCReaderError.localizedDescription
+
+            case let .sessionInvalidated(nFCReaderError):
+                return nFCReaderError.localizedDescription
+
+            case let .userCanceled(nFCReaderError):
+                return nFCReaderError.localizedDescription
+
+            case let .unsupportedFeature(nFCReaderError):
+                return nFCReaderError.localizedDescription
+
+            case let .other(nFCReaderError):
+                return nFCReaderError.localizedDescription
+
+            case let .unknown(error):
+                return error.localizedDescription
+            @unknown default:
+                return "unknown NFCTagReaderSession.nfcTag error"
+            }
         @unknown default:
             return "unknown NFCTagReaderSession.Error"
         }
@@ -44,6 +64,25 @@ extension NFCCardError: LocalizedError {
             return "NFCCardError: transfer exception with name: \(name)"
         case .sendTimeout:
             return "NFCCardError: send timeout"
+        case let .nfcTag(error: coreNFCError):
+            switch coreNFCError {
+            case let .tagConnectionLost(readerError):
+                return readerError.localizedDescription
+            case let .sessionTimeout(readerError):
+                return readerError.localizedDescription
+            case let .sessionInvalidated(readerError):
+                return readerError.localizedDescription
+            case let .other(readerError):
+                return readerError.localizedDescription
+            case let .unknown(error):
+                return error.localizedDescription
+            case let .userCanceled(readerError):
+                return readerError.localizedDescription
+            case let .unsupportedFeature(readerError):
+                return readerError.localizedDescription
+            @unknown default:
+                return "unknown NFCCardError.CoreNFCError"
+            }
         @unknown default:
             return "unknown NFCCardError"
         }

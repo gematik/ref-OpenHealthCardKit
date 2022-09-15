@@ -66,13 +66,19 @@ struct ResetRetryCounterWithNewPINView: View {
         .background(Color(.secondarySystemBackground).ignoresSafeArea())
         .padding(.bottom, self.keyboardHeight.height)
         .edgesIgnoringSafeArea(.bottom)
-        .navigationTitle("reset_txt_title")
+        .navigationTitle("reset_txt_title_with_new_pin")
         .fullScreenCover(isPresented: $showStartNFCView,
                          onDismiss: {
                              showStartNFCView = false
                          }, content: {
                              NavigationView {
-                                 StartNFCView(can: can, puk: puk, pin: newPin, useCase: .resetRetryCounterWithNewPin)
+                                 StartNFCView(
+                                     can: can,
+                                     puk: puk,
+                                     oldPin: "",
+                                     pin: newPin,
+                                     useCase: .resetRetryCounterWithNewPin
+                                 )
                              }
                          })
     }

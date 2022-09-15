@@ -62,7 +62,7 @@ struct RegisterCANView: View {
                         }
                         .disabled(!buttonEnabled)
 
-                        NavigationLink(destination: ResetRetryCounterWithNewPINView(can: storedCan)) {
+                        NavigationLink(destination: ChangeReferenceDataSetNewPINView(can: storedCan)) {
                             GTextButton(label: "can_btn_next_reset_pin_with_new_pin", enabled: buttonEnabled)
                                 .accessibility(identifier: "can_btn_next_reset_pin_with_new_pin")
                         }

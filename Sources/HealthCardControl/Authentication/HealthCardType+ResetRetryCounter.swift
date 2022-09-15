@@ -24,6 +24,7 @@ public enum ResetRetryCounterResponse: Equatable {
     case success
     /// Reset failed, retry count is the number of retries left for the given `EgkFileSystem.Pin` type's PUK
     case wrongSecretWarning(retryCount: Int)
+    /// Access rule evaluation failure
     case securityStatusNotSatisfied
     /// Write action unsuccessful
     case memoryFailure
@@ -94,7 +95,7 @@ extension HealthCardType {
     ///
     /// - Parameters:
     ///   - puk: Secret which authorizes the action
-    ///   - affectedPassWord: convenient `ResetRetryCounterAffectedPassword` selector
+    ///   - affectedPassWord: convenience `ResetRetryCounterAffectedPassword` selector
     /// - Returns: Publisher that tries to reset the password's retry counter
     /// - Throws: HealthCardAccessError
     public func resetRetryCounter(
@@ -125,7 +126,6 @@ extension HealthCardType {
     ///   - type: Password reference
     ///   - dfSpecific: is Password reference dfSpecific
     /// - Returns: Publisher that tries to reset the password's retry counter while setting a new secret
-    /// - Throws: HealthCardCommandBuilderError
     public func resetRetryCounterAndSetNewPin(
         puk: Format2Pin,
         newPin: Format2Pin,
@@ -170,9 +170,8 @@ extension HealthCardType {
     /// - Parameters:
     ///   - puk: Secret which authorizes the action
     ///   - newPin: The new secret of the password object
-    ///   - affectedPassWord: convenient `ResetRetryCounterAffectedPassword` selector
+    ///   - affectedPassWord: convenience `ResetRetryCounterAffectedPassword` selector
     /// - Returns: Publisher that tries to reset the password's retry counter
-    /// - Throws: HealthCardAccessError
     public func resetRetryCounterAndSetNewPin(
         puk: String,
         newPin: String,
