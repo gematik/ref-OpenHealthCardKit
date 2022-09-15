@@ -60,6 +60,12 @@
                 <a class="nav-group-task-link" href="../Enums/CardAid.html">CardAid</a>
               </li>
               <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ChangeReferenceDataAffectedPassword.html">ChangeReferenceDataAffectedPassword</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/ChangeReferenceDataResponse.html">ChangeReferenceDataResponse</a>
+              </li>
+              <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/KeyAgreement.html">KeyAgreement</a>
               </li>
               <li class="nav-group-task">
@@ -88,6 +94,9 @@
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/SelectError.html">SelectError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Enums/VerifyPinAffectedPassword.html">VerifyPinAffectedPassword</a>
               </li>
               <li class="nav-group-task">
                 <a class="nav-group-task-link" href="../Enums/VerifyPinResponse.html">VerifyPinResponse</a>
@@ -212,6 +221,77 @@
                       <div>
                         <h4>Return Value</h4>
                         <p>Published Aut certificate combined with its signature method and DSA signed challenge data</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB4TypeP0aB7ControlE28changeReferenceDataSetNewPin3old3new4type10dfSpecific7Combine12AnyPublisherVyAD06ChangegH8ResponseOs5Error_pGAA07Format2K0V_ArA13EgkFileSystemV0K0OSbtF"></a>
+                    <a name="//apple_ref/swift/Method/changeReferenceDataSetNewPin(old:new:type:dfSpecific:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB4TypeP0aB7ControlE28changeReferenceDataSetNewPin3old3new4type10dfSpecific7Combine12AnyPublisherVyAD06ChangegH8ResponseOs5Error_pGAA07Format2K0V_ArA13EgkFileSystemV0K0OSbtF">changeReferenceDataSetNewPin(old:<wbr>new:<wbr>type:<wbr>dfSpecific:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Assign a new secret (value) to a password.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">changeReferenceDataSetNewPin</span><span class="p">(</span>
+    <span class="nv">old</span><span class="p">:</span> <span class="kt">Format2Pin</span><span class="p">,</span>
+    <span class="nv">new</span><span class="p">:</span> <span class="kt">Format2Pin</span><span class="p">,</span>
+    <span class="nv">type</span><span class="p">:</span> <span class="kt">EgkFileSystem</span><span class="o">.</span><span class="kt">Pin</span> <span class="o">=</span> <span class="kt">EgkFileSystem</span><span class="o">.</span><span class="kt">Pin</span><span class="o">.</span><span class="n">mrpinHome</span><span class="p">,</span>
+    <span class="nv">dfSpecific</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">AnyPublisher</span><span class="o">&lt;</span><span class="kt"><a href="../Enums/ChangeReferenceDataResponse.html">ChangeReferenceDataResponse</a></span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Publisher that tries to set the password&rsquo;s new value</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB4TypeP0aB7ControlE28changeReferenceDataSetNewPin3old3new16affectedPassword7Combine12AnyPublisherVyAD06ChangegH8ResponseOs5Error_pGSS_SSAD0sgh8AffectedO0OtF"></a>
+                    <a name="//apple_ref/swift/Method/changeReferenceDataSetNewPin(old:new:affectedPassword:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB4TypeP0aB7ControlE28changeReferenceDataSetNewPin3old3new16affectedPassword7Combine12AnyPublisherVyAD06ChangegH8ResponseOs5Error_pGSS_SSAD0sgh8AffectedO0OtF">changeReferenceDataSetNewPin(old:<wbr>new:<wbr>affectedPassword:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Assign a new secret (value) to a password.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">changeReferenceDataSetNewPin</span><span class="p">(</span>
+    <span class="nv">old</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">new</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">affectedPassword</span><span class="p">:</span> <span class="kt"><a href="../Enums/ChangeReferenceDataAffectedPassword.html">ChangeReferenceDataAffectedPassword</a></span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">AnyPublisher</span><span class="o">&lt;</span><span class="kt"><a href="../Enums/ChangeReferenceDataResponse.html">ChangeReferenceDataResponse</a></span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Publisher that tries to set the password&rsquo;s new value</p>
                       </div>
                     </section>
                   </div>
@@ -459,7 +539,7 @@ Defaults to a hash function according to the <code><a href="../Enums/AutCertInfo
                               </td>
                               <td>
                                 <div>
-                                  <p>convenient <code><a href="../Enums/ResetRetryCounterAffectedPassword.html">ResetRetryCounterAffectedPassword</a></code> selector</p>
+                                  <p>convenience <code><a href="../Enums/ResetRetryCounterAffectedPassword.html">ResetRetryCounterAffectedPassword</a></code> selector</p>
                                 </div>
                               </td>
                             </tr>
@@ -487,11 +567,6 @@ Defaults to a hash function according to the <code><a href="../Enums/AutCertInfo
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>Reset the retry counter of a password object to its start value while assigning a new secret.</p>
-<div class="aside aside-throws">
-    <p class="aside-title">Throws</p>
-    HealthCardCommandBuilderError
-
-</div>
 
                       </div>
                       <div class="declaration">
@@ -583,11 +658,6 @@ Defaults to a hash function according to the <code><a href="../Enums/AutCertInfo
                       <div class="pointer"></div>
                       <div class="abstract">
                         <p>Reset the retry counter of a password object to its start value while assigning a new secret.</p>
-<div class="aside aside-throws">
-    <p class="aside-title">Throws</p>
-    HealthCardAccessError
-
-</div>
 
                       </div>
                       <div class="declaration">
@@ -638,7 +708,7 @@ Defaults to a hash function according to the <code><a href="../Enums/AutCertInfo
                               </td>
                               <td>
                                 <div>
-                                  <p>convenient <code><a href="../Enums/ResetRetryCounterAffectedPassword.html">ResetRetryCounterAffectedPassword</a></code> selector</p>
+                                  <p>convenience <code><a href="../Enums/ResetRetryCounterAffectedPassword.html">ResetRetryCounterAffectedPassword</a></code> selector</p>
                                 </div>
                               </td>
                             </tr>
@@ -655,9 +725,9 @@ Defaults to a hash function according to the <code><a href="../Enums/AutCertInfo
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:16HealthCardAccess0aB4TypeP0aB7ControlE6verify3pin4type7Combine12AnyPublisherVyAD17VerifyPinResponseOs5Error_pGAA07Format2M0V_AA13EgkFileSystemV0M0OtF"></a>
-                    <a name="//apple_ref/swift/Method/verify(pin:type:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:16HealthCardAccess0aB4TypeP0aB7ControlE6verify3pin4type7Combine12AnyPublisherVyAD17VerifyPinResponseOs5Error_pGAA07Format2M0V_AA13EgkFileSystemV0M0OtF">verify(pin:<wbr>type:<wbr>)</a>
+                    <a name="/s:16HealthCardAccess0aB4TypeP0aB7ControlE6verify3pin4type10dfSpecific7Combine12AnyPublisherVyAD17VerifyPinResponseOs5Error_pGAA07Format2O0V_AA13EgkFileSystemV0O0OSbtF"></a>
+                    <a name="//apple_ref/swift/Method/verify(pin:type:dfSpecific:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB4TypeP0aB7ControlE6verify3pin4type10dfSpecific7Combine12AnyPublisherVyAD17VerifyPinResponseOs5Error_pGAA07Format2O0V_AA13EgkFileSystemV0O0OSbtF">verify(pin:<wbr>type:<wbr>dfSpecific:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -677,7 +747,11 @@ Defaults to a hash function according to the <code><a href="../Enums/AutCertInfo
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">verify</span><span class="p">(</span><span class="nv">pin</span><span class="p">:</span> <span class="kt">Format2Pin</span><span class="p">,</span> <span class="nv">type</span><span class="p">:</span> <span class="kt">EgkFileSystem</span><span class="o">.</span><span class="kt">Pin</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">AnyPublisher</span><span class="o">&lt;</span><span class="kt"><a href="../Enums/VerifyPinResponse.html">VerifyPinResponse</a></span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">verify</span><span class="p">(</span>
+    <span class="nv">pin</span><span class="p">:</span> <span class="kt">Format2Pin</span><span class="p">,</span>
+    <span class="nv">type</span><span class="p">:</span> <span class="kt">EgkFileSystem</span><span class="o">.</span><span class="kt">Pin</span><span class="p">,</span>
+    <span class="nv">dfSpecific</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">AnyPublisher</span><span class="o">&lt;</span><span class="kt"><a href="../Enums/VerifyPinResponse.html">VerifyPinResponse</a></span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span></code></pre>
 
                         </div>
                       </div>
@@ -709,12 +783,89 @@ Defaults to a hash function according to the <code><a href="../Enums/AutCertInfo
                                 </div>
                               </td>
                             </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dfSpecific</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>is Password reference dfSpecific</p>
+                                </div>
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
                       </div>
                       <div>
                         <h4>Return Value</h4>
-                        <p>Publisher that tries to verify the given <code>pin</code> information against <code>type</code></p>
+                        <p>Publisher that tries to verify the given PIN-value information against <code>type</code></p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:16HealthCardAccess0aB4TypeP0aB7ControlE6verify3pin16affectedPassword7Combine12AnyPublisherVyAD17VerifyPinResponseOs5Error_pGSS_AD0mn8AffectedI0OtF"></a>
+                    <a name="//apple_ref/swift/Method/verify(pin:affectedPassword:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:16HealthCardAccess0aB4TypeP0aB7ControlE6verify3pin16affectedPassword7Combine12AnyPublisherVyAD17VerifyPinResponseOs5Error_pGSS_AD0mn8AffectedI0OtF">verify(pin:<wbr>affectedPassword:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Verify Password for a Pin type</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">verify</span><span class="p">(</span>
+    <span class="nv">pin</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">affectedPassword</span><span class="p">:</span> <span class="kt"><a href="../Enums/VerifyPinAffectedPassword.html">VerifyPinAffectedPassword</a></span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">AnyPublisher</span><span class="o">&lt;</span><span class="kt"><a href="../Enums/VerifyPinResponse.html">VerifyPinResponse</a></span><span class="p">,</span> <span class="kt">Error</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>pin</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>holds the Pin information for the password</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>affectedPassword</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>convenience <code><a href="../Enums/VerifyPinAffectedPassword.html">VerifyPinAffectedPassword</a></code> selector</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Publisher that tries to verify the given PIN-value information against the affected password</p>
                       </div>
                     </section>
                   </div>
@@ -884,7 +1035,7 @@ the file is read in chunks and returned as a whole.</p>
       </article>
     </div>
     <section class="footer">
-      <p>&copy; 2022 <a class="link" href="https://www.gematik.de" target="_blank" rel="external noopener">gematik GmbH</a>. All rights reserved. (Last updated: 2022-08-11)</p>
+      <p>&copy; 2022 <a class="link" href="https://www.gematik.de" target="_blank" rel="external noopener">gematik GmbH</a>. All rights reserved. (Last updated: 2022-09-15)</p>
       <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
     </section>
   </body>
