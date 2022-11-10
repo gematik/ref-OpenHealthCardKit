@@ -67,7 +67,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
         /// Negotiate a common key with a `HealthCard` given its `CardAccessNumber`
         ///
         /// - Parameters:
-        ///     - channel: the channel to negotiate a session key with
+        ///     - card: the card to negotiate a session key with
         ///     - can: the `CardAccessNumber` of the `HealthCard`
         ///     - writeTimeout: timeout in seconds. time <= 0 is no timeout
         ///     - readTimeout: timeout in seconds. time <= 0 is no timeout
@@ -174,9 +174,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
         readTimeout: TimeInterval
     ) -> AnyPublisher<Data, Swift.Error> {
         Just(HealthCardCommand.PACE.step1a())
-            .mapError {
-                $0 as Swift.Error
-            }
+            .setFailureType(to: Swift.Error.self)
             .flatMap {
                 $0.publisher(for: card, writeTimeout: writeTimeout, readTimeout: readTimeout)
             }
@@ -206,7 +204,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
     ) -> AnyPublisher<(BrainpoolP256r1.KeyExchange.PublicKey, BrainpoolP256r1.KeyExchange.PrivateKey), Swift.Error> {
         Deferred { () -> AnyPublisher<BrainpoolP256r1.KeyExchange.PrivateKey, Swift.Error> in
             do {
-                return Just(try BrainpoolP256r1.KeyExchange.generateKey(compactRepresentable: false))
+                return Just(try BrainpoolP256r1.KeyExchange.generateKey())
                     .setFailureType(to: Swift.Error.self)
                     .eraseToAnyPublisher()
             } catch {
@@ -214,7 +212,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
             }
         }
         .tryMap { keyPair1 in
-            let command = try HealthCardCommand.PACE.step2a(publicKey: keyPair1.publicKey.x962Value)
+            let command = try HealthCardCommand.PACE.step2a(publicKey: keyPair1.publicKey.x962Value())
             return (keyPair1, command)
         }
         .flatMap { (keyPair1: BrainpoolP256r1.KeyExchange.PrivateKey, command: HealthCardCommandType) in
@@ -244,7 +242,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
     ) -> AnyPublisher<(BrainpoolP256r1.KeyExchange.PublicKey, AES128PaceKey), Swift.Error> {
         Just(pk2Pcd)
             .tryMap { pk2Pcd -> HealthCardCommandType in
-                try HealthCardCommand.PACE.step3a(publicKey: pk2Pcd.x962Value)
+                try HealthCardCommand.PACE.step3a(publicKey: pk2Pcd.x962Value())
             }
             .flatMap {
                 $0.publisher(for: card, writeTimeout: writeTimeout, readTimeout: readTimeout)
@@ -275,7 +273,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
         let algorithm = Algorithm.idPaceEcdhGmAesCbcCmac128
         return Just(algorithm)
             .tryMap { algorithm -> HealthCardCommandType in
-                let macPcd = try KeyAgreement.deriveMac(publicKeyX509: pk2Picc.x962Value,
+                let macPcd = try KeyAgreement.deriveMac(publicKeyX509: pk2Picc.x962Value(),
                                                         sessionKeyMac: paceKey.mac,
                                                         algorithm: algorithm)
                 let macPcdToken = macPcd.prefix(algorithm.macTokenPrefixSize)
@@ -292,7 +290,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
                     throw Error.unexpectedFormedAnswerFromCard
                 }
                 let macPiccData = try extractPrimitive(constructedAsn1: macPiccResponseData)
-                let verifyMacPiccData = try deriveMac(publicKeyX509: pk2Pcd.x962Value,
+                let verifyMacPiccData = try deriveMac(publicKeyX509: pk2Pcd.x962Value(),
                                                       sessionKeyMac: paceKey.mac,
                                                       algorithm: algorithm)
 

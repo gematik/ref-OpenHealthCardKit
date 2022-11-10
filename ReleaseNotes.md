@@ -1,3 +1,15 @@
+# Release 5.1.0
+
+## Fixed
+
+ - Fix error state handling in demo app target
+
+## Changed
+
+- "Freeze" some `enums`
+- Update to OpenSSL-Swift version to 4.0.0
+- Change Xcode version to 14.0
+
 # Release 5.0.0
 
 ## Breaking

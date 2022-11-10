@@ -22,6 +22,12 @@ import XCTest
 
 // swiftlint:disable force_unwrapping
 class ReadingResultsViewSnapshotTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+
+        diffTool = "open"
+    }
+
     func testReadingResultsViewSnapshotTests() throws {
         let sut = NavigationView {
             ReadingResultsView(

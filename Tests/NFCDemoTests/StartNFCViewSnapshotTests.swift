@@ -20,6 +20,12 @@ import SwiftUI
 import XCTest
 
 class StartNFCViewSnapshotTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+
+        diffTool = "open"
+    }
+
     func testStartNFCViewSnapshotTests() throws {
         let sut = NavigationView {
             StartNFCView(can: "123456", puk: "12345678", oldPin: "123456", pin: "654321", useCase: .login)

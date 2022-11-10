@@ -35,7 +35,7 @@ struct StartNFCView: View {
     @State var checkBrainpoolAlgorithm = false
 
     var readingResults: [ReadingResult] {
-        (loginState.results + resetRetryCounterState.results)
+        (loginState.results + resetRetryCounterState.results + changeReferenceDataState.results)
             .sorted { $0.timestamp > $1.timestamp }
     }
 

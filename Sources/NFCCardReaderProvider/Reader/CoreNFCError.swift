@@ -17,6 +17,7 @@
 import CoreNFC
 import Foundation
 
+@frozen
 public enum CoreNFCError: Swift.Error {
     case tagConnectionLost(NFCReaderError)
     case sessionTimeout(NFCReaderError)

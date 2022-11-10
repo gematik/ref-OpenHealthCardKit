@@ -46,7 +46,7 @@ schemes:
 packages:
   SnapshotTesting:
     url: https://github.com/pointfreeco/swift-snapshot-testing
-    majorVersion: 1.9.0
+    majorVersion: 1.10.0
 settings:
   base:
     CODE_SIGN_IDENTITY: ""

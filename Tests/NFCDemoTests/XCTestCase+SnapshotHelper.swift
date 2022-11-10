@@ -18,14 +18,26 @@ import SnapshotTesting
 import SwiftUI
 import XCTest
 
+/// The default `perceptualPrecision` to use if a specific value is not provided.
+private let defaultPerceptualPrecision: Float = 0.93
+
 extension XCTestCase {
     func snapshotModi<T>() -> [String: Snapshotting<T, UIImage>] where T: SwiftUI.View {
         [
-            "light": .image,
-            "dark": .image(precision: 1, traits: UITraitCollection(userInterfaceStyle: .dark)),
-            "XXXL": .image(traits:
-                UITraitCollection(preferredContentSizeCategory: .extraExtraExtraLarge)),
-            "XS": .image(traits: UITraitCollection(preferredContentSizeCategory: .extraSmall)),
+            "light": .image(perceptualPrecision: defaultPerceptualPrecision),
+            "dark": .image(
+                precision: 1,
+                perceptualPrecision: defaultPerceptualPrecision,
+                traits: UITraitCollection(userInterfaceStyle: .dark)
+            ),
+            "accessibilityBig": .image(
+                perceptualPrecision: defaultPerceptualPrecision,
+                traits: UITraitCollection(preferredContentSizeCategory: .extraExtraExtraLarge)
+            ),
+            "accessibilitySmall": .image(
+                perceptualPrecision: defaultPerceptualPrecision,
+                traits: UITraitCollection(preferredContentSizeCategory: .extraSmall)
+            ),
         ]
     }
 }

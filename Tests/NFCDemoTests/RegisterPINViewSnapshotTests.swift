@@ -20,6 +20,12 @@ import SwiftUI
 import XCTest
 
 class RegisterPINViewSnapshotTests: XCTestCase {
+    override func setUp() {
+        super.setUp()
+
+        diffTool = "open"
+    }
+
     func testRegisterPINViewSnapshotTests() throws {
         let sut = NavigationView { RegisterPINView(can: "123456") }
             .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)

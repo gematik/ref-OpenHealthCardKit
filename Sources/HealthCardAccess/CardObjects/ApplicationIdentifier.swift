@@ -101,6 +101,10 @@ extension ApplicationIdentifier {
          - Parameter value: The StringLiteral to be used as rawValue
      */
     public init(stringLiteral value: StringLiteralType) {
-        try! self.init(hex: value) // swiftlint:disable:this force_try
+        do {
+            try self.init(hex: value)
+        } catch {
+            preconditionFailure(error.localizedDescription)
+        }
     }
 }

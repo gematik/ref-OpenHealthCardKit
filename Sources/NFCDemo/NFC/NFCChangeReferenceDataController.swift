@@ -137,7 +137,13 @@ public class NFCChangeReferenceDataController: ChangeReferenceData {
             .sink(
                 receiveCompletion: { [weak self] completion in
                     if case let .failure(error) = completion {
-                        self?.pState = .error(error)
+                        if case let .cardError(readerError) = error as? NFCChangeReferenceDataController.Error,
+                           case let .nfcTag(error: tagError) = readerError,
+                           case .userCanceled = tagError {
+                            self?.pState = .idle
+                        } else {
+                            self?.pState = .error(error)
+                        }
                     } else {
                         self?.pState = .idle
                     }

@@ -60,18 +60,6 @@ final class ApplicationIdentifierTest: XCTestCase {
         } == validAID
     }
 
-    func testInvalidAIDfromStringLiteral() {
-        #if !SWIFT_PACKAGE
-        expect {
-            _ = "ZD27600000102" as ApplicationIdentifier
-        }.to(throwAssertion())
-
-        expect {
-            _ = "D276" as ApplicationIdentifier
-        }.to(throwAssertion())
-        #endif
-    }
-
     static let allTests = [
         ("testValidAID", testValidAID),
         ("testValidAID_initFromString", testValidAID_initFromString),
@@ -79,6 +67,5 @@ final class ApplicationIdentifierTest: XCTestCase {
         ("testValidatorWhenAIDisInvalidLength", testValidatorWhenAIDisInvalidLength),
         ("testWhenAIDhasNonHexValue", testWhenAIDhasNonHexValue),
         ("testValidatorWhenAIDisValid", testValidatorWhenAIDisValid),
-        ("testInvalidAIDfromStringLiteral", testInvalidAIDfromStringLiteral),
     ]
 }

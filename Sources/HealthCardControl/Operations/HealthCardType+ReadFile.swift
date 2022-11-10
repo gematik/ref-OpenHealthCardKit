@@ -91,7 +91,7 @@ extension HealthCardType {
                             .eraseToAnyPublisher()
                         } else {
                             // Done
-                            return Just(responseData).mapError { $0 as Error }.eraseToAnyPublisher()
+                            return Just(responseData).setFailureType(to: Error.self).eraseToAnyPublisher()
                         }
                     }
             }

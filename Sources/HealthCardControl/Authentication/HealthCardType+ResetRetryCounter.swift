@@ -19,6 +19,7 @@ import Foundation
 import HealthCardAccess
 import Helper
 
+@frozen
 public enum ResetRetryCounterResponse: Equatable {
     /// Reset successful
     case success

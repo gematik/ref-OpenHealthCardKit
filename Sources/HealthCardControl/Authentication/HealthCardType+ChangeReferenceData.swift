@@ -19,6 +19,7 @@ import Foundation
 import HealthCardAccess
 import Helper
 
+@frozen
 public enum ChangeReferenceDataResponse: Equatable {
     /// Reset successful
     case success
