@@ -137,38 +137,26 @@ fastlane cibuild
 
 
 
-### build_ios_release
+### sign_adhoc
 
 ```sh
-[bundle exec] fastlane build_ios_release
-```
-
-Build and sign the iOS NFCDemo App for Appstore Distribution
-
-
-
-###Example:
-
-```
-fastlane build_ios_release configuration:Release 
+[bundle exec] fastlane sign_adhoc
 ```
 
 
 
-### bump_version
+### sign_appstore
 
 ```sh
-[bundle exec] fastlane bump_version
+[bundle exec] fastlane sign_appstore
 ```
 
-Bump the buildnumber with agvtool
 
 
+### build_archive
 
-###Example:
-
-```
-fastlane bump_version 
+```sh
+[bundle exec] fastlane build_archive
 ```
 
 
@@ -178,20 +166,6 @@ fastlane bump_version
 ```sh
 [bundle exec] fastlane publish
 ```
-
-Build, sign and upload the iOS NFCDemo to Testflight
-
-Note: The buildnumber is automatically increased and pushed back to remote git.
-
-
-
-###Example:
-
-```
-fastlane publish 
-```
-
- * **`dry_run`**: Whether to upload and push changes to remote(s) [default: false]. (`G_PUBLISH_DRY_RUN`)
 
 
 

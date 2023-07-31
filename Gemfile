@@ -1,8 +1,8 @@
 source "https://rubygems.org"
 
-ruby "2.6.5"
+ruby "3.1.2"
 
-gem "fastlane", "~>2.156"
+gem "fastlane", "~>2.213"
 gem "jazzy", "~>0.13"
 gem "xcodeproj", "~>1.7"
 gem "xcode-install", "~> 2.6.6"

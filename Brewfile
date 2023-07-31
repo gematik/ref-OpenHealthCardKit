@@ -1,2 +1,2 @@
 brew 'mint'
-brew 'maven'
+brew 'xcodesorg/made/xcodes'

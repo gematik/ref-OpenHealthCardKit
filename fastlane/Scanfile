@@ -5,7 +5,7 @@
 # fastlane scan --help
 
 # Remove the # in front of the line to enable the option
-device("iPhone 11")
+device("iPhone 14")
 
 project("OpenHealthCardKit.xcodeproj")
 

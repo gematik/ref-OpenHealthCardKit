@@ -1,0 +1,4 @@
+project("OpenHealthCardKit.xcodeproj")
+scheme("NFCDemo")
+
+configuration("Release")

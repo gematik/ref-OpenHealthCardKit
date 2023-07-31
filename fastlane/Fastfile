@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2022 gematik GmbH
+# Copyright (c) 2023 gematik GmbH
 # 
 # Licensed under the Apache License, Version 2.0 (the License);
 # you may not use this file except in compliance with the License.
@@ -14,9 +14,13 @@
 # limitations under the License.
 #
 
-fastlane_version "2.156.0"
+fastlane_version "2.210.1"
 
-xcversion(version: ENV["FL_XCODE_VERSION"] || "14.0")
+xcodes(
+  version: ENV["FL_XCODE_VERSION"] || "14.2",
+  select_for_current_build_only: true, 
+  update_list: false
+)
 
 mac_schemes = ["AllTests_macOS"]
 ios_schemes = ["AllTests_iOS"]

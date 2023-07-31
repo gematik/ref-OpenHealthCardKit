@@ -26,24 +26,14 @@ OpenHealthCardKit requires Swift 5.1.
 
 -   **Carthage:** Put this in your `Cartfile`:
 
-        github "gematik/ref-openHealthCardKit" ~> 1.0
+        github "gematik/ref-openHealthCardKit" ~> 5.0
 
 ### Setup for development
 
-You will need [Bundler](https://bundler.io/), [XcodeGen](https://github.com/yonaskolb/XcodeGen)
-and [fastlane](https://fastlane.tools) to conveniently use the established development environment.
+Run `$ make setup` to start developing locally. This will make sure all the dependencies are put in place and the Xcode-project will be generated and/or overwritten.
 
-1.  Update ruby gems necessary for build commands
-
-        $ bundle install --path vendor/gems
-
-2.  Checkout (and build) dependencies and generate the xcodeproject
-
-        $ bundle exec fastlane setup
-
-3.  Build the project
-
-        $ bundle exec fastlane build_all [build_mac, build_ios]
+Dependencies are a mix of SPM (Swift Package Manager) and Carthage right now. The Xcode-project is generated using `xcodegen`.
+The more complex build configuration(s) is done with the help of Fastlane. See the `./fastlane` directory for full setup.
 
 ## Overview
 

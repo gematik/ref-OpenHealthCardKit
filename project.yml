@@ -11,6 +11,8 @@ schemes:
       targets:
         NFCDemo: all
     test:
+      language: de
+      region: DE
       gatherCoverageData: true
       coverageTargets:
         - NFCDemo
@@ -65,14 +67,13 @@ targets:
     platform: iOS
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: de.gematik.ohcapp4ios.DemoApp
+        PRODUCT_BUNDLE_IDENTIFIER: ${GEM_PRODUCT_BUNDLE_IDENTIFIER}
         TARGETED_DEVICE_FAMILY: 1
         SWIFT_VERSION: $(inherited)
         ALWAYS_SEARCH_USER_PATHS: $(inherited)
-        CODE_SIGN_ENTITLEMENTS: Sources/NFCDemo/Resources/NFCDemo.entitlements
     configFiles:
-      Debug: Resources/debug.xcconfig
-      Release: Resources/release.xcconfig
+      Debug: Sources/NFCDemo/Resources/debug.xcconfig
+      Release: Sources/NFCDemo/Resources/release.xcconfig
     sources:
       - Sources/NFCDemo
     scheme:

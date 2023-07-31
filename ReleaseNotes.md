@@ -1,3 +1,10 @@
+# Release 5.2.1
+
+## Added
+
+ - Improved error display in app target
+ - expose API for changing PIN without straining the PUK counter
+
 # Release 5.1.0
 
 ## Fixed
