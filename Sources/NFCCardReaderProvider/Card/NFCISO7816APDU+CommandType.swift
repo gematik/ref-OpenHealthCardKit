@@ -14,6 +14,8 @@
 //  limitations under the License.
 //
 
+#if os(iOS)
+
 import CardReaderProviderApi
 import CoreNFC
 import Foundation
@@ -40,3 +42,5 @@ extension NFCISO7816APDU {
         )
     }
 }
+
+#endif

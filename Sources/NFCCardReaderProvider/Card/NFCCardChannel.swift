@@ -14,6 +14,8 @@
 //  limitations under the License.
 //
 
+#if os(iOS)
+
 import CardReaderProviderApi
 import CoreNFC
 import DataKit
@@ -125,3 +127,5 @@ class NFCCardChannel: CardChannelType {
         }
     }
 }
+
+#endif

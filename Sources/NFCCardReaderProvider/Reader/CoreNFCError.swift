@@ -14,6 +14,8 @@
 //  limitations under the License.
 //
 
+#if os(iOS)
+
 import CoreNFC
 import Foundation
 
@@ -67,3 +69,5 @@ extension Swift.Error {
         return .unknown(self)
     }
 }
+
+#endif

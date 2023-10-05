@@ -19,11 +19,13 @@ import Foundation
 import GemCommonsKit
 
 extension AnyPublisher {
-    func test() throws -> Self.Output {
+    /// Convenience function for testing a Publisher's emitted values
+    public func test() throws -> Self.Output {
         try testWithTimeout(timeout: 0)
     }
 
-    func testWithTimeout(timeout millis: Int = 3000, sleep interval: TimeInterval = 0.1) throws -> Self.Output {
+    /// Convenience function for testing a Publisher's emitted values
+    public func testWithTimeout(timeout millis: Int = 3000, sleep interval: TimeInterval = 0.1) throws -> Self.Output {
         var done = false
         var output: Self.Output?
         var error: Self.Failure?

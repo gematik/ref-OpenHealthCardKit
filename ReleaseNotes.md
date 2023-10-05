@@ -1,3 +1,13 @@
+# Release 5.3.0
+
+## Add
+
+ - Package.swift added to project
+
+## Changed
+
+- For development include gematik owned dependencies via SPM (instead of Carthage)
+
 # Release 5.2.1
 
 ## Added

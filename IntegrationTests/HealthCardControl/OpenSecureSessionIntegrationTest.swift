@@ -22,6 +22,7 @@ import GemCommonsKit
 import HealthCardAccess
 @testable import HealthCardControl
 import Nimble
+import Util
 import XCTest
 
 final class OpenSecureSessionIntegrationTest: CardSimulationTerminalTestCase {

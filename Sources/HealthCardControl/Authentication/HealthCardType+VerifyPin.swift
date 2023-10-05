@@ -23,6 +23,7 @@ import Helper
 /// - SeeAlso: `HealthCardType.verify(pin:type:)`
 /// - success: when the pin verified as correct
 /// - failed: when the pin was incorrect
+@frozen
 public enum VerifyPinResponse: Equatable {
     /// Pin verification succeeded
     case success

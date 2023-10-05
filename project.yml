@@ -28,7 +28,6 @@ schemes:
       targets:
         CardReaderAccess_macOS: test
     test:
-      gatherCoverageData: true
       targets:
         - CardReaderProviderApiTests_macOS
         - CardReaderAccessTests_macOS
@@ -46,6 +45,18 @@ schemes:
         - NFCDemoTests
 
 packages:
+  ASN1Kit:
+    url: https://github.com/gematik/ASN1Kit
+    majorVersion: 1.2.0
+  DataKit:
+    url: https://github.com/SwiftCommon/DataKit
+    majorVersion: 1.1.0
+  GemCommonsKit:
+    url: https://github.com/gematik/ref-GemCommonsKit.git
+    majorVersion: 1.3.0
+  OpenSSL-Swift:
+   url: https://github.com/gematik/OpenSSL-Swift
+   majorVersion: 4.1.0
   SnapshotTesting:
     url: https://github.com/pointfreeco/swift-snapshot-testing
     majorVersion: 1.10.0
@@ -71,6 +82,7 @@ targets:
         TARGETED_DEVICE_FAMILY: 1
         SWIFT_VERSION: $(inherited)
         ALWAYS_SEARCH_USER_PATHS: $(inherited)
+        CODE_SIGN_ENTITLEMENTS: Sources/NFCDemo/Resources/NFCDemo.entitlements
     configFiles:
       Debug: Sources/NFCDemo/Resources/debug.xcconfig
       Release: Sources/NFCDemo/Resources/release.xcconfig
@@ -81,14 +93,15 @@ targets:
         - NFCDemoTests
       gatherCoverageData: false
     dependencies:
-      - framework: Carthage/Build/DataKit.xcframework
-      - framework: Carthage/Build/GemCommonsKit.xcframework
       - target: CardReaderProviderApi_iOS
       - target: CardReaderAccess_iOS
       - target: NFCCardReaderProvider
       - target: Helper_iOS
-      - framework: Carthage/Build/ASN1Kit.xcframework
-      - framework: Carthage/Build/OpenSSL.xcframework
+      - package: ASN1Kit
+      - package: OpenSSL-Swift
+      - package: GemCommonsKit
+        product: GemCommonsKit
+      - package: DataKit
       - target: HealthCardAccess_iOS
       - target: HealthCardControl_iOS
       - sdk: CoreNFC.framework
@@ -114,7 +127,8 @@ targets:
     info:
       path: Resources/CardReaderProviderApi_Info.plist
     dependencies:
-      - framework: Carthage/Build/GemCommonsKit.xcframework
+      - package: GemCommonsKit
+        product: GemCommonsKit
       - target: Helper_${platform}
     scheme:
       testTargets:
@@ -152,6 +166,8 @@ targets:
       - Tests/CardReaderProviderApiTests
     dependencies:
       - target: CardReaderProviderApi_${platform}
+      - package: GemCommonsKit
+        product: GemCommonsKit
       - framework: Carthage/Build/Nimble.xcframework
   CardReaderAccessTests:
     type: bundle.unit-test
@@ -174,8 +190,8 @@ targets:
       - sdk: Combine.framework
       - target: CardReaderAccess_${platform}
       - target: CardReaderProviderApi_${platform}
-      - framework: Carthage/Build/ASN1Kit.xcframework
-      - framework: Carthage/Build/DataKit.xcframework
+      - package: ASN1Kit
+      - package: DataKit
     transitivelyLinkDependencies: true
     scheme:
       testTargets:
@@ -188,11 +204,16 @@ targets:
       path: Resources/HealthCardAccessTests_Info.plist
     sources:
       - path: Tests/HealthCardAccessTests
-      - path: Tests/Util
     dependencies:
       - target: HealthCardAccess_${platform}
-      - framework: Carthage/Build/ObjCCommonsKit.xcframework
+      - package: ASN1Kit
+      - package: DataKit
+      - package: GemCommonsKit
+        product: GemCommonsKit
+      - package: GemCommonsKit
+        product: ObjCCommonsKit
       - framework: Carthage/Build/Nimble.xcframework
+      - target: Util_${platform}
   HealthCardControl:
     type: framework
     platform: [iOS,macOS]
@@ -203,7 +224,8 @@ targets:
     dependencies:
       - target: HealthCardAccess_${platform}
       - target: Helper_${platform}
-      - framework: Carthage/Build/OpenSSL.xcframework
+      - package: OpenSSL-Swift
+      - package: DataKit
     transitivelyLinkDependencies: true
     scheme:
       testTargets:
@@ -217,10 +239,14 @@ targets:
       path: Resources/HealthCardControlTests_Info.plist
     sources:
       - path: Tests/HealthCardControlTests
-      - path: Tests/Util
     dependencies:
       - target: HealthCardControl_${platform}
+      - target: Util_${platform}
+      - package: GemCommonsKit
+        product: GemCommonsKit
+      - package: DataKit
       - framework: Carthage/Build/Nimble.xcframework
+      - sdk: Combine.framework
   NFCCardReaderProvider:
     type: framework
     platform: iOS
@@ -231,7 +257,9 @@ targets:
     dependencies:
       - target: HealthCardAccess_iOS
       - target: Helper_iOS
-      - framework: Carthage/Build/GemCommonsKit.xcframework
+      - package: DataKit
+      - package: GemCommonsKit
+        product: GemCommonsKit
       - sdk: CoreNFC.framework
     scheme:
       testTargets:
@@ -247,5 +275,16 @@ targets:
     dependencies:
       - target: NFCCardReaderProvider
       - framework: Carthage/Build/Nimble.xcframework
+  Util:
+    type: framework
+    platform: [macOS,iOS]
+    info:
+      path: Resources/Util_Info.plist
+    sources:
+      - Tests/Util
+    dependencies:
+      - package: GemCommonsKit
+        product: GemCommonsKit
+      - sdk: Combine.framework
 
 buildImplicitDependencies: true

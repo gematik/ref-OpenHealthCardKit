@@ -14,6 +14,8 @@
 //  limitations under the License.
 //
 
+#if os(iOS)
+
 import CardReaderProviderApi
 import Combine
 import CoreNFC
@@ -261,3 +263,5 @@ extension NFCTagReaderSession.Publisher {
         }
     }
 }
+
+#endif
