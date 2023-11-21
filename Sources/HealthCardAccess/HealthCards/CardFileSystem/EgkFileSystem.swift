@@ -82,7 +82,7 @@ public struct EgkFileSystem {
         public static let MF = DedicatedFile(aid: "D2760001448000", // swiftlint:disable:this identifier_name
                                              fid: "3F00")
         /// MF/DF.HCA
-        public static let HCA = DedicatedFile(aid: "D27699999192")
+        public static let HCA = DedicatedFile(aid: "D27600000102")
         /// MF/DF.ESIGN
         public static let ESIGN = DedicatedFile(aid: "A000000167455349474E")
         /// MF/DF.QES
