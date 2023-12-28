@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# scripts/publish: Build & Publish the application to TestFlight
+
+set -ev
+
+cd "$(dirname "$0")/.."
+
+echo "Publish started at…"
+date "+%H:%M:%S"
+
+scripts/bootstrap
+
+# NFC Demo for iOS
+bundle exec fastlane publish
+
+echo "Done"
+date "+%H:%M:%S"

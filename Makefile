@@ -30,5 +30,8 @@ lint:
 cibuild:
 	$(PROJECT_DIR)/scripts/cibuild
 
+publish:
+	$(PROJECT_DIR)/scripts/publish
 
-all: cibuild
+readme:
+	$(PROJECT_DIR)/scripts/readme

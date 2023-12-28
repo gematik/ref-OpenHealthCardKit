@@ -1,4 +1,9 @@
 name: OpenHealthCardKit
+include:
+  - path: IntegrationTests/project.yml
+    relativePaths: false
+    # Set environment variable to true if have access to the necessary gematik-internal resources
+    enable: ${GEMATIK_DEVELOPMENT} # <-- do not edit this line
 options:
   bundleIdPrefix: de.gematik.ti.ohcapp4ios
   deploymentTarget:
@@ -38,6 +43,8 @@ schemes:
       targets:
         NFCDemo: all
     test:
+      language: de
+      region: DE
       gatherCoverageData: true
       coverageTargets:
         - NFCDemo
@@ -60,8 +67,15 @@ packages:
   SnapshotTesting:
     url: https://github.com/pointfreeco/swift-snapshot-testing
     majorVersion: 1.10.0
+  AEXML:
+    url: https://github.com/tadija/AEXML
+    majorVersion: 4.6.0  
+  StreamReader:
+    url: https://github.com/hectr/swift-stream-reader/
+    majorVersion: 0.3.0   
 settings:
   base:
+    DEVELOPMENT_TEAM: A9FL89PFFL
     CODE_SIGN_IDENTITY: ""
     SWIFT_VERSION: 5.0
     ALWAYS_SEARCH_USER_PATHS: NO
@@ -210,8 +224,6 @@ targets:
       - package: DataKit
       - package: GemCommonsKit
         product: GemCommonsKit
-      - package: GemCommonsKit
-        product: ObjCCommonsKit
       - framework: Carthage/Build/Nimble.xcframework
       - target: Util_${platform}
   HealthCardControl:

@@ -1,3 +1,9 @@
+# Release 5.4.0
+
+## Changed
+
+- Adapt for Xcode15 development
+
 # Release 5.3.0
 
 ## Add

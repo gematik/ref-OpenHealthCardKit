@@ -13,6 +13,8 @@ date "+%H:%M:%S"
 scripts/bootstrap
 bundle exec fastlane cibuild
 
+# Publish dry_run
+bundle exec fastlane publish dry_run:true
 
 echo "Done"
 date "+%H:%M:%S"

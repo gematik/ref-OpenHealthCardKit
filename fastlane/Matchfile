@@ -1,0 +1,16 @@
+keychain_name("gematik")
+keychain_password("gematikpassword")
+
+git_branch("master")
+readonly(true)
+storage_mode("git")
+
+type("appstore")
+
+app_identifier("de.gematik.ohcapp4ios.DemoApp")
+team_name("gematik GmbH")
+team_id("A9FL89PFFL")
+
+# Uncomment and fill this lines or add the corresponding ENV (MATCH_USERNAME, MATCH_GIT_URL) to call fastlane locally
+# username("")
+# git_url("")

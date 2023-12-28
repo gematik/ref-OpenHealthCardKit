@@ -1,12 +1,12 @@
 //
 //  Copyright (c) 2023 gematik GmbH
-//  
+//
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at
-//  
+//
 //      http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 //  Unless required by applicable law or agreed to in writing, software
 //  distributed under the License is distributed on an 'AS IS' BASIS,
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -27,19 +27,19 @@ import XCTest
 /// - Note: The card type and the content of the image that the card simulation uses is configurable.
 ///     The conveniently overridable properties are `configFileInput` and `healthCardStatusInput`,
 ///     for more sophisticated configuration you can override the functions `configFile()` and `healthCardStatus()`
-open class CardSimulationTerminalTestCase: XCTestCase {
+class CardSimulationTerminalTestCase: XCTestCase {
     // Convenience default config input - override these in subclasses if needed
     class var configFileInput: String { "Configuration/configuration_EGKG2_80276883110000017222_gema5_TCP.xml" }
     class var healthCardStatusInput: HealthCardStatus { .valid(cardType: .egk(generation: .g2)) }
 
     #if os(macOS) || os(Linux)
-    public static var terminalResource: CardSimulationTerminalResource!
-    public static var reader: CardReaderType!
-    public static var card: CardType!
-    public static var healthCard: HealthCard!
+    static var terminalResource: CardSimulationTerminalResource!
+    static var reader: CardReaderType!
+    static var card: CardType!
+    static var healthCard: HealthCard!
     #endif
 
-    open class func configFile() -> URL? {
+    class func configFile() -> URL? {
         let bundle = Bundle(for: CardSimulationTerminalTestCase.self)
         guard let url = bundle.resourceURL?
             .appendingPathComponent("Resources.bundle")
@@ -49,12 +49,12 @@ open class CardSimulationTerminalTestCase: XCTestCase {
         return url
     }
 
-    open class func healthCardStatus() -> HealthCardStatus {
+    class func healthCardStatus() -> HealthCardStatus {
         healthCardStatusInput
     }
 
     #if os(macOS) || os(Linux)
-    open class func createTerminalResource() -> CardSimulationTerminalResource {
+    class func createTerminalResource() -> CardSimulationTerminalResource {
         guard let config = configFile() else {
             fatalError("No configFile")
         }
@@ -75,7 +75,7 @@ open class CardSimulationTerminalTestCase: XCTestCase {
     #endif
 
     #if os(macOS) || os(Linux)
-    override open class func setUp() {
+    override class func setUp() {
         super.setUp()
         terminalResource = createTerminalResource()
         do {
@@ -92,7 +92,7 @@ open class CardSimulationTerminalTestCase: XCTestCase {
         }
     }
 
-    override open class func tearDown() {
+    override class func tearDown() {
         terminalResource.shutDown()
 
         RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 3))
@@ -102,7 +102,7 @@ open class CardSimulationTerminalTestCase: XCTestCase {
     }
     #endif
 
-    override open func setUp() {
+    override func setUp() {
         super.setUp()
         do {
             try createHealthCard()
@@ -111,7 +111,7 @@ open class CardSimulationTerminalTestCase: XCTestCase {
         }
     }
 
-    override open func tearDown() {
+    override func tearDown() {
         do {
             try disconnectCard()
         } catch {
@@ -121,15 +121,15 @@ open class CardSimulationTerminalTestCase: XCTestCase {
     }
 
     #if os(macOS) || os(Linux)
-    open class func connectCard() throws {
+    class func connectCard() throws {
         card = try reader.connect([:])
     }
 
-    open func createHealthCard() throws {
+    func createHealthCard() throws {
         Self.healthCard = try HealthCard(card: Self.card, status: Self.healthCardStatus())
     }
 
-    open func disconnectCard() throws {
+    func disconnectCard() throws {
         try Self.card.disconnect(reset: true)
     }
     #endif

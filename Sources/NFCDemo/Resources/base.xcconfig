@@ -1,3 +1,4 @@
+DEVELOPMENT_TEAM = A9FL89PFFL
 
 CODE_SIGN_ENTITLEMENTS = Sources/NFCDemo/Resources/NFCDemo.entitlements
 
