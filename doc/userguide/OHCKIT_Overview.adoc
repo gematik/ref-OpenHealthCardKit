@@ -1,5 +1,3 @@
-include::config.adoc[]
-
 == Overview
 
 OpenHealthCardKit bundles submodules that provide the functionality

@@ -1,5 +1,3 @@
-include::config.adoc[]
-
 [#HealthCardAccess]
 === HealthCardAccess
 This library contains the classes for cards, commands, card file systems and error handling.
@@ -49,7 +47,7 @@ by setting the APDU-bytes manually.
 
 [source,swift]
 ----
-include::{integrationitestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=createCommand,indent=0]
+include::{integrationtestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=createCommand,indent=0]
 ----
 
 ===== Setting an execution target
@@ -61,7 +59,7 @@ as one kind of a `HealthCardType` implementing the `CardType` protocol.
 
 [source,swift]
 ----
-include::{integrationitestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=setExecutionTarget,indent=0]
+include::{integrationtestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=setExecutionTarget,indent=0]
 ----
 
 A created command can be lifted to the Combine framework with `publisher(for:writetimeout:readtimeout)`.
@@ -70,7 +68,7 @@ e.g. +SUCCESS+ (+0x9000+).
 
 [source,swift]
 ----
-include::{integrationitestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=evaluateResponseStatus,indent=0]
+include::{integrationtestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=evaluateResponseStatus,indent=0]
 ----
 
 ===== Create a Command Sequence
@@ -87,7 +85,7 @@ Eventually use `eraseToAnyPublisher()`.
 
 [source,swift]
 ----
-include::{integrationitestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=createCommandSequence,indent=0]
+include::{integrationtestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=createCommandSequence,indent=0]
 ----
 
 ===== Process Execution result
@@ -98,5 +96,5 @@ convenience publisher is useful.
 
 [source,swift]
 ----
-include::{integrationitestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=processExecutionResult,indent=0]
+include::{integrationtestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=processExecutionResult,indent=0]
 ----

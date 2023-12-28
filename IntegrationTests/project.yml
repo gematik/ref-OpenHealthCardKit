@@ -1,0 +1,181 @@
+schemes:
+  AllTests_macOS:
+    test:
+      targets:
+        - CardSimulationCardReaderProviderTests
+        - AEXMLExtTests
+        - CardSimulationLoaderTests
+        - IntegrationTests
+  AllIntegrationTests:
+    build:
+      targets:
+        IntegrationTests: test
+    test:
+      # gatherCoverageData: true
+      targets:
+        - CardSimulationCardReaderProviderTests
+        - CardSimulationLoaderTests
+        - AEXMLExtTests
+        - IntegrationTests
+targets:
+  IntegrationTests:
+    name: IntegrationTests
+    type: bundle.unit-test
+    platform: macOS
+    info:
+      path: Resources/IntegrationTests_Info.plist
+    settings:
+      base:
+        OTHER_SWIFT_FLAGS: -no-verify-emitted-module-interface
+    sources:
+      - path: IntegrationTests
+    dependencies:
+      - target: CardReaderAccess_macOS
+      - target: CardReaderProviderApi_macOS
+      - target: HealthCardAccess_macOS
+      - target: HealthCardControl_macOS
+      - target: Util_macOS
+      - framework: Carthage/Build/Nimble.xcframework
+      - target: CardSimulationCardReaderProvider
+      - target: CardSimulationLoader
+      - package: AEXML
+      - target: AEXMLExt
+      - package: StreamReader
+      - framework: Carthage/Build/SwiftSocket.xcframework
+      - package: GemCommonsKit
+        product: GemCommonsKit
+
+
+  # CardSimulationTestKit
+  CardSimulationLoader:
+    type: framework
+    platform: macOS
+    info:
+      path: CardSimulationTestKit/Resources/CardSimulationLoader_Info.plist
+    sources:
+      - CardSimulationTestKit/Sources/CardSimulationLoader
+    bundleIdPrefix: de.gematik.ti.openhealthcard.cardsimulation
+    settings:
+      base:
+        BUILD_LIBRARY_FOR_DISTRIBUTION: NO
+    dependencies:
+      - package: AEXML
+      - target: AEXMLExt
+        embed: true
+      - package: StreamReader
+      - package: GemCommonsKit
+        product: GemCommonsKit
+      - package: GemCommonsKit
+        product: ObjCCommonsKit
+    transitivelyLinkDependencies: true
+    scheme:
+      testTargets:
+        - CardSimulationLoaderTests
+  SwiftLibsShadow:
+    type: framework
+    platform: macOS
+    bundleIdPrefix: de.gematik.ti.openhealthcard.cardsimulation
+    settings:
+      base:
+        BUILD_LIBRARY_FOR_DISTRIBUTION: NO
+        ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
+    dependencies:
+      - target: CardSimulationLoader
+  AEXMLExt:
+    type: framework
+    platform: macOS
+    bundleIdPrefix: de.gematik.ti.openhealthcard.cardsimulation
+    settings:
+      base:
+        BUILD_LIBRARY_FOR_DISTRIBUTION: NO
+    info:
+      path: CardSimulationTestKit/Resources/AEXMLExt_Info.plist
+    sources:
+      - CardSimulationTestKit/Sources/AEXMLExt
+    dependencies:
+      - package: AEXML
+    scheme:
+      testTargets:
+        - AEXMLExtTests
+      gatherCoverageData: true
+  CardSimulationRunner:
+    type: tool
+    platform: macOS
+    bundleIdPrefix: de.gematik.ti.openhealthcard.cardsimulation
+    settings:
+      base:
+        SWIFT_FORCE_DYNAMIC_LINK_STDLIB: YES
+        SWIFT_FORCE_STATIC_LINK_STDLIB: NO
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/SwiftLibsShadow.framework/Versions/Current/Frameworks"
+    sources:
+      - CardSimulationTestKit/Sources/CardSimulationRunner
+    dependencies:
+      - target: SwiftLibsShadow
+      - target: CardSimulationLoader
+      - package: AEXML
+      - package: StreamReader
+      - package: GemCommonsKit
+        product: GemCommonsKit
+  CardSimulationCardReaderProvider:
+    type: framework
+    platform: macOS
+    bundleIdPrefix: de.gematik.ti.openhealthcard.cardsimulation
+    settings:
+      base:
+        BUILD_LIBRARY_FOR_DISTRIBUTION: NO
+    info:
+      path: CardSimulationTestKit/Resources/CardSimulationCardReaderProvider_Info.plist
+    sources:
+      - path: CardSimulationTestKit/Sources/CardSimulationCardReaderProvider
+    dependencies:
+      - target: CardSimulationLoader
+      - package: ASN1Kit
+      - target: CardReaderProviderApi_macOS
+      - target: CardReaderAccess_macOS
+      - framework: Carthage/Build/SwiftSocket.xcframework
+    transitivelyLinkDependencies: true
+  CardSimulationLoaderTests:
+    type: bundle.unit-test
+    platform: macOS
+    bundleIdPrefix: de.gematik.ti.openhealthcard.cardsimulation
+    settings:
+      base:
+        OTHER_SWIFT_FLAGS: -no-verify-emitted-module-interface
+    sources:
+      - CardSimulationTestKit/Tests/CardSimulationLoaderTests
+    dependencies:
+      - package: AEXML
+      - target: AEXMLExt
+      - target: CardSimulationLoader
+      - package: GemCommonsKit
+        product: GemCommonsKit
+      - framework: Carthage/Build/Nimble.xcframework
+    gatherCoverageData: true
+  AEXMLExtTests:
+    type: bundle.unit-test
+    platform: macOS
+    bundleIdPrefix: de.gematik.ti.openhealthcard.cardsimulation
+    sources:
+      - CardSimulationTestKit/Tests/AEXMLExtTests
+    dependencies:
+      - target: AEXMLExt
+      - package: AEXML
+      - framework: Carthage/Build/Nimble.xcframework
+    gatherCoverageData: true
+  CardSimulationCardReaderProviderTests:
+    type: bundle.unit-test
+    platform: macOS
+    bundleIdPrefix: de.gematik.ti.openhealthcard.cardsimulation
+    settings:
+      base:
+        OTHER_SWIFT_FLAGS: -no-verify-emitted-module-interface
+    sources:
+      - CardSimulationTestKit/Tests/CardSimulationCardReaderProviderTests
+    dependencies:
+      - target: CardSimulationCardReaderProvider
+      - target: AEXMLExt
+      - framework: Carthage/Build/Nimble.xcframework
+      - package: DataKit
+      - package: GemCommonsKit
+        product: GemCommonsKit
+    gatherCoverageData: true

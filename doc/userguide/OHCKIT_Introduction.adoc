@@ -1,5 +1,3 @@
-include::config.adoc[]
-
 == Introduction
 
 The OpenHealthCardKit module is intended for reference purposes

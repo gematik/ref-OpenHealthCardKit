@@ -7,3 +7,5 @@ set -ev
 cd "$(dirname "$0")/.."
 
 bundle exec fastlane build_all
+# NFC Demo for iOS
+bundle exec fastlane build_ios_release

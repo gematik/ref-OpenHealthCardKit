@@ -33,6 +33,7 @@ opt_in_rules:
   - empty_string
   - discouraged_optional_collection
   - closure_end_indentation
+  - file_header
 excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Package.swift
   - .build/
@@ -68,3 +69,8 @@ custom_rules:
     message: "Source must not contain author"
     severity: warning
 
+file_header:
+  required_pattern: |
+    \/\/
+    \/\/  Copyright \(c\) \d{4} gematik GmbH
+    \/\/

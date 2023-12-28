@@ -1,0 +1,28 @@
+////
+Execute `make readme` after editing <project_root>/README.adoc
+////
+:toc-title: Table of Contents
+:toc:
+:toclevels: 2
+:source-highlighter: prettify
+
+:testdir: ../../Tests
+:integrationtestdir: ../../IntegrationTests
+:sourcedir: ../../Sources
+
+= OpenHealthCardKit
+
+Controlling/Use-case framework for accessing smart cards of the telematic infrastructure.
+
+include::doc/userguide/OHCKIT_Introduction.adoc[]
+include::doc/userguide/OHCKIT_API.adoc[]
+include::doc/userguide/OHCKIT_GettingStarted.adoc[]
+
+include::doc/userguide/OHCKIT_Overview.adoc[]
+include::doc/userguide/OHCKIT_CardReaderProviderApi.adoc[]
+include::doc/userguide/OHCKIT_HealthCardAccess.adoc[]
+include::doc/userguide/OHCKIT_HealthCardControl.adoc[]
+include::doc/userguide/OHCKIT_NFCCardReaderProvider.adoc[]
+include::doc/userguide/OHCKIT_NFCDemo.adoc[]
+
+include::doc/userguide/OHCKIT_License.adoc[]

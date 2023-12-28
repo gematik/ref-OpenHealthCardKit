@@ -1,23 +1,11 @@
 #
-# Copyright (c) 2023 gematik GmbH
-# 
-# Licensed under the Apache License, Version 2.0 (the License);
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-# 
-#     http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an 'AS IS' BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# ${GEMATIK_COPYRIGHT_STATEMENT}
 #
 
 fastlane_version "2.210.1"
 
 xcodes(
-  version: ENV["FL_XCODE_VERSION"] || "14.2",
+  version: ENV["FL_XCODE_VERSION"] || "15.0.0",
   select_for_current_build_only: true, 
   update_list: false
 )
@@ -218,3 +206,130 @@ lane :cibuild do |options|
   generate_documentation
 end
 
+
+lane :sign_adhoc do |options|
+  match(type: "adhoc")
+
+  gym(
+    skip_build_archive: true,
+    export_method: "ad-hoc",
+    output_name: "ohckit_#{build_version}_adhoc.ipa",
+    archive_path: "./distribution/ohckit_#{build_version}.xcarchive",
+    output_directory: "./distribution",
+    include_bitcode: false,
+    export_options: {
+        uploadBitcode: false,
+        uploadSymbols: true,
+        compileBitcode: false
+    }
+  )
+end
+
+lane :sign_appstore do |options|
+  match(type: "appstore")
+
+  gym(
+    skip_build_archive: true,
+    export_method: "app-store",
+    output_name: "ohckit_#{build_version}_store.ipa",
+    archive_path: "./distribution/ohckit_#{build_version}.xcarchive",
+    output_directory: "./distribution"
+  )
+end
+
+
+lane :build_archive do |options|
+  clear_derived_data(derived_data_path: ENV['GYM_DERIVED_DATA_PATH'])
+
+  match(type: "appstore")
+
+  gym(
+    skip_build_archive: false,
+    skip_package_ipa: true,
+    export_method: "app-store",
+    archive_path: "./distribution/ohckit_#{build_version}.xcarchive",
+    xcargs: "GEMATIK_SOURCE_VERSION=\"#{git_version}\" GEMATIK_BUNDLE_VERSION=\"#{build_version}\""
+  )
+end
+
+def git_version()
+  short_hash = last_git_commit[:abbreviated_commit_hash]
+  dirty = sh("git diff --quiet || echo '-dirty'").strip!
+
+  "#{short_hash}#{dirty}"
+end
+
+def build_version()
+  ENV['BUILD_NUMBER'] || 'LOCAL_BUILD'
+end
+
+
+before_all do |lane, options|
+  load_keychain
+end
+
+after_all do |lane, options|
+  remove_keychain
+end
+
+error do |lane, exception, options|
+  remove_keychain
+end
+
+def load_keychain
+  remove_keychain
+
+  create_keychain(
+    name: "gematik",
+    password: "gematikpassword",
+    unlock: true,
+    timeout: 0
+  )
+end
+
+def remove_keychain
+  if File.exist? File.expand_path("~/Library/Keychains/gematik-db")
+    delete_keychain(name: "gematik") 
+  end
+end
+
+def randomWord(length)
+  return ('a'..'z').to_a.shuffle[0,length].join
+end
+
+def isDryRun(options)
+  if options.key?(:dry_run)
+    dry_run = options[:dry_run]
+  elsif !ENV['G_PUBLISH_DRY_RUN'].nil?
+    dry_run = true?(ENV['G_PUBLISH_DRY_RUN'])
+  else
+    dry_run = false
+  end
+  return dry_run
+end
+
+lane :publish do |options|
+  build_archive
+
+  sign_adhoc
+  # todo(?): if_ci { appcenter_upload + notify_teams_channel}
+
+  sign_appstore
+
+  dry_run = isDryRun(options)
+  UI.message("Live run") unless dry_run
+  UI.message("Dry run") if dry_run
+  app_store_connect_api_key(
+    issuer_id: "69a6de92-74a9-47e3-e053-5b8c7c11a4d1"
+  )
+
+  upload_to_testflight(
+    ipa: "./distribution/ohckit_#{build_version}_store.ipa",
+    skip_submission: true,
+    apple_id: '1450490405',
+    dev_portal_team_id: "A9FL89PFFL",
+    skip_waiting_for_build_processing: true
+  ) unless dry_run
+
+  sh "cd .. && mkdir -p artifacts/appstorebuild_pu/ && rm -rf artifacts/appstorebuild_pu/* && mv distribution artifacts/appstorebuild_pu/; cd - "
+end

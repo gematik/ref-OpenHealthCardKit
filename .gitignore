@@ -1,6 +1,7 @@
 .DS_Store
 /.build
 /Packages
+.vscode
 
 # AppCode project files
 .idea/
@@ -19,6 +20,7 @@ vendor/
 ## Build generated
 build/
 DerivedData/
+Resources/*_Info.plist
 
 ## Various settings
 *.pbxuser
@@ -53,6 +55,7 @@ playground.xcworkspace
 # Package.pins
 # Package.resolved
 .build/
+/*.xcodeproj
 
 # CocoaPods
 #
@@ -94,7 +97,8 @@ fastlane/test_output
 
 iOSInjectionProject/
 
-scripts/publish
-devops
 CardSimulationTestKit
+devops
+
+jenkinsfiles
 

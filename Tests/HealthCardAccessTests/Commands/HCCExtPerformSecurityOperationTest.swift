@@ -1,12 +1,12 @@
 //
 //  Copyright (c) 2023 gematik GmbH
-//  
+//
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
 //  You may obtain a copy of the License at
-//  
+//
 //      http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 //  Unless required by applicable law or agreed to in writing, software
 //  distributed under the License is distributed on an 'AS IS' BASIS,
 //  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -272,12 +272,6 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
          key: "ansix9p256r1_ecpubkey.dat", expected: "ansix9p256r1_expected_apdu.dat", pass: true, throw: false),
         (test: "ansix9p384r1", hash: "ansix9p384r1_hash.dat", normalized: "ansix9p384r1_signature_normalized.dat",
          key: "ansix9p384r1_ecpubkey.dat", expected: "ansix9p384r1_expected_apdu.dat", pass: true, throw: false),
-        (test: "brainpoolP256r1", hash: "brainpoolP256r1_hash.dat",
-         normalized: "brainpoolP256r1_signature_normalized.dat", key: "brainpoolP256r1_ecpubkey.dat",
-         expected: "brainpoolP256r1_expected_apdu.dat", pass: false, throw: false),
-        (test: "brainpoolP384r1", hash: "brainpoolP384r1_hash.dat",
-         normalized: "brainpoolP384r1_signature_normalized.dat", key: "brainpoolP384r1_ecpubkey.dat",
-         expected: "brainpoolP384r1_expected_apdu.dat", pass: false, throw: false),
         (test: "brainpoolP512r1", hash: "brainpoolP512r1_hash.dat",
          normalized: "brainpoolP512r1_signature_normalized.dat", key: "brainpoolP512r1_ecpubkey.dat",
          expected: "brainpoolP512r1_expected_apdu.dat", pass: false, throw: true),
@@ -413,8 +407,8 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
     }
 
     func testPsoVerifyDSA_wrong_hashsize() {
-        let filename = "ec_pub_key.dat"
-        let ecKeyData = filename.loadAsResource(at: "EC", bundle: bundle)
+        let filename = "ansix9p256r1_ecpubkey.dat"
+        let ecKeyData = filename.loadAsResource(at: "DSA", bundle: bundle)
 
         let signature = Data([UInt8](repeating: 0xF0, count: 64))
         let hash = Data([UInt8](repeating: 0xEF, count: 30))
@@ -422,7 +416,10 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
         var error: Unmanaged<CFError>?
         guard let key = SecKeyCreateWithData(
             ecKeyData as CFData,
-            [kSecAttrKeyType: kSecAttrKeyTypeEC, kSecAttrKeyClass: kSecAttrKeyClassPublic] as CFDictionary,
+            [
+                kSecAttrKeyType: kSecAttrKeyTypeEC,
+                kSecAttrKeyClass: kSecAttrKeyClassPublic,
+            ] as CFDictionary,
             &error
         ) else {
             Nimble.fail("Could not initialize ECPublicKey")
@@ -435,8 +432,8 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
     }
 
     func testPsoVerifyDSA_wrong_signaturesize() {
-        let filename = "ec_pub_key.dat"
-        let ecKeyData = filename.loadAsResource(at: "EC", bundle: bundle)
+        let filename = "ansix9p256r1_ecpubkey.dat"
+        let ecKeyData = filename.loadAsResource(at: "DSA", bundle: bundle)
 
         let signature = Data([UInt8](repeating: 0xF0, count: 66))
         let hash = Data([UInt8](repeating: 0xEF, count: 32))
@@ -457,8 +454,8 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
     }
 }
 
-func throwError<T>() -> Predicate<T> {
-    Predicate { actualExpression in
+func throwError<T>() -> Nimble.Predicate<T> {
+    Nimble.Predicate { actualExpression in
         var actualError: Error?
         do {
             _ = try actualExpression.evaluate()
