@@ -26,7 +26,7 @@ struct ChangeReferenceDataSetNewPINView: View {
     @State var newPin: String = ""
     @ObservedObject var keyboardHeight = KeyboardHeight()
     var buttonEnabled: Bool {
-        newPin.count >= 5 && newPin.count <= 6 && oldPin.count > 5 && oldPin.count <= 6
+        newPin.count >= 5 && newPin.count <= 6 && oldPin.count >= 5 && oldPin.count <= 6
     }
 
     var body: some View {

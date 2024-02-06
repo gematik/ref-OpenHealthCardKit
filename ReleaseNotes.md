@@ -1,3 +1,10 @@
+# Release 5.4.1
+
+## Fixed
+
+- Fix AID of EgkFileSystem.DF.HCA
+- Fix wrong PIN input length for Change-Pin use case
+
 # Release 5.4.0
 
 ## Changed
