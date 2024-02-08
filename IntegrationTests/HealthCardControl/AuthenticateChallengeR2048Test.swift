@@ -23,7 +23,7 @@ import Util
 import XCTest
 
 final class AuthenticateChallengeR2048Test: CardSimulationTerminalTestCase {
-    func testSignChallenge() throws {
+    func testSignChallenge_publisher() throws {
         let challenge = "1234567890".data(using: .utf8)!
         let authenticatedResult = try Self.healthCard
             .verify(pin: "123456", type: .mrpinHome)
@@ -32,6 +32,17 @@ final class AuthenticateChallengeR2048Test: CardSimulationTerminalTestCase {
             }
             .eraseToAnyPublisher()
             .test()
+
+        expect(authenticatedResult.certificate.signatureAlgorithm) == .sha256RsaMgf1
+        expect(authenticatedResult.certificate.certificate.count) == 1242
+        expect(authenticatedResult.signature.count) == 256
+    }
+
+    func testSignChallenge() async throws {
+        let challenge = "1234567890".data(using: .utf8)!
+        _ = try await Self.healthCard
+            .verify(pin: "123456", type: .mrpinHome)
+        let authenticatedResult = try await Self.healthCard.authenticate(challenge: challenge)
 
         expect(authenticatedResult.certificate.signatureAlgorithm) == .sha256RsaMgf1
         expect(authenticatedResult.certificate.certificate.count) == 1242

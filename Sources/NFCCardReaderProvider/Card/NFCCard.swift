@@ -74,6 +74,29 @@ class NFCCard: CardType {
         return NFCCardChannel(card: self, tag: tag, channelNo: Int(rspData[0]))
     }
 
+    func openLogicChannelAsync() async throws -> CardChannelType {
+        guard let tag = tag else {
+            throw NFCCardError.noCardPresent.illegalState
+        }
+
+        let manageChannelCommandOpen = try APDU.Command(cla: 0x00, ins: 0x70, p1: 0x00, p2: 0x00, ne: 0x01)
+        let responseSuccess = 0x9000
+
+        let response = try await openBasicChannel()
+            .transmitAsync(command: manageChannelCommandOpen, writeTimeout: 0, readTimeout: 0)
+        guard response.sw == responseSuccess else {
+            throw NFCCardError.transferException(
+                name: String(format: "openLogicalChannel failed, response code: 0x%04x", response.sw)
+            )
+        }
+        guard let rspData = response.data else {
+            throw NFCCardError.transferException(
+                name: String(format: "openLogicalChannel failed, no channel number received")
+            )
+        }
+        return NFCCardChannel(card: self, tag: tag, channelNo: Int(rspData[0]))
+    }
+
     func initialApplicationIdentifier() throws -> Data? {
         guard let initialSelectedAID = tag?.initialSelectedAID else {
             ALog("NFC tag could not deliver initialSelectedAID when expected")

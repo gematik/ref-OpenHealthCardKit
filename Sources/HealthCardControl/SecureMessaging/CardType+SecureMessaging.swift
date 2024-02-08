@@ -34,6 +34,7 @@ extension CardType {
     ///     - writeTimeout: time in seconds. Default: 30
     ///     - readTimeout: time in seconds. Default 30
     /// - Returns: Publisher that negotiates a secure session when scheduled to run.
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     public func openSecureSession(can: CAN, writeTimeout: TimeInterval = 30, readTimeout: TimeInterval = 30)
         -> AnyPublisher<HealthCardType, Error> {
         CommandLogger.commands.append(Command(message: "Open secure Session", type: .description))
@@ -73,6 +74,44 @@ extension CardType {
                 }
         }
         .eraseToAnyPublisher()
+    }
+
+    /// Open a secure session with a Card for further scheduling/attaching Publisher commands
+    ///
+    /// - Note: The negotiated SecureHealthCard should be used for the commands to be executed on the secure channel.
+    ///   After the chain has completed the session should be invalidated/closed.
+    ///
+    /// - Parameters:
+    ///     - can: The Channel access number for the session
+    ///     - writeTimeout: time in seconds. Default: 30
+    ///     - readTimeout: time in seconds. Default 30
+    /// - Returns: SecureHealthCard
+    public func openSecureSession(
+        can: CAN,
+        writeTimeout: TimeInterval = 30,
+        readTimeout: TimeInterval = 30
+    ) async throws -> HealthCardType {
+        CommandLogger.commands.append(Command(message: "Open secure Session", type: .description))
+        let channel = try openBasicChannel()
+        // Read/Determine ApplicationIdentifier of the card's initial application
+        let cardAid = try await channel.determineCardAid(writeTimeout: writeTimeout, readTimeout: readTimeout)
+
+        // Read EF.CardAccess and determine the algorithm for the key agreement (e.g. PACE)
+        let keyAgreementAlgorithm = try await channel.readKeyAgreementAlgorithm(cardAid: cardAid)
+        // Read EF.Version2 and determine HealthCardPropertyType
+        let cardType = try await channel.readCardType(
+            cardAid: cardAid,
+            writeTimeout: writeTimeout,
+            readTimeout: readTimeout
+        )
+        let healthCard = try HealthCard(card: self, status: .valid(cardType: cardType))
+        let sessionKey = try await keyAgreementAlgorithm.negotiateSessionKey(
+            card: healthCard,
+            can: can,
+            writeTimeout: writeTimeout,
+            readTimeout: readTimeout
+        )
+        return SecureHealthCard(session: sessionKey, card: healthCard)
     }
 
     /// Open a secure session with a Card for further scheduling/attaching Publisher commands

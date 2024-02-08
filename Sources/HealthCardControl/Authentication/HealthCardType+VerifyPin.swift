@@ -60,6 +60,7 @@ extension HealthCardType {
     /// - Returns: Publisher that tries to verify the given PIN-value information against `type`
     ///
     /// - Note: Only supports eGK Card types
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     public func verify(
         pin: Format2Pin,
         type: EgkFileSystem.Pin,
@@ -90,9 +91,44 @@ extension HealthCardType {
     /// Verify Password for a Pin type
     ///
     /// - Parameters:
+    ///     - pin: `Format2Pin` holds the Pin information for the `type`. E.g. mrPinHome.
+    ///     - type: verification type. Any of `EgkFileSystem.Pin`.
+    ///     - dfSpecific: is Password reference dfSpecific
+    ///
+    /// - Returns: Response after trying to verify the given PIN-value information against a EgkFileSystem.Pin `type`
+    ///
+    /// - Note: Only supports eGK Card types
+    public func verify(
+        pin: Format2Pin,
+        type: EgkFileSystem.Pin,
+        dfSpecific: Bool = false
+    ) async throws -> VerifyPinResponse {
+        CommandLogger.commands.append(Command(message: "Verify PIN", type: .description))
+        let verifyPasswordParameter = (type.rawValue, dfSpecific, pin)
+        let verifyCommand = HealthCardCommand.Verify.verify(password: verifyPasswordParameter)
+        let verifyResponse = try await verifyCommand.transmit(to: self)
+        let responseStatus = verifyResponse.responseStatus
+        if ResponseStatus.wrongSecretWarnings.contains(responseStatus) {
+            return .wrongSecretWarning(retryCount: responseStatus.retryCount)
+        }
+        switch responseStatus {
+        case .success: return .success
+        case .memoryFailure: return .memoryFailure
+        case .securityStatusNotSatisfied: return .securityStatusNotSatisfied
+        case .passwordBlocked: return .passwordBlocked
+        case .passwordNotUsable: return .passwordNotUsable
+        case .passwordNotFound: return .passwordNotFound
+        default: return .unknownFailure
+        }
+    }
+
+    /// Verify Password for a Pin type
+    ///
+    /// - Parameters:
     ///   - pin: holds the Pin information for the password
     ///   - affectedPassword: convenience `VerifyPinAffectedPassword` selector
     /// - Returns: Publisher that tries to verify the given PIN-value information against the affected password
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     public func verify(
         pin: String,
         affectedPassword: VerifyPinAffectedPassword
@@ -111,5 +147,26 @@ extension HealthCardType {
             dfSpecific = false
         }
         return verify(pin: parsedPIN, type: type, dfSpecific: dfSpecific)
+    }
+
+    /// Verify Password for a Pin type
+    ///
+    /// - Parameters:
+    ///   - pin: holds the Pin information for the password
+    ///   - affectedPassword: convenience `VerifyPinAffectedPassword` selector
+    /// - Returns: Response after trying to verify the given PIN-value information against a EgkFileSystem.Pin `type`
+    public func verify(
+        pin: String,
+        affectedPassword: VerifyPinAffectedPassword
+    ) async throws -> VerifyPinResponse {
+        let parsedPIN = try Format2Pin(pincode: pin)
+        let type: EgkFileSystem.Pin
+        let dfSpecific: Bool
+        switch affectedPassword {
+        case .mrPinHomeNoDfSpecific:
+            type = .mrpinHome
+            dfSpecific = false
+        }
+        return try await verify(pin: parsedPIN, type: type, dfSpecific: dfSpecific)
     }
 }

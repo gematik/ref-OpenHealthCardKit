@@ -26,19 +26,32 @@ import XCTest
 final class KeyAgreementIntegrationTest: CardSimulationTerminalTestCase {
     override class var configFileInput: String { "Configuration/configuration_E021D-A5Tp_432_80276883110000218486.xml" }
 
-    func testNegotiatePaceEcdhGmAesCbcCmac128() {
+    func testNegotiatePaceEcdhGmAesCbcCmac128_publisher() {
         let can = try! CAN.from(Data("123123".utf8)) // swiftlint:disable:this force_try
         expect { () -> SecureMessaging? in
-            // tag::negotiateSessionKey[]
+            // tag::negotiateSessionKey_publisher[]
             try KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128.negotiateSessionKey(
                 card: CardSimulationTerminalTestCase.healthCard,
                 can: can,
                 writeTimeout: 0,
                 readTimeout: 10
             )
-            // end::negotiateSessionKey[]
+            // end::negotiateSessionKey_publisher[]
             .test()
         }.toNot(beNil())
+    }
+
+    func testNegotiatePaceEcdhGmAesCbcCmac128() async throws {
+        let can = try! CAN.from(Data("123123".utf8)) // swiftlint:disable:this force_try
+        // tag::negotiateSessionKey[]
+        let secureMessaging = try await KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128.negotiateSessionKey(
+            card: CardSimulationTerminalTestCase.healthCard,
+            can: can,
+            writeTimeout: 0,
+            readTimeout: 10
+        )
+        // end::negotiateSessionKey[]
+        expect(secureMessaging).toNot(beNil())
     }
 
     static let allTests = [

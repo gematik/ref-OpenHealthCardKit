@@ -24,14 +24,18 @@ import XCTest
 final class HealthCardTypeExtEfCardAccessIntTest: CardSimulationTerminalTestCase {
     override class var configFileInput: String { "Configuration/configuration_E021D-A5Tp_432_80276883110000218486.xml" }
 
-    func testReadEfCardAccess() {
+    func testReadEfCardAccess_publisher() {
         expect {
             try Self.healthCard.currentCardChannel.readKeyAgreementAlgorithm(writeTimeout: 30, readTimeout: 30)
                 .test()
         } == KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128
     }
 
-    static let allTests = [
-        ("testReadEfCardAccess", testReadEfCardAccess),
-    ]
+    func testReadEfCardAccess() async throws {
+        let algorithm = try await Self.healthCard.currentCardChannel.readKeyAgreementAlgorithm(
+            writeTimeout: 30,
+            readTimeout: 30
+        )
+        expect(algorithm) == KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128
+    }
 }

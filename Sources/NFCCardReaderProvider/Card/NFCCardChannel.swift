@@ -43,9 +43,12 @@ class NFCCardChannel: CardChannelType {
         nfcCard
     }
 
-    // swiftlint:disable:next function_body_length
-    func transmit(command: CommandType, writeTimeout _: TimeInterval,
-                  readTimeout: TimeInterval) throws -> ResponseType {
+    @available(*, deprecated, message: "Use structured concurrency version instead")
+    func transmit( // swiftlint:disable:this function_body_length
+        command: CommandType,
+        writeTimeout _: TimeInterval,
+        readTimeout: TimeInterval
+    ) throws -> ResponseType {
         let commandApdu: CommandType
         if channelNumber > 0 {
             commandApdu = try command.toLogicalChannel(channelNo: UInt8(channelNumber))
@@ -104,6 +107,53 @@ class NFCCardChannel: CardChannelType {
         }
     }
 
+    // todo-timeout: implement timeout?
+    func transmitAsync(
+        command: CommandType,
+        writeTimeout _: TimeInterval,
+        readTimeout _: TimeInterval
+    ) async throws -> ResponseType {
+        let commandApdu: CommandType
+        if channelNumber > 0 {
+            commandApdu = try command.toLogicalChannel(channelNo: UInt8(channelNumber))
+        } else {
+            commandApdu = command
+        }
+
+        guard let tag = tag else {
+            throw NFCCardError.noCardPresent.illegalState
+        }
+
+        var sw1: UInt8 = 0
+        var sw2: UInt8 = 0
+        var data = Data()
+
+        let apdu = NFCISO7816APDU(command: commandApdu)
+        let sendHeader = Data(
+            [apdu.instructionClass] + [apdu.instructionCode] + [apdu.p1Parameter] + [apdu.p2Parameter]
+        ).hexString()
+
+        let send = "[\(sendHeader)\(apdu.data?.hexString() ?? "")|ne:\(String(apdu.expectedResponseLength))]"
+        DLog("SEND:     \(send)")
+        CommandLogger.commands.append(Command(message: send, type: .send))
+
+        do {
+            (data, sw1, sw2) = try await tag.sendCommand(apdu: apdu)
+        } catch {
+            throw NFCCardError.nfcTag(error: error.asCoreNFCError())
+        }
+
+        let response = "[\(Data(data + [sw1, sw2]).hexString())]"
+        DLog("RESPONSE: \(response)")
+        CommandLogger.commands.append(Command(message: response, type: .response))
+
+        do {
+            return try APDU.Response(body: data, sw1: sw1, sw2: sw2)
+        } catch {
+            throw CardError.connectionError(error)
+        }
+    }
+
     func close() throws {
         defer {
             tag = nil
@@ -121,6 +171,29 @@ class NFCCardChannel: CardChannelType {
         let responseSuccess = 0x9000
 
         let response = try transmit(command: manageChannelCommandClose, writeTimeout: 0, readTimeout: 0)
+        if response.sw != responseSuccess {
+            throw NFCCardError.transferException(name:
+                String(format: "closing logical channel %d failed, response: 0x%04x", channelNumber, response.sw))
+        }
+    }
+
+    func closeAsync() async throws {
+        defer {
+            tag = nil
+        }
+        guard tag != nil else {
+            throw NFCCardError.transferException(name:
+                "Basic channel cannot be closed or channel already closed").illegalState
+        }
+        guard channelNumber != 0 else {
+            return // only logical channels can/should be closed
+        }
+
+        let manageChannelCommandClose = try APDU.Command(cla: 0x00, ins: 0x70, p1: 0x80, p2: 0x00)
+            .toLogicalChannel(channelNo: UInt8(channelNumber))
+        let responseSuccess = 0x9000
+
+        let response = try await transmitAsync(command: manageChannelCommandClose, writeTimeout: 0, readTimeout: 0)
         if response.sw != responseSuccess {
             throw NFCCardError.transferException(name:
                 String(format: "closing logical channel %d failed, response: 0x%04x", channelNumber, response.sw))

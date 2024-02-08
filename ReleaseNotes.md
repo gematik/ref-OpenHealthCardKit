@@ -1,4 +1,8 @@
-# Release 5.4.1
+# Release 5.5.0
+
+## Added
+
+- Extend HealthCardControl API to offer structured concurrency endpoints (more to come)
 
 ## Fixed
 

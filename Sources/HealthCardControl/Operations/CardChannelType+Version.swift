@@ -62,6 +62,7 @@ extension CardChannelType {
     ///     - writeTimeout: interval in seconds. Default: 30
     ///     - readTimeout: interval in seconds. Default: 30
     /// - Returns: Publisher that emits a HealthCardPropertyType on successful recognition of the AID and EF.Version2
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     public func readCardType(
         cardAid: CardAid? = nil,
         writeTimeout: TimeInterval = 30.0,
@@ -94,5 +95,52 @@ extension CardChannelType {
                     }
             }
             .eraseToAnyPublisher()
+    }
+
+    /// Determine `HealthCardPropertyType` either by known initialApplicationIdentifier of the `CardType`
+    /// or trying to read EF.Version2.
+    /// - Parameters:
+    ///     - cardAid: `ApplicationIdentifier` of MF (root) where EF.Version2 is expected to be in.
+    ///                 When now known then the function determines it by itself.
+    ///     - writeTimeout: interval in seconds. Default: 30
+    ///     - readTimeout: interval in seconds. Default: 30
+    /// - Returns: HealthCardPropertyType on successful recognition of the AID and EF.Version2
+    public func readCardType(
+        cardAid: CardAid? = nil,
+        writeTimeout: TimeInterval = 30.0,
+        readTimeout: TimeInterval = 30.0
+    ) async throws -> HealthCardPropertyType {
+        let channel = self
+
+        let determinedCardAid: CardAid
+        if let cardAid = cardAid {
+            determinedCardAid = cardAid
+        } else {
+            determinedCardAid = try await channel.determineCardAid()
+        }
+
+        let selectCommand = HealthCardCommand.Select.selectFile(with: determinedCardAid.rawValue)
+        let selectResponse = try await selectCommand.transmit(
+            on: channel,
+            writeTimeout: writeTimeout,
+            readTimeout: readTimeout
+        )
+        guard selectResponse.responseStatus == ResponseStatus.success
+        else {
+            throw HealthCard.Error.unexpectedResponse(actual: selectResponse.responseStatus, expected: .success)
+        }
+
+        let readCommand = try HealthCardCommand.Read.readFileCommand(
+            with: determinedCardAid.efVersion2Sfi,
+            ne: channel.expectedLengthWildcard
+        )
+        let readResponse = try await readCommand.transmit(
+            on: channel,
+            writeTimeout: writeTimeout,
+            readTimeout: readTimeout
+        )
+
+        let cardVersion2 = try CardVersion2(data: readResponse.data ?? Data.empty)
+        return try HealthCardPropertyType.from(cardAid: determinedCardAid, cardVersion2: cardVersion2)
     }
 }

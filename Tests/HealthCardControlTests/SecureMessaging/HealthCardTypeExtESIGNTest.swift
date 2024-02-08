@@ -47,7 +47,14 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
             try handler(command, self, writeTimeout, readTimeout)
         }
 
+        func transmitAsync(command: CommandType, writeTimeout: TimeInterval, readTimeout: TimeInterval)
+            throws -> ResponseType {
+            try handler(command, self, writeTimeout, readTimeout)
+        }
+
         func close() throws {}
+
+        func closeAsync() async throws {}
     }
 
     class MockHealthCard: HealthCardType {
@@ -64,7 +71,7 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
         case unsupportedCommand
     }
 
-    func testReadAutCertificate() {
+    func testReadAutCertificate_publisher() {
         let fcpResourcesPath =
             URL(fileURLWithPath: #file)
                 .deletingLastPathComponent()
@@ -109,13 +116,67 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
         expect(autCertificateResponse?.certificate) == mockCertificate
     }
 
-    func testReadAutCertificate_unsupportedCardType() {
+    func testReadAutCertificate() async throws {
+        let fcpResourcesPath =
+            URL(fileURLWithPath: #file)
+                .deletingLastPathComponent()
+                .deletingLastPathComponent()
+                .appendingPathComponent("Resources.bundle")
+                .appendingPathComponent("FCP")
+                .appendingPathComponent("fcp_A000000167455349474E.dat")
+
+        // swiftlint:disable:next force_try
+        let fcp = try! FileControlParameter.parse(data: fcpResourcesPath.readFileContents())
+        let certSize = Int(fcp.size)
+        let mockCertificate = Data([UInt8](repeating: 0x55, count: certSize))
+
+        let egkCardStatus = HealthCardStatus.valid(cardType: HealthCardPropertyType.egk(generation: .g2_1))
+        let commandHandler: CommandMessageHandler = { command, channel, _, _ in
+            let selectCommand = HealthCardCommand.Select.selectFile(with: AutCertInfo.efAutE256.certificate.aid)
+                .apduCommand
+            let selectEfCommand = try HealthCardCommand.Select.selectEfRequestingFcp(
+                with: AutCertInfo.efAutE256.certificate.fid!, // swiftlint:disable:this force_unwrapping
+                expectedLength: channel.maxResponseLength
+            ).apduCommand
+            let readCommand = try HealthCardCommand.Read.readFileCommand(ne: certSize, offset: 0)
+            if command == selectCommand {
+                return try APDU.Response(body: Data(), sw1: 0x90, sw2: 0x0)
+            } else if command == selectEfCommand {
+                return try APDU.Response(body: fcpResourcesPath.readFileContents(), sw1: 0x90, sw2: 0x0)
+            } else if command == readCommand {
+                return try APDU.Response(body: mockCertificate, sw1: 0x90, sw2: 0x0)
+            }
+            throw TestError.unsupportedCommand
+        }
+        let channel = MockChannel(messageHandler: commandHandler)
+        let card = MockHealthCard(status: egkCardStatus, currentCardChannel: channel)
+
+        var autCertificateResponse: AutCertificateResponse?
+        autCertificateResponse = try await card.readAutCertificate()
+        expect(autCertificateResponse?.info) == .efAutE256
+        expect(autCertificateResponse?.certificate) == mockCertificate
+    }
+
+    func testReadAutCertificate_unsupportedCardType_publisher() {
         let egkCardStatus = HealthCardStatus.valid(cardType: HealthCardPropertyType.hba(generation: .g2_1))
         let channel = MockChannel { _, _, _, _ in
             throw TestError.unsupportedCommand
         }
         let card = MockHealthCard(status: egkCardStatus, currentCardChannel: channel)
 
+        expect {
+            try card.readAutCertificate().test()
+        }.to(throwError(HealthCard.Error.unsupportedCardType))
+    }
+
+    func testReadAutCertificate_unsupportedCardType() async throws {
+        let egkCardStatus = HealthCardStatus.valid(cardType: HealthCardPropertyType.hba(generation: .g2_1))
+        let channel = MockChannel { _, _, _, _ in
+            throw TestError.unsupportedCommand
+        }
+        let card = MockHealthCard(status: egkCardStatus, currentCardChannel: channel)
+
+        // todo-nimble update
         expect {
             try card.readAutCertificate().test()
         }.to(throwError(HealthCard.Error.unsupportedCardType))

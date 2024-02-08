@@ -16,6 +16,7 @@
 
 import CardReaderProviderApi
 import CardSimulationCardReaderProvider
+import Combine
 import Foundation
 import HealthCardAccess
 @testable import HealthCardControl
@@ -25,7 +26,7 @@ import XCTest
 final class SelectWithFCPOnSecureChannelIntegrationTest: CardSimulationTerminalTestCase {
     override class var configFileInput: String { "CardSim/configuration_TLK_COS_image_kontaktlos128.xml" }
 
-    func testSelectEsignCChAutE256WithFCP() throws {
+    func testSelectEsignCChAutE256WithFCP_publisher() throws {
         let can = try CAN.from(Data("123123".utf8))
 
         let response = try Self.card.openSecureSession(can: can, writeTimeout: 0, readTimeout: 0)
@@ -37,6 +38,19 @@ final class SelectWithFCPOnSecureChannelIntegrationTest: CardSimulationTerminalT
             }
             .eraseToAnyPublisher()
             .test()
+
+        expect(response.0) == .success
+        expect(response.1?.size) == 1900
+    }
+
+    func testSelectEsignCChAutE256WithFCP() async throws {
+        let can = try CAN.from(Data("123123".utf8))
+
+        let secureCard = try await Self.card.openSecureSession(can: can, writeTimeout: 0, readTimeout: 0)
+        let response = try await secureCard.selectDedicated(
+            file: DedicatedFile(aid: EgkFileSystem.DF.ESIGN.aid, fid: EgkFileSystem.EF.esignCChAutE256.fid),
+            fcp: true
+        )
 
         expect(response.0) == .success
         expect(response.1?.size) == 1900

@@ -44,9 +44,24 @@ extension HealthCardCommandType {
     ///     - writeTimeout: the time in seconds to allow for the write to begin. time <= 0 no timeout
     ///     - readTimeout: the time in seconds to allow for the receiving to begin. time <= 0 no timeout
     /// - Returns: AnyPublisher that holds a strong reference to the command: `self`
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     public func publisher(for card: HealthCardType, writeTimeout: TimeInterval = 0, readTimeout: TimeInterval = 0)
         -> AnyPublisher<HealthCardResponseType, Swift.Error> {
         publisher(for: card.currentCardChannel, writeTimeout: writeTimeout, readTimeout: readTimeout)
+    }
+
+    /// Execute the command on a given card
+    /// - Parameters:
+    ///     - to: the card to use for executing `self` on
+    ///     - writeTimeout: the time in seconds to allow for the write to begin. time <= 0 no timeout
+    ///     - readTimeout: the time in seconds to allow for the receiving to begin. time <= 0 no timeout
+    /// - Returns: HealthCardResponseType decoded from the answer received via channel.
+    public func transmit(
+        to card: HealthCardType,
+        writeTimeout: TimeInterval = 0,
+        readTimeout: TimeInterval = 0
+    ) async throws -> HealthCardResponseType {
+        try await transmit(on: card.currentCardChannel, writeTimeout: writeTimeout, readTimeout: readTimeout)
     }
 
     /// Execute the command on a given channel
@@ -56,6 +71,7 @@ extension HealthCardCommandType {
     ///     - writeTimeout: the time in seconds to allow for the write to begin. time <= 0 no timeout
     ///     - readTimeout: the time in seconds to allow for the receiving to begin. time <= 0 no timeout
     /// - Returns: AnyPublisher that holds a strong reference to the command: `self`
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     public func publisher(for channel: CardChannelType, writeTimeout: TimeInterval = 0, readTimeout: TimeInterval = 0)
         -> AnyPublisher<HealthCardResponseType, Swift.Error> {
         Combine.Future<ResponseType, Swift.Error> { promise in
@@ -74,5 +90,24 @@ extension HealthCardCommandType {
             HealthCardResponse.from(response: $0, for: self)
         }
         .eraseToAnyPublisher()
+    }
+
+    /// Execute the command on a given channel
+    /// - Parameters:
+    ///     - channel: the channel to use for executing `self` on
+    ///     - writeTimeout: the time in seconds to allow for the write to begin. time <= 0 no timeout
+    ///     - readTimeout: the time in seconds to allow for the receiving to begin. time <= 0 no timeout
+    /// - Returns: HealthCardResponseType decoded from the answer received via channel.
+    public func transmit(
+        on channel: CardChannelType,
+        writeTimeout: TimeInterval = 0,
+        readTimeout: TimeInterval = 0
+    ) async throws -> HealthCardResponseType {
+        let response = try await channel.transmitAsync(
+            command: self,
+            writeTimeout: writeTimeout,
+            readTimeout: readTimeout
+        )
+        return HealthCardResponse.from(response: response, for: self)
     }
 }

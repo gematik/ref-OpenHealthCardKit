@@ -25,10 +25,15 @@ final class DetermineCardAidIntegrationTest: CardSimulationTerminalTestCase {
     override class var configFileInput: String { "Configuration/configuration_EGK_G2_1_ecc.xml" }
     override class var healthCardStatusInput: HealthCardStatus { .valid(cardType: .egk(generation: .g2_1)) }
 
-    func testDetermineCardAid() {
+    func testDetermineCardAid_publisher() {
         expect {
             try Self.healthCard.currentCardChannel.determineCardAid()
                 .test()
         } == CardAid.egk
+    }
+
+    func testDetermineCardAid() async throws {
+        let result = try await Self.healthCard.currentCardChannel.determineCardAid()
+        expect(result) == CardAid.egk
     }
 }

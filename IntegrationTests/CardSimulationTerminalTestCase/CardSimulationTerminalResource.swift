@@ -153,6 +153,10 @@ class DisconnectedCard: CardType {
         throw Error(description: "[DisconnectedCard] openLogicChannel() has not been implemented")
     }
 
+    func openLogicChannelAsync() async throws -> CardReaderProviderApi.CardChannelType {
+        throw Error(description: "[DisconnectedCard] openBasicChannel() has not been implemented")
+    }
+
     func disconnect(reset _: Bool) throws {
         throw Error(description: "[DisconnectedCard] disconnect() has not been implemented")
     }

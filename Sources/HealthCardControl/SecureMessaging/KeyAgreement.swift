@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 //
 //  Copyright (c) 2023 gematik GmbH
 //
@@ -72,6 +73,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
         ///     - writeTimeout: timeout in seconds. time <= 0 is no timeout
         ///     - readTimeout: timeout in seconds. time <= 0 is no timeout
         /// - Returns: Publisher that when successful emits PaceKey both this application and the card agreed on.
+        @available(*, deprecated, message: "Use structured concurrency version instead")
         public func negotiateSessionKey(
             card: HealthCardType,
             can: CAN,
@@ -141,6 +143,71 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
                 .eraseToAnyPublisher()
             }
         }
+
+        /// Negotiate a common key with a `HealthCard` given its `CardAccessNumber`
+        ///
+        /// - Parameters:
+        ///     - card: the card to negotiate a session key with
+        ///     - can: the `CardAccessNumber` of the `HealthCard`
+        ///     - writeTimeout: timeout in seconds. time <= 0 is no timeout
+        ///     - readTimeout: timeout in seconds. time <= 0 is no timeout
+        /// - Returns: Instance of `SecureMessaging` employing the PACE key
+        ///         that both this application and the card agreed on.
+        public func negotiateSessionKey(
+            card: HealthCardType,
+            can: CAN,
+            writeTimeout: TimeInterval = 10,
+            readTimeout: TimeInterval = 10
+        ) async throws -> SecureMessaging {
+            switch self {
+            case .idPaceEcdhGmAesCbcCmac128:
+                // Set security environment
+                _ = try await step0PaceEcdhGmAesCbcCmac128(
+                    card: card,
+                    writeTimeout: writeTimeout,
+                    readTimeout: readTimeout
+                )
+                // Request nonceZ from card and decrypt it to nonceS as Data
+                let nonceS = try await step1PaceEcdhGmAesCbcCmac128(
+                    card: card,
+                    can: can,
+                    writeTimeout: writeTimeout,
+                    readTimeout: readTimeout
+                )
+                // Generate first own public key (PK1_PCD) and send it to card.
+                // Receive first public key (PK1_PICC) from card
+                let (pk2Pcd, keyPair2) = try await step2PaceEcdhGmAesCbcCmac128(
+                    card: card,
+                    nonceS: nonceS,
+                    writeTimeout: writeTimeout,
+                    readTimeout: readTimeout
+                )
+                // Send own public key PK2_PCD to card and receive second public key (PK2_PICC) from card.
+                // Derive PaceKey from all the information.
+                let (pk2Picc, paceKey) = try await step3PaceEcdhGmAesCbcCmac128(
+                    card: card,
+                    pk2Pcd: pk2Pcd,
+                    keyPair2: keyPair2,
+                    writeTimeout: writeTimeout,
+                    readTimeout: readTimeout
+                )
+                // Derive MAC_PCD from a key mac and from a auth token and send it to card
+                // so the card can verify it.
+                // Receive MAC_PICC from card and verify it.
+                let verifyMacPicc = try await step4PaceEcdhGmAesCbcCmac128(
+                    card: card,
+                    pk2Picc: pk2Picc,
+                    pk2Pcd: pk2Pcd,
+                    paceKey: paceKey,
+                    writeTimeout: writeTimeout,
+                    readTimeout: readTimeout
+                )
+                guard verifyMacPicc else {
+                    throw Error.macPiccVerificationFailedLocally
+                }
+                return paceKey
+            }
+        }
     }
 
     /// Set the appropriate security environment on card.
@@ -164,6 +231,29 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
                 $0.publisher(for: card, writeTimeout: writeTimeout, readTimeout: readTimeout)
             }
             .eraseToAnyPublisher()
+    }
+
+    /// Set the appropriate security environment on card.
+    private static func step0PaceEcdhGmAesCbcCmac128(
+        card: HealthCardType,
+        writeTimeout: TimeInterval,
+        readTimeout: TimeInterval
+    ) async throws -> HealthCardResponseType {
+        let algorithm = Algorithm.idPaceEcdhGmAesCbcCmac128
+        let key = try Key(algorithm.affectedKeyId)
+        let decodedOID = try ASN1Decoder.decode(asn1: try Data(hex: algorithm.protocolIdentifierHex))
+        let oid = try ObjectIdentifier(from: decodedOID)
+        let selectPaceCommand = try HealthCardCommand.ManageSE.selectPACE(
+            symmetricKey: key,
+            dfSpecific: false,
+            oid: oid
+        )
+        let selectPaceResponse = try await selectPaceCommand.transmit(
+            to: card,
+            writeTimeout: writeTimeout,
+            readTimeout: readTimeout
+        )
+        return selectPaceResponse
     }
 
     /// Request nonceZ from card and decrypt it to nonceS as Data
@@ -190,6 +280,29 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
                 return try AES.CBC128.decrypt(data: nonceZ, key: derivedKey)
             }
             .eraseToAnyPublisher()
+    }
+
+    /// Request nonceZ from card and decrypt it to nonceS as Data
+    private static func step1PaceEcdhGmAesCbcCmac128(
+        card: HealthCardType,
+        can: CAN,
+        writeTimeout: TimeInterval,
+        readTimeout: TimeInterval
+    ) async throws -> Data {
+        let paceStep1aCommand = HealthCardCommand.PACE.step1a()
+        let paceStep1aResponse = try await paceStep1aCommand.transmit(
+            to: card,
+            writeTimeout: writeTimeout,
+            readTimeout: readTimeout
+        )
+
+        guard let responseData = paceStep1aResponse.data,
+              let nonceZ = try? KeyAgreement.extractPrimitive(constructedAsn1: responseData)
+        else {
+            throw KeyAgreement.Error.unexpectedFormedAnswerFromCard
+        }
+        let derivedKey = KeyDerivationFunction.deriveKey(from: can.rawValue, mode: .password)
+        return try AES.CBC128.decrypt(data: nonceZ, key: derivedKey)
     }
 
     /// Generate first own public key (PK1_PCD) and send it to card.
@@ -231,6 +344,35 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
         .eraseToAnyPublisher()
     }
 
+    /// Generate first own public key (PK1_PCD) and send it to card.
+    /// Receive first public key (PK1_PICC) from card
+    /// Calculate a shared secret generating point gTilde
+    /// Generate a second keyPair2 PK2_PICD and public key PK2_PCD = gTilde * keyPair2.privateKey
+    private static func step2PaceEcdhGmAesCbcCmac128(
+        card: HealthCardType,
+        nonceS: Data,
+        writeTimeout: TimeInterval,
+        readTimeout: TimeInterval
+    ) async throws -> (BrainpoolP256r1.KeyExchange.PublicKey, BrainpoolP256r1.KeyExchange.PrivateKey) {
+        let keyPair1 = try BrainpoolP256r1.KeyExchange.generateKey()
+
+        let paceStep2aCommand = try HealthCardCommand.PACE.step2a(publicKey: keyPair1.publicKey.x962Value())
+
+        let pk1PiccResponse = try await paceStep2aCommand.transmit(
+            to: card,
+            writeTimeout: writeTimeout,
+            readTimeout: readTimeout
+        )
+        guard let pk1PiccResponseData = pk1PiccResponse.data else {
+            throw Error.unexpectedFormedAnswerFromCard
+        }
+        let pk1PiccData = try KeyAgreement.extractPrimitive(constructedAsn1: pk1PiccResponseData)
+        let pk1Picc = try BrainpoolP256r1.KeyExchange.PublicKey(x962: pk1PiccData)
+        let (pk2Pcd, keyPair2) = try keyPair1.paceMapNonce(nonce: nonceS, peerKey1: pk1Picc)
+
+        return (pk2Pcd, keyPair2)
+    }
+
     /// Send own public key PK2_PCD to card and receive second public key (PK2_PICC) from card
     /// Derive PACE key from all the information
     private static func step3PaceEcdhGmAesCbcCmac128(
@@ -258,6 +400,31 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
                 return (pk2Picc, paceKey)
             }
             .eraseToAnyPublisher()
+    }
+
+    /// Send own public key PK2_PCD to card and receive second public key (PK2_PICC) from card
+    /// Derive PACE key from all the information
+    private static func step3PaceEcdhGmAesCbcCmac128(
+        card: HealthCardType,
+        pk2Pcd: BrainpoolP256r1.KeyExchange.PublicKey,
+        keyPair2: BrainpoolP256r1.KeyExchange.PrivateKey,
+        writeTimeout: TimeInterval,
+        readTimeout: TimeInterval
+    ) async throws -> (BrainpoolP256r1.KeyExchange.PublicKey, AES128PaceKey) {
+        let paceStep3Command = try HealthCardCommand.PACE.step3a(publicKey: pk2Pcd.x962Value())
+        let pk2PiccResponse = try await paceStep3Command.transmit(
+            to: card,
+            writeTimeout: writeTimeout,
+            readTimeout: readTimeout
+        )
+        guard let pk2PiccResponseResponseData = pk2PiccResponse.data else {
+            throw KeyAgreement.Error.unexpectedFormedAnswerFromCard
+        }
+        let pk2PiccData = try KeyAgreement.extractPrimitive(constructedAsn1: pk2PiccResponseResponseData)
+        let pk2Picc = try BrainpoolP256r1.KeyExchange.PublicKey(x962: pk2PiccData)
+        let paceKey = try KeyAgreement.derivePaceKeyEcdhAes128(publicKey: pk2Picc, keyPair: keyPair2)
+
+        return (pk2Picc, paceKey)
     }
 
     /// Derive MAC_PCD from a key mac and from a auth token and send it to card for verification
@@ -297,6 +464,45 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
                 return macPiccData == verifyMacPiccData.prefix(8)
             }
             .eraseToAnyPublisher()
+    }
+
+    /// Derive MAC_PCD from a key mac and from a auth token and send it to card for verification
+    /// Receive MAC_PICC from card and verify it
+    private static func step4PaceEcdhGmAesCbcCmac128( // swiftlint:disable:this function_parameter_count
+        card: HealthCardType,
+        pk2Picc: BrainpoolP256r1.KeyExchange.PublicKey,
+        pk2Pcd: BrainpoolP256r1.KeyExchange.PublicKey,
+        paceKey: AES128PaceKey,
+        writeTimeout: TimeInterval,
+        readTimeout: TimeInterval
+    ) async throws -> Bool {
+        let algorithm = Algorithm.idPaceEcdhGmAesCbcCmac128
+        let macPcd = try KeyAgreement.deriveMac(
+            publicKeyX509: pk2Picc.x962Value(),
+            sessionKeyMac: paceKey.mac,
+            algorithm: algorithm
+        )
+        let macPcdToken = macPcd.prefix(algorithm.macTokenPrefixSize)
+        let paceStep4aCommand = try HealthCardCommand.PACE.step4a(token: macPcdToken)
+        let macPiccResponse = try await paceStep4aCommand.transmit(
+            to: card,
+            writeTimeout: writeTimeout,
+            readTimeout: readTimeout
+        )
+        if macPiccResponse.responseStatus != .success {
+            throw Error.macPcdVerificationFailedOnCard
+        }
+        guard let macPiccResponseData = macPiccResponse.data else {
+            throw Error.unexpectedFormedAnswerFromCard
+        }
+        let macPiccData = try extractPrimitive(constructedAsn1: macPiccResponseData)
+        let verifyMacPiccData = try deriveMac(
+            publicKeyX509: pk2Pcd.x962Value(),
+            sessionKeyMac: paceKey.mac,
+            algorithm: algorithm
+        )
+
+        return macPiccData == verifyMacPiccData.prefix(8)
     }
 
     static func extractPrimitive(constructedAsn1: Data) throws -> Data {

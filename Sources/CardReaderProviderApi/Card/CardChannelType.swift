@@ -49,7 +49,25 @@ public protocol CardChannelType {
 
          - Returns: the Command APDU Response or CardError on failure
      */
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     func transmit(command: CommandType, writeTimeout: TimeInterval, readTimeout: TimeInterval) throws -> ResponseType
+
+    /**
+         Transceive a (APDU) command
+
+         - Parameters:
+             - command: the prepared command
+             - writeTimeout: the max waiting time in seconds before the first byte should have been sent.
+                             (<= 0 = no timeout)
+             - readTimeout: the max waiting time in seconds before the first byte should have been received.
+                             (<= 0 = no timeout)
+
+         - Throws: `CardError` when transmitting and/or receiving the response failed
+
+         - Returns: the Command APDU Response or CardError on failure
+     */
+    func transmitAsync(command: CommandType, writeTimeout: TimeInterval, readTimeout: TimeInterval) async throws
+        -> ResponseType
 
     /**
         Close the channel for subsequent actions.
@@ -57,4 +75,11 @@ public protocol CardChannelType {
         - Throws `CardError`
      */
     func close() throws
+
+    /**
+        Close the channel for subsequent actions.
+
+        - Throws `CardError`
+     */
+    func closeAsync() async throws
 }

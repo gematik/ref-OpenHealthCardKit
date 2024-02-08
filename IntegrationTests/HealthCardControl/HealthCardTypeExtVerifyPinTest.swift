@@ -28,7 +28,7 @@ final class HealthCardTypeExtVerifyPinTest: CardSimulationTerminalTestCase {
 
     override class var healthCardStatusInput: HealthCardStatus { .valid(cardType: .egk(generation: .g2_1)) }
 
-    func testVerifyMrPinHomeEgk21() {
+    func testVerifyMrPinHomeEgk21_publisher() {
         let pinCode = "123456"
         expect {
             let format2Pin = try Format2Pin(pincode: pinCode)
@@ -37,7 +37,14 @@ final class HealthCardTypeExtVerifyPinTest: CardSimulationTerminalTestCase {
         } == VerifyPinResponse.success
     }
 
-    func testVerifyMrPinHomeEgk21_WarningRetryCounter() {
+    func testVerifyMrPinHomeEgk21() async throws {
+        let pinCode = "123456"
+        let format2Pin = try Format2Pin(pincode: pinCode)
+        let response = try await Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
+        expect(response) == VerifyPinResponse.success
+    }
+
+    func testVerifyMrPinHomeEgk21_WarningRetryCounter_publisher() {
         let pinCode = "654321"
         expect {
             let format2Pin = try Format2Pin(pincode: pinCode)
@@ -46,8 +53,11 @@ final class HealthCardTypeExtVerifyPinTest: CardSimulationTerminalTestCase {
         } == VerifyPinResponse.wrongSecretWarning(retryCount: 2)
     }
 
-    static let allTests = [
-        ("testVerifyMrPinHomeEgk21", testVerifyMrPinHomeEgk21),
-        ("testVerifyMrPinHomeEgk21Failing", testVerifyMrPinHomeEgk21_WarningRetryCounter),
-    ]
+    func testVerifyMrPinHomeEgk21_WarningRetryCounter() async throws {
+        let pinCode = "654321"
+        let format2Pin = try Format2Pin(pincode: pinCode)
+        let response = try await Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
+        // Note: The retry counter is not reset after each test case. Therefore, the retry counter is 1 here.
+        expect(response) == VerifyPinResponse.wrongSecretWarning(retryCount: 1)
+    }
 }

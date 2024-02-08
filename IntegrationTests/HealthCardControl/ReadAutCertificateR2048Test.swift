@@ -36,13 +36,21 @@ final class ReadAutCertificateR2048Test: CardSimulationTerminalTestCase {
         }
     }
 
-    func testReadAutCertificate2048() {
+    func testReadAutCertificate2048_publisher() {
         var autCertificateResponse: AutCertificateResponse?
         expect {
             autCertificateResponse = try CardSimulationTerminalTestCase.healthCard
                 .readAutCertificate()
                 .test()
         }.toNot(throwError())
+        expect(autCertificateResponse?.info) == .efAutR2048
+        expect(autCertificateResponse?.certificate) == expectedCertificate
+    }
+
+    func testReadAutCertificate2048() async throws {
+        var autCertificateResponse: AutCertificateResponse?
+        autCertificateResponse = try await CardSimulationTerminalTestCase.healthCard
+            .readAutCertificate()
         expect(autCertificateResponse?.info) == .efAutR2048
         expect(autCertificateResponse?.certificate) == expectedCertificate
     }
