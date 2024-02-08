@@ -14,6 +14,8 @@
 //  limitations under the License.
 //
 
+import Foundation
+import GemCommonsKit
 import HealthCardAccess
 @testable import HealthCardControl
 import Nimble
@@ -25,14 +27,19 @@ final class CardChannelTypeExtVersionIntegrationTest: CardSimulationTerminalTest
         "Configuration/configuration_EGK_G2_1_80276883110000095711_GuD_TCP.xml"
     }
 
-    func testReadCardTypeFromVersion() {
+    func testReadCardTypeFromVersion_publisher() {
         expect {
             try Self.healthCard.currentCardChannel.readCardType()
                 .test()
         } == HealthCardPropertyType.egk(generation: .g2_1)
     }
 
-    func testDetermineCardAidThenReadCardTypeFromVersion() {
+    func testReadCardTypeFromVersion() async throws {
+        let cardType = try await Self.healthCard.currentCardChannel.readCardType()
+        expect(cardType) == HealthCardPropertyType.egk(generation: .g2_1)
+    }
+
+    func testDetermineCardAidThenReadCardTypeFromVersion_publisher() {
         expect {
             try Self.healthCard.currentCardChannel.determineCardAid()
                 .flatMap { cardAid in
@@ -43,11 +50,23 @@ final class CardChannelTypeExtVersionIntegrationTest: CardSimulationTerminalTest
         } == HealthCardPropertyType.egk(generation: .g2_1)
     }
 
-    func testReadCardTypeFromVersionWithKnownCardAid() {
+    func testDetermineCardAidThenReadCardTypeFromVersion() async throws {
+        let cardAid = try await Self.healthCard.currentCardChannel.determineCardAid()
+        let cardType = try await Self.healthCard.currentCardChannel.readCardType(cardAid: cardAid)
+        expect(cardType) == HealthCardPropertyType.egk(generation: .g2_1)
+    }
+
+    func testReadCardTypeFromVersionWithKnownCardAid_publisher() {
         let cardAid = CardAid.egk
         expect {
             try Self.healthCard.currentCardChannel.readCardType(cardAid: cardAid)
                 .test()
         } == HealthCardPropertyType.egk(generation: .g2_1)
+    }
+
+    func testReadCardTypeFromVersionWithKnownCardAid() async throws {
+        let cardAid = CardAid.egk
+        let cardType = try await Self.healthCard.currentCardChannel.readCardType(cardAid: cardAid)
+        expect(cardType) == HealthCardPropertyType.egk(generation: .g2_1)
     }
 }

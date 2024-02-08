@@ -28,9 +28,10 @@ extension HealthCardType {
     ///
     /// - Parameter challenge: the data to sign
     /// - Returns: Published Aut certificate combined with its signature method and DSA signed challenge data
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     public func authenticate(challenge: Data) -> AnyPublisher<AuthenticationResult, Error> {
         readAutCertificate()
-            .mapCertificateInfo()
+            .tryMap { try $0.certificateInfo() }
             .flatMap { info in
                 self.sign(data: challenge)
                     .tryMap { (response: HealthCardResponseType) in
@@ -45,24 +46,39 @@ extension HealthCardType {
             }
             .eraseToAnyPublisher()
     }
+
+    /// Authenticate a challenge on HealthCardType
+    ///
+    /// - Note: the HealthCard needs to be in a unlocked (e.g. mrPinHome verified) state.
+    ///
+    /// - Parameter challenge: the data to sign
+    /// - Returns: AuthenticationResult (Aut certificate and its signature method and DSA signed challenge data)
+    public func authenticate(challenge: Data) async throws -> AuthenticationResult {
+        let autCertificate = try await readAutCertificate()
+        let certificateInfo = try autCertificate.certificateInfo()
+        let signResponse = try await sign(data: challenge)
+        guard signResponse.responseStatus == .success,
+              let signatureData = signResponse.data
+        else {
+            throw HealthCard.Error.unexpectedResponse(actual: signResponse.responseStatus, expected: .success)
+        }
+        return (certificateInfo as CertificateInfo, signatureData as Signature)
+    }
 }
 
-extension AnyPublisher where Output == AutCertificateResponse {
+extension AutCertificateResponse {
     /// Read the MF/DF.ESIGN.EF.C.CH.AUT.[E256/R2048] certificate from the HealthCardType
     ///
     /// - Returns: Published Aut certificated with its signature method
-    func mapCertificateInfo() -> AnyPublisher<CertificateInfo, Error> {
-        tryMap { (autCertificateResponse: AutCertificateResponse) in
-            let algorithm = autCertificateResponse.info.algorithm
-            let certificateDER = autCertificateResponse.certificate
-            guard let signatureAlgorithm = SignatureAlgorithm.from(psoAlgorithm: algorithm) else {
-                throw HealthCard.Error.operational
-            }
-            return CertificateInfo(
-                certificate: certificateDER,
-                signatureAlgorithm: signatureAlgorithm
-            )
+    func certificateInfo() throws -> CertificateInfo {
+        let algorithm = info.algorithm
+        let certificateDER = certificate
+        guard let signatureAlgorithm = SignatureAlgorithm.from(psoAlgorithm: algorithm) else {
+            throw HealthCard.Error.operational
         }
-        .eraseToAnyPublisher()
+        return CertificateInfo(
+            certificate: certificateDER,
+            signatureAlgorithm: signatureAlgorithm
+        )
     }
 }

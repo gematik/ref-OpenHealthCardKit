@@ -28,31 +28,27 @@ final class HealthCardTypeExtChangeReferenceDataIntegrationTest: CardSimulationT
 
     override class var healthCardStatusInput: HealthCardStatus { .valid(cardType: .egk(generation: .g2_1)) }
 
-    func testChangeReferenceDataEgk21_success() throws {
+    func testChangeReferenceDataEgk21_success() async throws {
         let old = "123456" as Format2Pin
         let new = "654321" as Format2Pin
 
-        expect(
-            try Self.healthCard.changeReferenceDataSetNewPin(
-                old: old,
-                new: new
-            )
-            .test()
-        ) == ChangeReferenceDataResponse.success
+        let response = try await Self.healthCard.changeReferenceDataSetNewPin(
+            old: old,
+            new: new
+        )
+        expect(response) == ChangeReferenceDataResponse.success
     }
 
-    func testChangeReferenceDataEgk21_wrongPasswordLength() throws {
+    func testChangeReferenceDataEgk21_wrongPasswordLength() async throws {
         let old = "123456" as Format2Pin
         let new = "654321123456" as Format2Pin
 
-        expect(
-            try Self.healthCard.changeReferenceDataSetNewPin(
-                old: old,
-                new: new,
-                type: EgkFileSystem.Pin.mrpinHome,
-                dfSpecific: false
-            )
-            .test()
-        ) == ChangeReferenceDataResponse.wrongPasswordLength
+        let response = try await Self.healthCard.changeReferenceDataSetNewPin(
+            old: old,
+            new: new,
+            type: EgkFileSystem.Pin.mrpinHome,
+            dfSpecific: false
+        )
+        expect(response) == ChangeReferenceDataResponse.wrongPasswordLength
     }
 }

@@ -19,7 +19,7 @@ Take the necessary preparatory steps for signing a challenge on the Health Card,
 
 [source,swift]
 ----
-include::{integrationtestdir}/HealthCardControl/HealthCardTypeExtESIGNIntegrationTest.swift[tags=signChallenge,indent=0]
+include::{integrationtestdir}/HealthCardControl/HealthCardTypeExtESIGNIntegrationTest.swift[tags=signChallenge_publisher,indent=0]
 ----
 
 
@@ -28,7 +28,7 @@ steps for establishing a secure channel with the Health Card and expose only a s
 
 [source,swift]
 ----
-include::{integrationtestdir}/HealthCardControl/KeyAgreementIntegrationTest.swift[tags=negotiateSessionKey,indent=0]
+include::{integrationtestdir}/HealthCardControl/KeyAgreementIntegrationTest.swift[tags=negotiateSessionKey_publisher,indent=0]
 ----
 
 See the integration tests link:include::{integrationtestdir}/HealthCardControl/[IntegrationTests/HealthCardControl/]

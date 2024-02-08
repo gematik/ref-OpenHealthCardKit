@@ -31,6 +31,7 @@ extension CardAid {
 }
 
 extension CardChannelType {
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     func readKeyAgreementAlgorithm(
         cardAid: CardAid? = nil,
         writeTimeout: TimeInterval = 30.0,
@@ -69,6 +70,50 @@ extension CardChannelType {
                     }
             }
             .eraseToAnyPublisher()
+    }
+
+    func readKeyAgreementAlgorithm(
+        cardAid: CardAid? = nil,
+        writeTimeout: TimeInterval = 30.0,
+        readTimeout: TimeInterval = 30.0
+    ) async throws -> KeyAgreement.Algorithm {
+        let channel = self
+
+        let determinedCardAid: CardAid
+        if let cardAid = cardAid {
+            determinedCardAid = cardAid
+        } else {
+            determinedCardAid = try await channel.determineCardAid()
+        }
+
+        let selectCommand = HealthCardCommand.Select.selectFile(with: determinedCardAid.rawValue)
+        let selectResponse = try await selectCommand.transmit(
+            on: channel,
+            writeTimeout: writeTimeout,
+            readTimeout: readTimeout
+        )
+        guard selectResponse.responseStatus == ResponseStatus.success
+        else {
+            throw HealthCard.Error.unexpectedResponse(actual: selectResponse.responseStatus, expected: .success)
+        }
+        let readCommand = try HealthCardCommand.Read.readFileCommand(
+            with: determinedCardAid.efCardAccess,
+            ne: APDU.expectedLengthWildcardShort
+        )
+        let readResponse = try await readCommand.transmit(
+            on: channel,
+            writeTimeout: writeTimeout,
+            readTimeout: readTimeout
+        )
+
+        guard let data = readResponse.data else {
+            throw KeyAgreement.Error.unexpectedFormedAnswerFromCard
+        }
+        let protocolOid = try ASN1Kit.ObjectIdentifier.protocolOid(from: data)
+        guard let keyAgreementAlgorithm = protocolOid.keyAgreementAlgorithm else {
+            throw KeyAgreement.Error.unsupportedKeyAgreementAlgorithm(protocolOid)
+        }
+        return keyAgreementAlgorithm
     }
 }
 

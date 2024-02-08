@@ -70,9 +70,41 @@ internal class SecureCardChannel: CardChannelType {
         return decryptedAPDU
     }
 
+    func transmitAsync(
+        command: CardReaderProviderApi.CommandType,
+        writeTimeout: TimeInterval,
+        readTimeout: TimeInterval
+    ) async throws -> CardReaderProviderApi.ResponseType {
+        DLog(">> \(command.bytes.hexString())")
+        // we only log the header bytes to prevent logging user's PIN
+        CommandLogger.commands.append(
+            Command(message: ">> \(command.bytes.prefix(4).hexString())", type: .sendSecureChannel)
+        )
+        let encryptedCommand = try session.encrypt(command: command)
+        let encryptedResponse = try await channel.transmitAsync(
+            command: encryptedCommand,
+            writeTimeout: writeTimeout,
+            readTimeout: readTimeout
+        )
+        let decryptedAPDU = try session.decrypt(response: encryptedResponse)
+        DLog("<< \(decryptedAPDU.sw.hexString()) | [\(decryptedAPDU.data?.hexString() ?? "")]")
+        CommandLogger.commands.append(
+            Command(
+                message: "<< \(decryptedAPDU.sw.hexString())",
+                type: .responseSecureChannel
+            )
+        )
+        return decryptedAPDU
+    }
+
     func close() throws {
         session.invalidate()
         try channel.close()
+    }
+
+    func closeAsync() async throws {
+        session.invalidate()
+        try await channel.closeAsync()
     }
 }
 

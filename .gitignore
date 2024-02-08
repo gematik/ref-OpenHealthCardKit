@@ -2,6 +2,7 @@
 /.build
 /Packages
 .vscode
+.swiftpm
 
 # AppCode project files
 .idea/

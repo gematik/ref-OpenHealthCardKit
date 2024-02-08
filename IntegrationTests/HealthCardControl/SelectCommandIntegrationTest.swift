@@ -21,46 +21,31 @@ import Nimble
 import XCTest
 
 final class SelectCommandIntegrationTest: CardSimulationTerminalTestCase {
-    func testSelectRoot() {
-        expect {
-            try HealthCardCommand.Select.selectRoot()
-                .publisher(for: CardSimulationTerminalTestCase.healthCard)
-                .test()
-                .responseStatus
-        } == ResponseStatus.success
+    func testSelectRoot() async throws {
+        let selectRootCommand = HealthCardCommand.Select.selectRoot()
+        let selectRootResponse = try await selectRootCommand.transmit(to: Self.healthCard)
+        expect(selectRootResponse.responseStatus) == ResponseStatus.success
     }
 
-    func testSelectFileByAidThenSelectParentFolder() {
-        expect {
-            try HealthCardCommand.Select.selectFile(with: EgkFileSystem.DF.GDD.aid)
-                .publisher(for: CardSimulationTerminalTestCase.healthCard)
-                .flatMap { _ in
-                    HealthCardCommand.Select.selectRoot()
-                        .publisher(for: CardSimulationTerminalTestCase.healthCard)
-                }
-                .eraseToAnyPublisher()
-                .test()
-                .responseStatus
-        } == ResponseStatus.success
+    func testSelectFileByAidThenSelectParentFolder() async throws {
+        let selectFileCommand = HealthCardCommand.Select.selectFile(with: EgkFileSystem.DF.GDD.aid)
+        let selectFileResponse = try await selectFileCommand.transmit(to: Self.healthCard)
+        expect(selectFileResponse.responseStatus) == ResponseStatus.success
+
+        let selectRootCommand = HealthCardCommand.Select.selectRoot()
+        let selectRootResponse = try await selectRootCommand.transmit(to: Self.healthCard)
+        expect(selectRootResponse.responseStatus) == ResponseStatus.success
     }
 
-    func testReadFileBySfiWithLowerThanSpecifiedLength() {
+    func testReadFileBySfiWithLowerThanSpecifiedLength() async throws {
         let cEgkAutCVCE256Count = 0x00DE
 
-        expect {
-            try HealthCardCommand.Read.readFileCommand(with: EgkFileSystem.EF.cEgkAutCVCE256.sfid!,
-                                                       // swiftlint:disable:previous force_unwrapping
-                                                       ne: cEgkAutCVCE256Count + 1,
-                                                       offset: 0)
-                .publisher(for: CardSimulationTerminalTestCase.healthCard)
-                .test()
-                .responseStatus
-        } == ResponseStatus.endOfFileWarning
+        let readFileCommand = try HealthCardCommand.Read.readFileCommand(
+            with: EgkFileSystem.EF.cEgkAutCVCE256.sfid!, // swiftlint:disable:this force_unwrapping
+            ne: cEgkAutCVCE256Count + 1,
+            offset: 0
+        )
+        let readFileResponse = try await readFileCommand.transmit(to: Self.healthCard)
+        expect(readFileResponse.responseStatus) == ResponseStatus.endOfFileWarning
     }
-
-    static let allTests = [
-        ("testSelectRoot", testSelectRoot),
-        ("testSelectFileByAidThenSelectParentFolder", testSelectFileByAidThenSelectParentFolder),
-        ("testReadFileBySfiWithLowerThanSpecifiedLength", testReadFileBySfiWithLowerThanSpecifiedLength),
-    ]
 }

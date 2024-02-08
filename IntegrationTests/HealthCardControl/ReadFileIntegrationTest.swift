@@ -57,7 +57,7 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
         }
     }
 
-    func testReadFileTillEOF() {
+    func testReadFileTillEOF_publisher() {
         expect {
             let (responseStatus, _) = try Self.healthCard.selectDedicated(file: self.dedicatedFile)
                 .test()
@@ -70,7 +70,15 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
         } == expectedCertificate
     }
 
-    func testReadFileFailOnEOF() {
+    func testReadFileTillEOF() async throws {
+        let (responseStatus, _) = try await Self.healthCard.selectDedicated(file: dedicatedFile)
+        expect(responseStatus) == ResponseStatus.success
+
+        let readData = try await Self.healthCard.readSelectedFile(expected: nil, failOnEndOfFileWarning: false)
+        expect(readData) == expectedCertificate
+    }
+
+    func testReadFileFailOnEOF_publisher() {
         expect {
             let (responseStatus, _) = try Self.healthCard.selectDedicated(file: self.dedicatedFile)
                 .test()
@@ -83,7 +91,18 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
         }.to(throwError(ReadError.unexpectedResponse(state: ResponseStatus.endOfFileWarning)))
     }
 
-    func testReadFile() {
+    func testReadFileFailOnEOF() async throws {
+        let (responseStatus, _) = try await Self.healthCard.selectDedicated(file: dedicatedFile)
+        expect(responseStatus) == ResponseStatus.success
+
+        // todo-nimble update
+        expect {
+            try Self.healthCard.readSelectedFile(expected: 2000)
+                .test()
+        }.to(throwError(ReadError.unexpectedResponse(state: ResponseStatus.endOfFileWarning)))
+    }
+
+    func testReadFile_publisher() {
         guard let (responseStatus, fcp) = try? Self.healthCard.selectDedicated(file: dedicatedFile, fcp: true)
             .test() else {
             Nimble.fail("Failed to select and read FCP [Preparing test-case]")
@@ -100,7 +119,20 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
         } == expectedCertificate
     }
 
-    func testReadFileInChunks() {
+    func testReadFile() async throws {
+        let (responseStatus, fcp) = try await Self.healthCard.selectDedicated(file: dedicatedFile, fcp: true)
+        expect(responseStatus) == .success
+        expect(fcp).toNot(beNil())
+
+        // swiftlint:disable:next force_unwrapping
+        let readData = try await Self.healthCard.readSelectedFile(
+            expected: Int(fcp!.readSize!),
+            failOnEndOfFileWarning: true
+        )
+        expect(readData) == expectedCertificate
+    }
+
+    func testReadFileInChunks_publisher() {
         guard let card = CardSimulationTerminalTestCase.card as? SimulatorCard else {
             Nimble.fail("This test only works with CardSimulation cards")
             return
@@ -126,7 +158,29 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
         } == expectedCertificate
     }
 
-    func testReadFileInChunksTillEOF() {
+    func testReadFileInChunks() async throws {
+        guard let card = CardSimulationTerminalTestCase.card as? SimulatorCard else {
+            Nimble.fail("This test only works with CardSimulation cards")
+            return
+        }
+        card.maxResponseLength = 256
+        guard let healthCard = try? HealthCard(card: card, status: Self.healthCardStatus()) else {
+            Nimble.fail("Failed to initialize HealthCard [Preparing test-case]")
+            return
+        }
+
+        let (responseStatus, fcp) = try await healthCard.selectDedicated(file: dedicatedFile, fcp: true)
+        expect(responseStatus) == .success
+        expect(fcp).toNot(beNil())
+
+        let readData = try await healthCard.readSelectedFile(
+            expected: Int(fcp!.readSize!),
+            failOnEndOfFileWarning: true
+        )
+        expect(readData) == expectedCertificate
+    }
+
+    func testReadFileInChunksTillEOF_publisher() {
         guard let card = CardSimulationTerminalTestCase.card as? SimulatorCard else {
             Nimble.fail("This test only works with CardSimulation cards")
             return
@@ -151,7 +205,26 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
         } == expectedCertificate
     }
 
-    func testReadFileInChunksFailOnEOF() {
+    func testReadFileInChunksTillEOF() async throws {
+        guard let card = CardSimulationTerminalTestCase.card as? SimulatorCard else {
+            Nimble.fail("This test only works with CardSimulation cards")
+            return
+        }
+        card.maxResponseLength = 256
+        guard let healthCard = try? HealthCard(card: card, status: Self.healthCardStatus()) else {
+            Nimble.fail("Failed to initialize HealthCard [Preparing test-case]")
+            return
+        }
+
+        let (responseStatus, fcp) = try await healthCard.selectDedicated(file: dedicatedFile, fcp: true)
+        expect(responseStatus) == .success
+        expect(fcp).toNot(beNil())
+
+        let readData = try await healthCard.readSelectedFile(expected: nil, failOnEndOfFileWarning: false)
+        expect(readData) == expectedCertificate
+    }
+
+    func testReadFileInChunksFailOnEOF_publisher() {
         guard let card = CardSimulationTerminalTestCase.card as? SimulatorCard else {
             Nimble.fail("This test only works with CardSimulation cards")
             return
@@ -168,6 +241,27 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
             return responseStatus
         } == ResponseStatus.success
 
+        expect {
+            try healthCard.readSelectedFile(expected: 2000, failOnEndOfFileWarning: true)
+                .test()
+        }.to(throwError(ReadError.unexpectedResponse(state: ResponseStatus.endOfFileWarning)))
+    }
+
+    func testReadFileInChunksFailOnEOF() async throws {
+        guard let card = CardSimulationTerminalTestCase.card as? SimulatorCard else {
+            Nimble.fail("This test only works with CardSimulation cards")
+            return
+        }
+        card.maxResponseLength = 256
+        guard let healthCard = try? HealthCard(card: card, status: Self.healthCardStatus()) else {
+            Nimble.fail("Failed to initialize HealthCard [Preparing test-case]")
+            return
+        }
+
+        let (responseStatus, _) = try await healthCard.selectDedicated(file: dedicatedFile)
+        expect(responseStatus) == ResponseStatus.success
+
+        // todo-nimble update
         expect {
             try healthCard.readSelectedFile(expected: 2000, failOnEndOfFileWarning: true)
                 .test()

@@ -47,7 +47,18 @@ public protocol CardType {
 
         - Returns: The (connected) card channel
      */
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     func openLogicChannel() throws -> CardChannelType
+
+    /**
+        Open a new logical channel. The channel is opened issuing a MANAGE CHANNEL command that
+        should use the format [0x0, 0x70, 0x0, 0x0, 0x1].
+
+        - Throws: `CardError` when failed to connect to the Card.
+
+        - Returns: The (connected) card channel
+     */
+    func openLogicChannelAsync() async throws -> CardChannelType
 
     /**
         Transmit a control command to the Card/Slot

@@ -32,39 +32,34 @@ final class HealthCardTypeExtChangeReferenceDataIntegrationTestCont: CardSimulat
         .valid(cardType: .egk(generation: .g2_1))
     }
 
-    func testChangeReferenceDataEgk21_wrongSecretWarning() throws {
+    func testChangeReferenceDataEgk21_wrongSecretWarning() async throws {
         let wrongOld = "9999999" as Format2Pin
         let correctOld = "123456" as Format2Pin
         let new = "654321" as Format2Pin
 
-        expect(
-            try Self.healthCard.changeReferenceDataSetNewPin(
-                old: wrongOld,
-                new: new,
-                type: EgkFileSystem.Pin.mrpinHome,
-                dfSpecific: false
-            )
-            .test()
-        ) == ChangeReferenceDataResponse.wrongSecretWarning(retryCount: 2)
+        var response: ChangeReferenceDataResponse
+        response = try await Self.healthCard.changeReferenceDataSetNewPin(
+            old: wrongOld,
+            new: new,
+            type: EgkFileSystem.Pin.mrpinHome,
+            dfSpecific: false
+        )
+        expect(response) == ChangeReferenceDataResponse.wrongSecretWarning(retryCount: 2)
 
-        expect(
-            try Self.healthCard.changeReferenceDataSetNewPin(
-                old: wrongOld,
-                new: new,
-                type: EgkFileSystem.Pin.mrpinHome,
-                dfSpecific: false
-            )
-            .test()
-        ) == ChangeReferenceDataResponse.wrongSecretWarning(retryCount: 1)
+        response = try await Self.healthCard.changeReferenceDataSetNewPin(
+            old: wrongOld,
+            new: new,
+            type: EgkFileSystem.Pin.mrpinHome,
+            dfSpecific: false
+        )
+        expect(response) == ChangeReferenceDataResponse.wrongSecretWarning(retryCount: 1)
 
-        expect(
-            try Self.healthCard.changeReferenceDataSetNewPin(
-                old: correctOld,
-                new: new,
-                type: EgkFileSystem.Pin.mrpinHome,
-                dfSpecific: false
-            )
-            .test()
-        ) == ChangeReferenceDataResponse.success
+        response = try await Self.healthCard.changeReferenceDataSetNewPin(
+            old: correctOld,
+            new: new,
+            type: EgkFileSystem.Pin.mrpinHome,
+            dfSpecific: false
+        )
+        expect(response) == ChangeReferenceDataResponse.success
     }
 }

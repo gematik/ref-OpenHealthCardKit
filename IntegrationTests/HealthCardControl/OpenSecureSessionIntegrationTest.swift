@@ -28,7 +28,7 @@ import XCTest
 final class OpenSecureSessionIntegrationTest: CardSimulationTerminalTestCase {
     override class var configFileInput: String { "Configuration/configuration_E021D-A5Tp_432_80276883110000218486.xml" }
 
-    func testOpenSecureSession() {
+    func testOpenSecureSession_publisher() {
         let can = try! CAN.from(Data("123123".utf8)) // swiftlint:disable:this force_try
 
         expect {
@@ -36,5 +36,12 @@ final class OpenSecureSessionIntegrationTest: CardSimulationTerminalTestCase {
                 .test()
                 .status.type
         } == .egk(generation: .g2)
+    }
+
+    func testOpenSecureSession() async throws {
+        let can = try! CAN.from(Data("123123".utf8)) // swiftlint:disable:this force_try
+
+        let secureHealthCard = try await Self.card.openSecureSession(can: can, writeTimeout: 0, readTimeout: 0)
+        expect(secureHealthCard.status.type) == .egk(generation: .g2)
     }
 }

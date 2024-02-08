@@ -55,6 +55,7 @@ extension HealthCardType {
     ///   - dfSpecific: is Password reference dfSpecific
     /// - Returns: Publisher that tries to reset the password's retry counter
     /// - Throws: HealthCardCommandBuilderError
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     public func resetRetryCounter(
         puk: Format2Pin,
         type: EgkFileSystem.Pin = EgkFileSystem.Pin.mrpinHome,
@@ -96,9 +97,47 @@ extension HealthCardType {
     ///
     /// - Parameters:
     ///   - puk: Secret which authorizes the action
+    ///   - type: Password reference
+    ///   - dfSpecific: is Password reference dfSpecific
+    /// - Returns: Response after trying to reset the password's retry counter
+    /// - Throws: HealthCardCommandBuilderError
+    public func resetRetryCounter(
+        puk: Format2Pin,
+        type: EgkFileSystem.Pin = EgkFileSystem.Pin.mrpinHome,
+        dfSpecific: Bool = false,
+        writeTimeout: TimeInterval = 10,
+        readTimeout: TimeInterval = 10
+    ) async throws -> ResetRetryCounterResponse {
+        CommandLogger.commands.append(Command(message: "Reset Retry Counter", type: .description))
+        let command = try HealthCardCommand.ResetRetryCounter.resetRetryCounterWithPukWithoutNewSecret(
+            password: type.rawValue,
+            dfSpecific: dfSpecific,
+            puk: puk
+        )
+        let response = try await command.transmit(to: self, writeTimeout: writeTimeout, readTimeout: readTimeout)
+        let responseStatus = response.responseStatus
+        if ResponseStatus.wrongSecretWarnings.contains(responseStatus) {
+            return .wrongSecretWarning(retryCount: responseStatus.retryCount)
+        }
+        switch responseStatus {
+        case .success: return .success
+        case .memoryFailure: return .memoryFailure
+        case .securityStatusNotSatisfied: return .securityStatusNotSatisfied
+        case .commandBlocked: return .commandBlocked
+        case .wrongPasswordLength: return .wrongPasswordLength
+        case .passwordNotFound: return .passwordNotFound
+        default: return .unknownFailure
+        }
+    }
+
+    /// Reset the retry counter of a password object to its start value.
+    ///
+    /// - Parameters:
+    ///   - puk: Secret which authorizes the action
     ///   - affectedPassWord: convenience `ResetRetryCounterAffectedPassword` selector
     /// - Returns: Publisher that tries to reset the password's retry counter
     /// - Throws: HealthCardAccessError
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     public func resetRetryCounter(
         puk: String,
         affectedPassWord: ResetRetryCounterAffectedPassword
@@ -119,6 +158,37 @@ extension HealthCardType {
         return resetRetryCounter(puk: parsedPuk, type: type, dfSpecific: dfSpecific)
     }
 
+    /// Reset the retry counter of a password object to its start value.
+    ///
+    /// - Parameters:
+    ///   - puk: Secret which authorizes the action
+    ///   - type: Password reference
+    ///   - dfSpecific: is Password reference dfSpecific
+    /// - Returns: Response after trying to reset the password's retry counter
+    /// - Throws: HealthCardCommandBuilderError
+    public func resetRetryCounter(
+        puk: String,
+        affectedPassWord: ResetRetryCounterAffectedPassword,
+        writeTimeout: TimeInterval = 10,
+        readTimeout: TimeInterval = 10
+    ) async throws -> ResetRetryCounterResponse {
+        let parsedPuk = try Format2Pin(pincode: puk)
+        let type: EgkFileSystem.Pin
+        let dfSpecific: Bool
+        switch affectedPassWord {
+        case .mrPinHomeNoDfSpecific:
+            type = .mrpinHome
+            dfSpecific = false
+        }
+        return try await resetRetryCounter(
+            puk: parsedPuk,
+            type: type,
+            dfSpecific: dfSpecific,
+            writeTimeout: writeTimeout,
+            readTimeout: readTimeout
+        )
+    }
+
     /// Reset the retry counter of a password object to its start value while assigning a new secret.
     ///
     /// - Parameters:
@@ -127,6 +197,7 @@ extension HealthCardType {
     ///   - type: Password reference
     ///   - dfSpecific: is Password reference dfSpecific
     /// - Returns: Publisher that tries to reset the password's retry counter while setting a new secret
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     public func resetRetryCounterAndSetNewPin(
         puk: Format2Pin,
         newPin: Format2Pin,
@@ -171,8 +242,46 @@ extension HealthCardType {
     /// - Parameters:
     ///   - puk: Secret which authorizes the action
     ///   - newPin: The new secret of the password object
+    ///   - type: Password reference
+    ///   - dfSpecific: is Password reference dfSpecific
+    /// - Returns: Response after trying to reset the password's retry counter while setting a new secret
+    public func resetRetryCounterAndSetNewPin(
+        puk: Format2Pin,
+        newPin: Format2Pin,
+        type: EgkFileSystem.Pin = EgkFileSystem.Pin.mrpinHome,
+        dfSpecific: Bool = false
+    ) async throws -> ResetRetryCounterResponse {
+        CommandLogger.commands.append(Command(message: "Reset Retry Counter And Set New PIN", type: .description))
+        let command = try HealthCardCommand.ResetRetryCounter.resetRetryCounterWithPukWithNewSecret(
+            password: type.rawValue,
+            dfSpecific: dfSpecific,
+            puk: puk,
+            newPin: newPin
+        )
+        let response = try await command.transmit(to: self)
+        let responseStatus = response.responseStatus
+        if ResponseStatus.wrongSecretWarnings.contains(responseStatus) {
+            return .wrongSecretWarning(retryCount: responseStatus.retryCount)
+        }
+        switch responseStatus {
+        case .success: return .success
+        case .memoryFailure: return .memoryFailure
+        case .securityStatusNotSatisfied: return .securityStatusNotSatisfied
+        case .commandBlocked: return .commandBlocked
+        case .wrongPasswordLength: return .wrongPasswordLength
+        case .passwordNotFound: return .passwordNotFound
+        default: return .unknownFailure
+        }
+    }
+
+    /// Reset the retry counter of a password object to its start value while assigning a new secret.
+    ///
+    /// - Parameters:
+    ///   - puk: Secret which authorizes the action
+    ///   - newPin: The new secret of the password object
     ///   - affectedPassWord: convenience `ResetRetryCounterAffectedPassword` selector
     /// - Returns: Publisher that tries to reset the password's retry counter
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     public func resetRetryCounterAndSetNewPin(
         puk: String,
         newPin: String,
@@ -194,5 +303,34 @@ extension HealthCardType {
             dfSpecific = false
         }
         return resetRetryCounterAndSetNewPin(puk: parsedPuk, newPin: parsedPin, type: type, dfSpecific: dfSpecific)
+    }
+
+    /// Reset the retry counter of a password object to its start value while assigning a new secret.
+    ///
+    /// - Parameters:
+    ///   - puk: Secret which authorizes the action
+    ///   - newPin: The new secret of the password object
+    ///   - affectedPassWord: convenience `ResetRetryCounterAffectedPassword` selector
+    /// - Returns: Response after trying to reset the password's retry counter while setting a new secret
+    public func resetRetryCounterAndSetNewPin(
+        puk: String,
+        newPin: String,
+        affectedPassWord: ResetRetryCounterAffectedPassword
+    ) async throws -> ResetRetryCounterResponse {
+        let parsedPuk = try Format2Pin(pincode: puk)
+        let parsedPin = try Format2Pin(pincode: newPin)
+        let type: EgkFileSystem.Pin
+        let dfSpecific: Bool
+        switch affectedPassWord {
+        case .mrPinHomeNoDfSpecific:
+            type = .mrpinHome
+            dfSpecific = false
+        }
+        return try await resetRetryCounterAndSetNewPin(
+            puk: parsedPuk,
+            newPin: parsedPin,
+            type: type,
+            dfSpecific: dfSpecific
+        )
     }
 }

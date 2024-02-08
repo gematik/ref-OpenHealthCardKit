@@ -28,7 +28,7 @@ final class HealthCardTypeExtResetRetryCounterIntegrationTest: CardSimulationTer
 
     override class var healthCardStatusInput: HealthCardStatus { .valid(cardType: .egk(generation: .g2_1)) }
 
-    func testResetRetryCounterEgk21_success() throws {
+    func testResetRetryCounterEgk21_success_publisher() throws {
         let puk = "12345678" as Format2Pin
 
         expect(
@@ -41,7 +41,18 @@ final class HealthCardTypeExtResetRetryCounterIntegrationTest: CardSimulationTer
         ) == ResetRetryCounterResponse.success
     }
 
-    func testResetRetryCounterWithNewPinEgk21_success() throws {
+    func testResetRetryCounterEgk21_success() async throws {
+        let puk = "12345678" as Format2Pin
+
+        let response = try await Self.healthCard.resetRetryCounter(
+            puk: puk,
+            type: EgkFileSystem.Pin.mrpinHome,
+            dfSpecific: false
+        )
+        expect(response) == ResetRetryCounterResponse.success
+    }
+
+    func testResetRetryCounterWithNewPinEgk21_success_publisher() throws {
         let puk = "12345678" as Format2Pin
         let newPin = "654321" as Format2Pin
 
@@ -56,7 +67,20 @@ final class HealthCardTypeExtResetRetryCounterIntegrationTest: CardSimulationTer
         ) == ResetRetryCounterResponse.success
     }
 
-    func testResetRetryCounterWithNewPinEgk21_wrongPasswordLength() throws {
+    func testResetRetryCounterWithNewPinEgk21_success() async throws {
+        let puk = "12345678" as Format2Pin
+        let newPin = "654321" as Format2Pin
+
+        let response = try await Self.healthCard.resetRetryCounterAndSetNewPin(
+            puk: puk,
+            newPin: newPin,
+            type: EgkFileSystem.Pin.mrpinHome,
+            dfSpecific: false
+        )
+        expect(response) == ResetRetryCounterResponse.success
+    }
+
+    func testResetRetryCounterWithNewPinEgk21_wrongPasswordLength_publsher() throws {
         let puk = "12345678" as Format2Pin
         let tooLongNewPin = "654112341234" as Format2Pin
 
@@ -69,5 +93,18 @@ final class HealthCardTypeExtResetRetryCounterIntegrationTest: CardSimulationTer
             )
             .test()
         ) == ResetRetryCounterResponse.wrongPasswordLength
+    }
+
+    func testResetRetryCounterWithNewPinEgk21_wrongPasswordLength() async throws {
+        let puk = "12345678" as Format2Pin
+        let tooLongNewPin = "654112341234" as Format2Pin
+
+        let response = try await Self.healthCard.resetRetryCounterAndSetNewPin(
+            puk: puk,
+            newPin: tooLongNewPin,
+            type: EgkFileSystem.Pin.mrpinHome,
+            dfSpecific: false
+        )
+        expect(response) == ResetRetryCounterResponse.wrongPasswordLength
     }
 }

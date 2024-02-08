@@ -29,7 +29,7 @@ final class AuthenticateChallengeE256Test: CardSimulationTerminalTestCase {
 
     override class var healthCardStatusInput: HealthCardStatus { .valid(cardType: .egk(generation: .g2_1)) }
 
-    func testSignChallenge() throws {
+    func testSignChallenge_publisher() throws {
         let challenge = "1234567890".data(using: .utf8)!
         let authenticatedResult = try Self.healthCard
             .verify(pin: "123456", type: .mrpinHome)
@@ -38,6 +38,17 @@ final class AuthenticateChallengeE256Test: CardSimulationTerminalTestCase {
             }
             .eraseToAnyPublisher()
             .test()
+
+        expect(authenticatedResult.certificate.signatureAlgorithm) == .ecdsaSha256
+        expect(authenticatedResult.certificate.certificate.count) == 885
+        expect(authenticatedResult.signature.count) == 64
+    }
+
+    func testSignChallenge() async throws {
+        let challenge = "1234567890".data(using: .utf8)!
+        _ = try await Self.healthCard
+            .verify(pin: "123456", type: .mrpinHome)
+        let authenticatedResult = try await Self.healthCard.authenticate(challenge: challenge)
 
         expect(authenticatedResult.certificate.signatureAlgorithm) == .ecdsaSha256
         expect(authenticatedResult.certificate.certificate.count) == 885

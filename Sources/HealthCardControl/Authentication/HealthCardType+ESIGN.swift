@@ -60,12 +60,18 @@ public enum AutCertInfo {
 }
 
 /// Alias for the certificate response that holds the raw certificate + the AutCertInfo associated with it.
-public typealias AutCertificateResponse = (info: AutCertInfo, certificate: Data)
+public struct AutCertificateResponse {
+    /// The AutCertInfo associated with the certificate
+    public let info: AutCertInfo
+    /// Raw certificate data
+    public let certificate: Data
+}
 
 extension HealthCardType {
     /// Read the MF/DF.ESIGN.EF.C.CH.AUT.[E256/R2048] certificate from the receiver
     ///
     /// - Returns: Publisher that tries to read the authentication certificate file and ESignInfo associated to it
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     public func readAutCertificate() -> AnyPublisher<AutCertificateResponse, Error> {
         CommandLogger.commands.append(Command(message: "Read Auth Certificate", type: .description))
         let expectedFcpLength = currentCardChannel.maxResponseLength
@@ -83,12 +89,32 @@ extension HealthCardType {
                 .flatMap { (readSize: UInt) in
                     self.readSelectedFile(expected: Int(readSize))
                         .map { certificate in
-                            (info: info, certificate: certificate)
+                            AutCertificateResponse(info: info, certificate: certificate)
                         }
                 }
                 .eraseToAnyPublisher()
         }
         .eraseToAnyPublisher()
+    }
+
+    /// Read the MF/DF.ESIGN.EF.C.CH.AUT.[E256/R2048] certificate from the receiver
+    ///
+    /// - Returns: `AutCertificateResponse` after trying to read the authentication certificate file
+    ///         and ESignInfo associated to it
+    public func readAutCertificate() async throws -> AutCertificateResponse {
+        CommandLogger.commands.append(Command(message: "Read Auth Certificate", type: .description))
+        let expectedFcpLength = currentCardChannel.maxResponseLength
+        guard let info = self.status.type?.autCertInfo else {
+            throw HealthCard.Error.unsupportedCardType
+        }
+
+        let (status, fcp) = try await selectDedicated(file: info.certificate, fcp: true, length: expectedFcpLength)
+        guard let fcp = fcp, let readSize = fcp.readSize else {
+            throw ReadError.fcpMissingReadSize(state: status)
+        }
+
+        let certificate = try await readSelectedFile(expected: Int(readSize))
+        return AutCertificateResponse(info: info, certificate: certificate)
     }
 }
 
@@ -127,6 +153,7 @@ extension HealthCardType {
     /// - Note: If `data` is already hashed properly and/or needs no hashing, you must provide a no-op hasher
     ///         e.g. { data, _ in return data }
     /// - Returns: Executable that signs the given data on the card
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     public func sign(
         data: Data,
         hasher: @escaping (Data, AutCertInfo) -> Data = { data, cert in cert.signatureHashMethod(data) }
@@ -170,5 +197,44 @@ extension HealthCardType {
                 .eraseToAnyPublisher()
         }
         .eraseToAnyPublisher()
+    }
+
+    /// Sign a challenge (for example a hash value) for authentication.
+    ///
+    /// - Parameters:
+    ///   - data: The data to be signed
+    ///   - hasher: function that hashes the data before signing it
+    ///         Defaults to a hash function according to the `AutCertInfo` that is read from `self` in the process.
+    /// - Note: If `data` is already hashed properly and/or needs no hashing, you must provide a no-op hasher
+    ///         e.g. { data, _ in return data }
+    /// - Returns: HealthCardResponseType after PsoDSA.sign trying to sign the given data on the card
+    public func sign(
+        data: Data,
+        hasher: @escaping (Data, AutCertInfo) -> Data = { data, cert in cert.signatureHashMethod(data) }
+    ) async throws -> HealthCardResponseType {
+        guard let info = status.type?.autCertInfo
+        else {
+            throw HealthCard.Error.unsupportedCardType
+        }
+        let selectFileCommand = HealthCardCommand.Select.selectFile(with: info.eSign)
+        let selectFileResponse = try await selectFileCommand.transmit(to: self)
+        guard selectFileResponse.responseStatus == .success
+        else {
+            throw HealthCard.Error.operational
+        }
+        let selectSigningCommand = try HealthCardCommand.ManageSE.selectSigning(
+            key: info.key,
+            dfSpecific: true,
+            algorithm: info.algorithm
+        )
+        let selectSigningResponse = try await selectSigningCommand.transmit(to: self)
+        guard selectSigningResponse.responseStatus == .success
+        else {
+            throw HealthCard.Error.operational
+        }
+        let digest = hasher(data, info)
+        let psoDsaSignCommand = try HealthCardCommand.PsoDSA.sign(digest)
+        let psoDsaSignResponse = try await psoDsaSignCommand.transmit(to: self)
+        return psoDsaSignResponse
     }
 }

@@ -54,6 +54,7 @@ extension HealthCardType {
     ///   - type: Password reference
     ///   - dfSpecific: is Password reference dfSpecific
     /// - Returns: Publisher that tries to set the password's new value
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     public func changeReferenceDataSetNewPin(
         old: Format2Pin,
         new: Format2Pin,
@@ -94,8 +95,43 @@ extension HealthCardType {
     /// - Parameters:
     ///   - old: The old secret of the password object
     ///   - new: The new secret of the password object
+    ///   - type: Password reference
+    ///   - dfSpecific: is Password reference dfSpecific
+    /// - Returns: `ChangeReferenceDataResponse` after trying to set the password's new value
+    public func changeReferenceDataSetNewPin(
+        old: Format2Pin,
+        new: Format2Pin,
+        type: EgkFileSystem.Pin = EgkFileSystem.Pin.mrpinHome,
+        dfSpecific: Bool = false
+    ) async throws -> ChangeReferenceDataResponse {
+        CommandLogger.commands.append(Command(message: "Change Reference Data: Set New PIN", type: .description))
+        let parameters = (password: type.rawValue, dfSpecific: dfSpecific, old: old, new: new)
+        let changeReferenceDataCommand = try HealthCardCommand.ChangeReferenceData.change(password: parameters)
+        let changeReferenceDataResponse = try await changeReferenceDataCommand.transmit(to: self)
+
+        let responseStatus = changeReferenceDataResponse.responseStatus
+        if ResponseStatus.wrongSecretWarnings.contains(responseStatus) {
+            return .wrongSecretWarning(retryCount: responseStatus.retryCount)
+        }
+        switch responseStatus {
+        case .success: return .success
+        case .memoryFailure: return .memoryFailure
+        case .securityStatusNotSatisfied: return .securityStatusNotSatisfied
+        case .commandBlocked: return .commandBlocked
+        case .wrongPasswordLength: return .wrongPasswordLength
+        case .passwordNotFound: return .passwordNotFound
+        default: return .unknownFailure
+        }
+    }
+
+    ///  Assign a new secret (value) to a password.
+    ///
+    /// - Parameters:
+    ///   - old: The old secret of the password object
+    ///   - new: The new secret of the password object
     ///   - affectedPassword: convenient `ChangeReferenceDataAffectedPassword` selector
     /// - Returns: Publisher that tries to set the password's new value
+    @available(*, deprecated, message: "Use structured concurrency version instead")
     public func changeReferenceDataSetNewPin(
         old: String,
         new: String,
@@ -117,5 +153,34 @@ extension HealthCardType {
             dfSpecific = false
         }
         return changeReferenceDataSetNewPin(old: parsedOld, new: parsedNew, type: type, dfSpecific: dfSpecific)
+    }
+
+    ///  Assign a new secret (value) to a password.
+    ///
+    /// - Parameters:
+    ///   - old: The old secret of the password object
+    ///   - new: The new secret of the password object
+    ///   - affectedPassword: convenient `ChangeReferenceDataAffectedPassword` selector
+    /// - Returns: `ChangeReferenceDataResponse` after trying to set the password's new value
+    public func changeReferenceDataSetNewPin(
+        old: String,
+        new: String,
+        affectedPassword: ChangeReferenceDataAffectedPassword
+    ) async throws -> ChangeReferenceDataResponse {
+        let parsedOld = try Format2Pin(pincode: old)
+        let parsedNew = try Format2Pin(pincode: new)
+        let type: EgkFileSystem.Pin
+        let dfSpecific: Bool
+        switch affectedPassword {
+        case .mrPinHomeNoDfSpecific:
+            type = .mrpinHome
+            dfSpecific = false
+        }
+        return try await changeReferenceDataSetNewPin(
+            old: parsedOld,
+            new: parsedNew,
+            type: type,
+            dfSpecific: dfSpecific
+        )
     }
 }
