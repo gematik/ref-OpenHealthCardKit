@@ -41,7 +41,7 @@ final class OpenSecureSessionIntegrationTest: CardSimulationTerminalTestCase {
     func testOpenSecureSession() async throws {
         let can = try! CAN.from(Data("123123".utf8)) // swiftlint:disable:this force_try
 
-        let secureHealthCard = try await Self.card.openSecureSession(can: can, writeTimeout: 0, readTimeout: 0)
+        let secureHealthCard = try await Self.card.openSecureSessionAsync(can: can, writeTimeout: 0, readTimeout: 0)
         expect(secureHealthCard.status.type) == .egk(generation: .g2)
     }
 }

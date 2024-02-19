@@ -18,11 +18,52 @@
 import CoreNFC
 import NFCCardReaderProvider
 
-extension NFCTagReaderSession.Error: LocalizedError {
+extension NFCHealthCardSessionError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .couldNotInitializeSession:
             return "NFCTagReaderSession could not be initalized"
+        case .unsupportedTag:
+            return "NFCTagReaderSession.Error: The read tag is not supported"
+        case let .coreNFC(error: error):
+            switch error {
+            case let .tagConnectionLost(nFCReaderError):
+                return nFCReaderError.localizedDescription
+            case let .sessionTimeout(nFCReaderError):
+                return nFCReaderError.localizedDescription
+
+            case let .sessionInvalidated(nFCReaderError):
+                return nFCReaderError.localizedDescription
+
+            case let .userCanceled(nFCReaderError):
+                return nFCReaderError.localizedDescription
+
+            case let .unsupportedFeature(nFCReaderError):
+                return nFCReaderError.localizedDescription
+
+            case let .other(nFCReaderError):
+                return nFCReaderError.localizedDescription
+
+            case let .unknown(error):
+                return error.localizedDescription
+            }
+        case .wrongCAN:
+            return "Wrong CAN (macPcdVerificationFailedOnCard)!"
+        case let .establishingSecureChannel(error):
+            return error.localizedDescription
+        case let .operation(error):
+            return error.localizedDescription
+        @unknown default:
+            return "unknown NFCHealthCardSessionError"
+        }
+    }
+}
+
+extension NFCTagReaderSession.Error: LocalizedError {
+    public var errorDescription: String? {
+        switch self {
+        case .couldNotInitializeSession:
+            return "NFCTagReaderSession could not be initialized"
         case .unsupportedTag:
             return "NFCTagReaderSession.Error: The read tag is not supported"
         case let .nfcTag(error: error):

@@ -98,7 +98,7 @@ extension HealthCardType {
     /// - Returns: Response after trying to verify the given PIN-value information against a EgkFileSystem.Pin `type`
     ///
     /// - Note: Only supports eGK Card types
-    public func verify(
+    public func verifyAsync(
         pin: Format2Pin,
         type: EgkFileSystem.Pin,
         dfSpecific: Bool = false
@@ -106,7 +106,7 @@ extension HealthCardType {
         CommandLogger.commands.append(Command(message: "Verify PIN", type: .description))
         let verifyPasswordParameter = (type.rawValue, dfSpecific, pin)
         let verifyCommand = HealthCardCommand.Verify.verify(password: verifyPasswordParameter)
-        let verifyResponse = try await verifyCommand.transmit(to: self)
+        let verifyResponse = try await verifyCommand.transmitAsync(to: self)
         let responseStatus = verifyResponse.responseStatus
         if ResponseStatus.wrongSecretWarnings.contains(responseStatus) {
             return .wrongSecretWarning(retryCount: responseStatus.retryCount)
@@ -155,7 +155,7 @@ extension HealthCardType {
     ///   - pin: holds the Pin information for the password
     ///   - affectedPassword: convenience `VerifyPinAffectedPassword` selector
     /// - Returns: Response after trying to verify the given PIN-value information against a EgkFileSystem.Pin `type`
-    public func verify(
+    public func verifyAsync(
         pin: String,
         affectedPassword: VerifyPinAffectedPassword
     ) async throws -> VerifyPinResponse {
@@ -167,6 +167,6 @@ extension HealthCardType {
             type = .mrpinHome
             dfSpecific = false
         }
-        return try await verify(pin: parsedPIN, type: type, dfSpecific: dfSpecific)
+        return try await verifyAsync(pin: parsedPIN, type: type, dfSpecific: dfSpecific)
     }
 }

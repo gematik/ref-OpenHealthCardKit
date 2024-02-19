@@ -1,3 +1,13 @@
+# Release 5.6.0
+
+## Added
+
+- New NFCHealthCardSession offers a structured concurrency API
+
+## Other
+
+- adapt app target NFCDemo to use the new NFCHealthCardSession API
+
 # Release 5.5.0
 
 ## Added

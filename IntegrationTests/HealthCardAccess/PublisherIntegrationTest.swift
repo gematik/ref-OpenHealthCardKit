@@ -54,31 +54,43 @@ final class PublisherIntegrationTest: CardSimulationTerminalTestCase {
         } == ResponseStatus.endOfFileWarning
     }
 
-    // swiftlint:disable force_unwrapping
-    func codeForUserManual() {
+    func testCodeForUserManual() async throws {
         // tag::createCommand[]
         let eSign = EgkFileSystem.DF.ESIGN
         let selectEsignCommand = HealthCardCommand.Select.selectFile(with: eSign.aid)
         // end::createCommand[]
 
+        // tag::evaluateResponseStatus[]
+        let healthCardResponse = try await selectEsignCommand.transmitAsync(to: Self.healthCard)
+        guard healthCardResponse.responseStatus == ResponseStatus.success else {
+            throw HealthCard.Error.operational // TO-DO: handle this or throw a meaningful Error
+        }
+        // end::evaluateResponseStatus[]
+
+        // expect that no error has been thrown
+    }
+
+    // swiftlint:disable force_unwrapping
+    func codeForUserManual_publisher() {
+        let eSign = EgkFileSystem.DF.ESIGN
+        let selectEsignCommand = HealthCardCommand.Select.selectFile(with: eSign.aid)
+
         expect {
-            // tag::setExecutionTarget[]
             // initialize your CardReaderType instance
             let cardReader: CardReaderType = CardSimulationTerminalTestCase.reader
             let card = try cardReader.connect([:])!
             let healthCardStatus = HealthCardStatus.valid(cardType: .egk(generation: .g2))
             let eGk = try HealthCard(card: card, status: healthCardStatus)
-            let publisher: AnyPublisher<HealthCardResponseType, Error> = selectEsignCommand.publisher(for: eGk)
-            // end::setExecutionTarget[]
 
-            // tag::evaluateResponseStatus[]
+            // tag::evaluateResponseStatus_publisher[]
+            let publisher: AnyPublisher<HealthCardResponseType, Error> = selectEsignCommand.publisher(for: eGk)
             let checkResponse = publisher.tryMap { healthCardResponse -> HealthCardResponseType in
                 guard healthCardResponse.responseStatus == ResponseStatus.success else {
                     throw HealthCard.Error.operational // throw a meaningful Error
                 }
                 return healthCardResponse
             }
-            // end::evaluateResponseStatus[]
+            // end::evaluateResponseStatus_publisher[]
 
             // tag::createCommandSequence[]
             let readCertificate = checkResponse

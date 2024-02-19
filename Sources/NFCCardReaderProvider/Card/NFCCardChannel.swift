@@ -107,7 +107,6 @@ class NFCCardChannel: CardChannelType {
         }
     }
 
-    // todo-timeout: implement timeout?
     func transmitAsync(
         command: CommandType,
         writeTimeout _: TimeInterval,
@@ -140,18 +139,14 @@ class NFCCardChannel: CardChannelType {
         do {
             (data, sw1, sw2) = try await tag.sendCommand(apdu: apdu)
         } catch {
-            throw NFCCardError.nfcTag(error: error.asCoreNFCError())
+            throw error.asCoreNFCError()
         }
 
         let response = "[\(Data(data + [sw1, sw2]).hexString())]"
         DLog("RESPONSE: \(response)")
         CommandLogger.commands.append(Command(message: response, type: .response))
 
-        do {
-            return try APDU.Response(body: data, sw1: sw1, sw2: sw2)
-        } catch {
-            throw CardError.connectionError(error)
-        }
+        return try APDU.Response(body: data, sw1: sw1, sw2: sw2)
     }
 
     func close() throws {

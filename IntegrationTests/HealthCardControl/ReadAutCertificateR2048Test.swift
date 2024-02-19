@@ -50,7 +50,7 @@ final class ReadAutCertificateR2048Test: CardSimulationTerminalTestCase {
     func testReadAutCertificate2048() async throws {
         var autCertificateResponse: AutCertificateResponse?
         autCertificateResponse = try await CardSimulationTerminalTestCase.healthCard
-            .readAutCertificate()
+            .readAutCertificateAsync()
         expect(autCertificateResponse?.info) == .efAutR2048
         expect(autCertificateResponse?.certificate) == expectedCertificate
     }

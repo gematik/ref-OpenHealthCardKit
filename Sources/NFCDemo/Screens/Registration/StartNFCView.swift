@@ -100,13 +100,21 @@ struct StartNFCView: View {
             Divider()
 
             Button {
-                switch useCase {
-                case .login: loginState.login(can: can, pin: pin, checkBrainpoolAlgorithm: checkBrainpoolAlgorithm)
-                case .resetRetryCounter: resetRetryCounterState.resetRetryCounter(can: can, puk: puk)
-                case .resetRetryCounterWithNewPin: resetRetryCounterState
-                    .resetRetryCounterWithNewPin(can: can, puk: puk, newPin: pin)
-                case .changeReferenceDataSetNewPin: changeReferenceDataState
-                    .changeReferenceDataSetNewPin(can: can, oldPin: oldPin, newPin: pin)
+                Task {
+                    switch useCase {
+                    case .login:
+                        await loginState.login(can: can, pin: pin, checkBrainpoolAlgorithm: checkBrainpoolAlgorithm)
+                    case .resetRetryCounter:
+                        await resetRetryCounterState.resetRetryCounter(can: can, puk: puk)
+                    case .resetRetryCounterWithNewPin:
+                        await resetRetryCounterState.resetRetryCounterWithNewPin(can: can, puk: puk, newPin: pin)
+                    case .changeReferenceDataSetNewPin:
+                        await changeReferenceDataState.changeReferenceDataSetNewPin(
+                            can: can,
+                            oldPin: oldPin,
+                            newPin: pin
+                        )
+                    }
                 }
 
             } label: {
@@ -142,7 +150,9 @@ struct StartNFCView: View {
                 title: Text("alert_error_title"),
                 message: Text(error?.localizedDescription ?? "alert_error_message_unknown"),
                 dismissButton: .default(Text("alert_btn_ok")) {
-                    self.loginState.dismissError()
+                    Task {
+                        await self.loginState.dismissError()
+                    }
                 }
             )
         }

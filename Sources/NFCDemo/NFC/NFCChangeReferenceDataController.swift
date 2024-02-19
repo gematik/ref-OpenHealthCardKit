@@ -25,8 +25,8 @@ import NFCCardReaderProvider
 
 public class NFCChangeReferenceDataController: ChangeReferenceData {
     public enum Error: Swift.Error, LocalizedError {
-        /// In case the PIN, PUK or CAN could not be constructed from input
         case cardError(NFCTagReaderSession.Error)
+        /// In case the PIN, PUK or CAN could not be constructed from input
         case invalidCanOrPinFormat
         case wrongPin(retryCount: Int)
         case commandBlocked
@@ -48,6 +48,7 @@ public class NFCChangeReferenceDataController: ChangeReferenceData {
         }
     }
 
+    @MainActor
     @Published
     private var pState: ViewState<Bool, Swift.Error> = .idle
     var state: Published<ViewState<Bool, Swift.Error>>.Publisher {
@@ -56,17 +57,17 @@ public class NFCChangeReferenceDataController: ChangeReferenceData {
 
     var cancellable: AnyCancellable?
 
-    func dismissError() {
+    @MainActor
+    func dismissError() async {
         if pState.error != nil {
-            callOnMainThread {
-                self.pState = .idle
-            }
+            pState = .idle
         }
     }
 
-    let messages = NFCTagReaderSession.Messages(
+    let messages = NFCHealthCardSession<ChangeReferenceDataResponse>.Messages(
         discoveryMessage: NSLocalizedString("nfc_txt_discoveryMessage", comment: ""),
         connectMessage: NSLocalizedString("nfc_txt_connectMessage", comment: ""),
+        secureChannelMessage: NSLocalizedString("nfc_txt_secureChannel", comment: ""),
         noCardMessage: NSLocalizedString("nfc_txt_noCardMessage", comment: ""),
         multipleCardsMessage: NSLocalizedString("nfc_txt_multipleCardsMessage", comment: ""),
         unsupportedCardMessage: NSLocalizedString("nfc_txt_unsupportedCardMessage", comment: ""),
@@ -74,116 +75,63 @@ public class NFCChangeReferenceDataController: ChangeReferenceData {
     )
 
     // swiftlint:disable:next function_body_length
-    func changeReferenceDataSetNewPin(can: String, oldPin: String, newPin: String) {
-        if case .loading = pState { return }
-        callOnMainThread {
+    func changeReferenceDataSetNewPin(can: String, oldPin: String, newPin: String) async {
+        if case .loading = await pState { return }
+        Task { @MainActor in
             self.pState = .loading(nil)
         }
-        let canData: CAN
         let format2OldPin: Format2Pin
         let format2NewPin: Format2Pin
         do {
-            canData = try CAN.from(Data(can.utf8))
             format2OldPin = try Format2Pin(pincode: oldPin)
             format2NewPin = try Format2Pin(pincode: newPin)
         } catch {
-            callOnMainThread {
+            Task { @MainActor in
                 self.pState = .error(Error.invalidCanOrPinFormat)
             }
             return
         }
 
-        cancellable = NFCTagReaderSession.publisher(messages: messages)
-            .mapError { Error.cardError($0) as Swift.Error }
-            .flatMap { (session: NFCCardSession) -> AnyPublisher<ViewState<Bool, Swift.Error>, Swift.Error> in
-                session.updateAlert(message: NSLocalizedString("nfc_txt_msg_secure_channel", comment: ""))
-                return session.card // swiftlint:disable:this trailing_closure
-                    .openSecureSession(can: canData, writeTimeout: 0, readTimeout: 0)
-                    .userMessage(
-                        session: session,
-                        message: NSLocalizedString("nfc_txt_msg_reset_withNewPin", comment: "")
-                    )
-                    .changeReferenceDataSetNewPin(
-                        oldPin: format2OldPin,
-                        newPin: format2NewPin,
-                        type: EgkFileSystem.Pin.mrpinHome,
-                        dfSpecific: false
-                    )
-
-                    .map { _ in true }
-                    .map(ViewState.value)
-                    .handleEvents(receiveOutput: { state in
-                        if let value = state.value, value == true {
-                            session
-                                .updateAlert(message: NSLocalizedString("nfc_txt_msg_reset_success",
-                                                                        comment: ""))
-                            session.invalidateSession(with: nil)
-                        } else {
-                            session.invalidateSession(
-                                with: state.error?.localizedDescription ?? NSLocalizedString(
-                                    "nfc_txt_msg_failure",
-                                    comment: ""
-                                )
-                            )
-                        }
-                    })
-                    .mapError { error in
-                        session.invalidateSession(with: error.localizedDescription)
-                        return error
-                    }
-                    .eraseToAnyPublisher()
-            }
-            .receive(on: DispatchQueue.main)
-            .sink(
-                receiveCompletion: { [weak self] completion in
-                    if case let .failure(error) = completion {
-                        if case let .cardError(readerError) = error as? NFCChangeReferenceDataController.Error,
-                           case let .nfcTag(error: tagError) = readerError,
-                           case .userCanceled = tagError {
-                            self?.pState = .idle
-                        } else {
-                            self?.pState = .error(error)
-                        }
-                    } else {
-                        self?.pState = .idle
-                    }
-                    self?.cancellable?.cancel()
-                },
-                receiveValue: { [weak self] value in
-                    self?.pState = value
-                }
+        guard let nfcHealthCardSession = NFCHealthCardSession(messages: messages, can: can, operation: { session in
+            session.updateAlert(message: NSLocalizedString("nfc_txt_msg_reset_withNewPin", comment: ""))
+            let changeReferenceDataResponse = try await session.card.changeReferenceDataSetNewPin(
+                old: format2OldPin,
+                new: format2NewPin,
+                type: EgkFileSystem.Pin.mrpinHome,
+                dfSpecific: false
             )
-    }
-}
-
-extension Publisher where Output == HealthCardType, Self.Failure == Swift.Error {
-    func changeReferenceDataSetNewPin(
-        oldPin: Format2Pin,
-        newPin: Format2Pin,
-        type: EgkFileSystem.Pin,
-        dfSpecific: Bool
-    ) -> AnyPublisher<HealthCardType, Swift.Error> {
-        flatMap { secureCard in
-            secureCard.changeReferenceDataSetNewPin(
-                old: oldPin,
-                new: newPin,
-                type: type,
-                dfSpecific: dfSpecific
-            )
-            .tryMap { response in
-                if case ChangeReferenceDataResponse.success = response {
-                    return secureCard
-                }
-                if case let ChangeReferenceDataResponse.wrongSecretWarning(retryCount: count) = response {
+            if case ChangeReferenceDataResponse.success = changeReferenceDataResponse {
+                session.updateAlert(message: NSLocalizedString("nfc_txt_msg_reset_success", comment: ""))
+                return changeReferenceDataResponse
+            } else {
+                session.updateAlert(message: NSLocalizedString("nfc_txt_msg_reset_failure", comment: ""))
+                if case let ChangeReferenceDataResponse
+                    .wrongSecretWarning(retryCount: count) = changeReferenceDataResponse {
                     throw NFCChangeReferenceDataController.Error.wrongPin(retryCount: count)
                 }
-                if case ChangeReferenceDataResponse.commandBlocked = response {
+                if case ChangeReferenceDataResponse.commandBlocked = changeReferenceDataResponse {
                     throw NFCChangeReferenceDataController.Error.commandBlocked
                 }
                 // else
                 throw NFCChangeReferenceDataController.Error.otherError
             }
+        })
+        else {
+            Task { @MainActor in self.pState = .error(NFCTagReaderSession.Error.couldNotInitializeSession) }
+            return
         }
-        .eraseToAnyPublisher()
+
+        do {
+            _ = try await nfcHealthCardSession.executeOperation()
+            Task { @MainActor in self.pState = .value(true) }
+        } catch NFCHealthCardSessionError.coreNFC(.userCanceled) {
+            nfcHealthCardSession.invalidateSession(with: nil)
+            Task { @MainActor in self.pState = .idle }
+            return
+        } catch {
+            nfcHealthCardSession.invalidateSession(with: error.localizedDescription)
+            Task { @MainActor in self.pState = .error(error) }
+            return
+        }
     }
 }

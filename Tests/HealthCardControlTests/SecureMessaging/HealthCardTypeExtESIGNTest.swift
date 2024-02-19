@@ -42,13 +42,19 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
             handler = messageHandler
         }
 
-        func transmit(command: CommandType, writeTimeout: TimeInterval, readTimeout: TimeInterval)
-            throws -> ResponseType {
+        func transmit(
+            command: CommandType,
+            writeTimeout: TimeInterval,
+            readTimeout: TimeInterval
+        ) throws -> ResponseType {
             try handler(command, self, writeTimeout, readTimeout)
         }
 
-        func transmitAsync(command: CommandType, writeTimeout: TimeInterval, readTimeout: TimeInterval)
-            throws -> ResponseType {
+        func transmitAsync(
+            command: CommandType,
+            writeTimeout: TimeInterval,
+            readTimeout: TimeInterval
+        ) async throws -> ResponseType {
             try handler(command, self, writeTimeout, readTimeout)
         }
 
@@ -152,7 +158,7 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
         let card = MockHealthCard(status: egkCardStatus, currentCardChannel: channel)
 
         var autCertificateResponse: AutCertificateResponse?
-        autCertificateResponse = try await card.readAutCertificate()
+        autCertificateResponse = try await card.readAutCertificateAsync()
         expect(autCertificateResponse?.info) == .efAutE256
         expect(autCertificateResponse?.certificate) == mockCertificate
     }

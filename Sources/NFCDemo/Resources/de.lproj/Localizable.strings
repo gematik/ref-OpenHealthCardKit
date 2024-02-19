@@ -63,6 +63,7 @@
 
 "nfc_txt_discoveryMessage" = "Bitte legen Sie die Karte auf Ihr iPhone";
 "nfc_txt_connectMessage" = "Verbinden";
+"nfc_txt_secureChannel" = "Herstellen einer sicheren Verbindung";
 "nfc_txt_noCardMessage" = "Keine Karte gefunden";
 "nfc_txt_multipleCardsMessage" = "Es wurden mehrere Karten gefunden";
 "nfc_txt_unsupportedCardMessage" = "Karte wird nicht unterstützt";

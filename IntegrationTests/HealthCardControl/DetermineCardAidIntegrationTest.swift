@@ -33,7 +33,7 @@ final class DetermineCardAidIntegrationTest: CardSimulationTerminalTestCase {
     }
 
     func testDetermineCardAid() async throws {
-        let result = try await Self.healthCard.currentCardChannel.determineCardAid()
+        let result = try await Self.healthCard.currentCardChannel.determineCardAidAsync()
         expect(result) == CardAid.egk
     }
 }

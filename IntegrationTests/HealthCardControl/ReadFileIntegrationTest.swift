@@ -71,10 +71,10 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
     }
 
     func testReadFileTillEOF() async throws {
-        let (responseStatus, _) = try await Self.healthCard.selectDedicated(file: dedicatedFile)
+        let (responseStatus, _) = try await Self.healthCard.selectDedicatedAsync(file: dedicatedFile)
         expect(responseStatus) == ResponseStatus.success
 
-        let readData = try await Self.healthCard.readSelectedFile(expected: nil, failOnEndOfFileWarning: false)
+        let readData = try await Self.healthCard.readSelectedFileAsync(expected: nil, failOnEndOfFileWarning: false)
         expect(readData) == expectedCertificate
     }
 
@@ -92,7 +92,7 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
     }
 
     func testReadFileFailOnEOF() async throws {
-        let (responseStatus, _) = try await Self.healthCard.selectDedicated(file: dedicatedFile)
+        let (responseStatus, _) = try await Self.healthCard.selectDedicatedAsync(file: dedicatedFile)
         expect(responseStatus) == ResponseStatus.success
 
         // todo-nimble update
@@ -120,12 +120,12 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
     }
 
     func testReadFile() async throws {
-        let (responseStatus, fcp) = try await Self.healthCard.selectDedicated(file: dedicatedFile, fcp: true)
+        let (responseStatus, fcp) = try await Self.healthCard.selectDedicatedAsync(file: dedicatedFile, fcp: true)
         expect(responseStatus) == .success
         expect(fcp).toNot(beNil())
 
         // swiftlint:disable:next force_unwrapping
-        let readData = try await Self.healthCard.readSelectedFile(
+        let readData = try await Self.healthCard.readSelectedFileAsync(
             expected: Int(fcp!.readSize!),
             failOnEndOfFileWarning: true
         )
@@ -169,11 +169,11 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
             return
         }
 
-        let (responseStatus, fcp) = try await healthCard.selectDedicated(file: dedicatedFile, fcp: true)
+        let (responseStatus, fcp) = try await healthCard.selectDedicatedAsync(file: dedicatedFile, fcp: true)
         expect(responseStatus) == .success
         expect(fcp).toNot(beNil())
 
-        let readData = try await healthCard.readSelectedFile(
+        let readData = try await healthCard.readSelectedFileAsync(
             expected: Int(fcp!.readSize!),
             failOnEndOfFileWarning: true
         )
@@ -216,11 +216,11 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
             return
         }
 
-        let (responseStatus, fcp) = try await healthCard.selectDedicated(file: dedicatedFile, fcp: true)
+        let (responseStatus, fcp) = try await healthCard.selectDedicatedAsync(file: dedicatedFile, fcp: true)
         expect(responseStatus) == .success
         expect(fcp).toNot(beNil())
 
-        let readData = try await healthCard.readSelectedFile(expected: nil, failOnEndOfFileWarning: false)
+        let readData = try await healthCard.readSelectedFileAsync(expected: nil, failOnEndOfFileWarning: false)
         expect(readData) == expectedCertificate
     }
 
@@ -258,7 +258,7 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
             return
         }
 
-        let (responseStatus, _) = try await healthCard.selectDedicated(file: dedicatedFile)
+        let (responseStatus, _) = try await healthCard.selectDedicatedAsync(file: dedicatedFile)
         expect(responseStatus) == ResponseStatus.success
 
         // todo-nimble update

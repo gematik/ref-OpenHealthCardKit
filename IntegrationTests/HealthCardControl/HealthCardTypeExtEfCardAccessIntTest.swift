@@ -32,7 +32,7 @@ final class HealthCardTypeExtEfCardAccessIntTest: CardSimulationTerminalTestCase
     }
 
     func testReadEfCardAccess() async throws {
-        let algorithm = try await Self.healthCard.currentCardChannel.readKeyAgreementAlgorithm(
+        let algorithm = try await Self.healthCard.currentCardChannel.readKeyAgreementAlgorithmAsync(
             writeTimeout: 30,
             readTimeout: 30
         )

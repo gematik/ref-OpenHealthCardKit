@@ -1,12 +1,12 @@
 == Getting Started
 
-OpenHealthCardKit requires Swift 5.1.
+OpenHealthCardKit requires Swift 5.6.
 
 === Setup for integration
 
 - **Swift Package Manager:** Put this in your `Package.swift`:
 
-    `.package(url: "https://github.com/gematik/ref-OpenHealthCardKit", from: "5.3.0"),`
+    `.package(url: "https://github.com/gematik/ref-OpenHealthCardKit", from: "5.6.0"),`
 
 - **Carthage:** Put this in your `Cartfile`:
 

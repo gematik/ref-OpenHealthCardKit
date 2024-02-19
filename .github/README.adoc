@@ -26,13 +26,13 @@ This document describes the functionalitiy and structure of OpenHealthCardKit.
 Generated API docs are available at https://gematik.github.io/ref-OpenHealthCardKit.
 == Getting Started
 
-OpenHealthCardKit requires Swift 5.1.
+OpenHealthCardKit requires Swift 5.6.
 
 === Setup for integration
 
 - **Swift Package Manager:** Put this in your `Package.swift`:
 
-    `.package(url: "https://github.com/gematik/ref-OpenHealthCardKit", from: "5.3.0"),`
+    `.package(url: "https://github.com/gematik/ref-OpenHealthCardKit", from: "5.6.0"),`
 
 - **Carthage:** Put this in your `Cartfile`:
 
@@ -116,22 +116,22 @@ let eSign = EgkFileSystem.DF.ESIGN
 let selectEsignCommand = HealthCardCommand.Select.selectFile(with: eSign.aid)
 ----
 
-===== Setting an execution target
+===== Command execution
 
 We execute the created command `CardType` instance which has been typically provided by a `CardReaderType`.
 
 In the next example we use a `HealthCard` object representing an eGK (elektronische Gesundheitskarte)
-as one kind of a `HealthCardType` implementing the `CardType` protocol.
-
+as one kind of a `HealthCardType` implementing the `CardType` protocol and then send the command to the card (or card's channel):
 [source,swift]
 ----
-// initialize your CardReaderType instance
-let cardReader: CardReaderType = CardSimulationTerminalTestCase.reader
-let card = try cardReader.connect([:])!
-let healthCardStatus = HealthCardStatus.valid(cardType: .egk(generation: .g2))
-let eGk = try HealthCard(card: card, status: healthCardStatus)
-let publisher: AnyPublisher<HealthCardResponseType, Error> = selectEsignCommand.publisher(for: eGk)
+let healthCardResponse = try await selectEsignCommand.transmit(to: Self.healthCard)
+guard healthCardResponse.responseStatus == ResponseStatus.success else {
+    throw HealthCard.Error.operational // TO-DO: handle this or throw a meaningful Error
+}
 ----
+
+
+*Following paragraphs describe the deprecated way of executung commands via the _Combine_ inteface:*
 
 A created command can be lifted to the Combine framework with `publisher(for:writetimeout:readtimeout)`.
 The result of the command execution can be validated against an expected `ResponseStatus`,
@@ -139,6 +139,7 @@ e.g. +SUCCESS+ (+0x9000+).
 
 [source,swift]
 ----
+let publisher: AnyPublisher<HealthCardResponseType, Error> = selectEsignCommand.publisher(for: eGk)
 let checkResponse = publisher.tryMap { healthCardResponse -> HealthCardResponseType in
     guard healthCardResponse.responseStatus == ResponseStatus.success else {
         throw HealthCard.Error.operational // throw a meaningful Error
@@ -219,17 +220,11 @@ Take the necessary preparatory steps for signing a challenge on the Health Card,
 
 [source,swift]
 ----
-expect {
-    let challenge = Data([0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8])
-    let format2Pin = try Format2Pin(pincode: "123456")
-    return try Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
-        .flatMap { _ in
-            Self.healthCard.sign(data: challenge)
-        }
-        .eraseToAnyPublisher()
-        .test()
-        .responseStatus
-} == ResponseStatus.success
+let challenge = Data([0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8])
+let format2Pin = try Format2Pin(pincode: "123456")
+_ = try await Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
+let signResponse = try await Self.healthCard.sign(data: challenge)
+expect(signResponse.responseStatus) == ResponseStatus.success
 ----
 
 
@@ -238,7 +233,7 @@ steps for establishing a secure channel with the Health Card and expose only a s
 
 [source,swift]
 ----
-try KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128.negotiateSessionKey(
+let secureMessaging = try await KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128.negotiateSessionKey(
     card: CardSimulationTerminalTestCase.healthCard,
     can: can,
     writeTimeout: 0,
@@ -253,6 +248,68 @@ for more already implemented use cases.
 
 A `CardReaderProvider` implementation that handles the
 communication with the Apple iPhone NFC interface.
+
+==== NFCCardReaderSession
+
+For convience, the `NFCCardReaderSession` combines the usage of the NFC inteface with the `HealthCardAccess/HealthCardControl` layers.
+
+The initializer takes some NFC-Display messages, the CAN (card access number) and a closure with a `NFCHealthCardSessionHandle` to send/receive commands/responses to/from the NFC HealthCard and to update the user's interface message to.
+
+[source,swift]
+----
+guard let nfcHealthCardSession = NFCHealthCardSession(messages: messages, can: can, operation: { session in
+    session.updateAlert(message: NSLocalizedString("nfc_txt_msg_verify_pin", comment: ""))
+    let verifyPinResponse = try await session.card.verifyAsync(
+        pin: format2Pin,
+        type: EgkFileSystem.Pin.mrpinHome
+    )
+    if case let VerifyPinResponse.wrongSecretWarning(retryCount: count) = verifyPinResponse {
+        throw NFCLoginController.Error.wrongPin(retryCount: count)
+    } else if case VerifyPinResponse.passwordBlocked = verifyPinResponse {
+        throw NFCLoginController.Error.passwordBlocked
+    } else if VerifyPinResponse.success != verifyPinResponse {
+        throw NFCLoginController.Error.verifyPinResponse
+    }
+
+    session.updateAlert(message: NSLocalizedString("nfc_txt_msg_signing", comment: ""))
+    let outcome = try await session.card.sign(
+        payload: "ABC".data(using: .utf8)!, // swiftlint:disable:this force_unwrapping
+        checkAlgorithm: checkBrainpoolAlgorithm
+    )
+
+    session.updateAlert(message: NSLocalizedString("nfc_txt_msg_success", comment: ""))
+    return outcome
+})
+else {
+    // handle the case the Session could not be initialized
+----
+
+Execute the operation on the NFC HealthCard. The secure channel (PACE) is established initially before executing the operation.
+
+[source,swift]
+----
+signedData = try await nfcHealthCardSession.executeOperation()
+----
+
+The thrown error will be of type `NFCHealthCardSessionError`.
+The `NFCHealthCardSession` also gives you an endpoint to invalidate the underlying `TagReaderSession`.
+
+[source,swift]
+----
+} catch NFCHealthCardSessionError.coreNFC(.userCanceled) {
+    // error type is always `NFCHealthCardSessionError`
+    // here we especially handle when the user canceled the session
+    Task { @MainActor in self.pState = .idle } // Do some view-property update
+    // Calling .invalidateSession() is not strictly necessary
+    //  since nfcHealthCardSession does it while it's de-initializing.
+    nfcHealthCardSession.invalidateSession(with: nil)
+    return
+} catch {
+    Task { @MainActor in self.pState = .error(error) }
+    nfcHealthCardSession.invalidateSession(with: error.localizedDescription)
+    return
+}
+----
 [#NFCDemo]
 === NFCDemo
 

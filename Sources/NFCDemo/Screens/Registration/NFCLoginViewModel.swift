@@ -23,8 +23,8 @@ import SwiftUI
 protocol LoginController {
     var state: Published<ViewState<Bool, Error>>.Publisher { get }
 
-    func login(can: String, pin: String, checkBrainpoolAlgorithm: Bool)
-    func dismissError()
+    func login(can: String, pin: String, checkBrainpoolAlgorithm: Bool) async
+    func dismissError() async
 }
 
 class NFCLoginViewModel: ObservableObject {
@@ -52,12 +52,12 @@ class NFCLoginViewModel: ObservableObject {
             .store(in: &disposables)
     }
 
-    func login(can: String, pin: String, checkBrainpoolAlgorithm: Bool) {
-        loginController.login(can: can, pin: pin, checkBrainpoolAlgorithm: checkBrainpoolAlgorithm)
+    func login(can: String, pin: String, checkBrainpoolAlgorithm: Bool) async {
+        await loginController.login(can: can, pin: pin, checkBrainpoolAlgorithm: checkBrainpoolAlgorithm)
     }
 
-    func dismissError() {
-        loginController.dismissError()
+    func dismissError() async {
+        await loginController.dismissError()
     }
 }
 

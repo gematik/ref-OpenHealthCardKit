@@ -23,17 +23,17 @@ import XCTest
 final class SelectCommandIntegrationTest: CardSimulationTerminalTestCase {
     func testSelectRoot() async throws {
         let selectRootCommand = HealthCardCommand.Select.selectRoot()
-        let selectRootResponse = try await selectRootCommand.transmit(to: Self.healthCard)
+        let selectRootResponse = try await selectRootCommand.transmitAsync(to: Self.healthCard)
         expect(selectRootResponse.responseStatus) == ResponseStatus.success
     }
 
     func testSelectFileByAidThenSelectParentFolder() async throws {
         let selectFileCommand = HealthCardCommand.Select.selectFile(with: EgkFileSystem.DF.GDD.aid)
-        let selectFileResponse = try await selectFileCommand.transmit(to: Self.healthCard)
+        let selectFileResponse = try await selectFileCommand.transmitAsync(to: Self.healthCard)
         expect(selectFileResponse.responseStatus) == ResponseStatus.success
 
         let selectRootCommand = HealthCardCommand.Select.selectRoot()
-        let selectRootResponse = try await selectRootCommand.transmit(to: Self.healthCard)
+        let selectRootResponse = try await selectRootCommand.transmitAsync(to: Self.healthCard)
         expect(selectRootResponse.responseStatus) == ResponseStatus.success
     }
 
@@ -45,7 +45,7 @@ final class SelectCommandIntegrationTest: CardSimulationTerminalTestCase {
             ne: cEgkAutCVCE256Count + 1,
             offset: 0
         )
-        let readFileResponse = try await readFileCommand.transmit(to: Self.healthCard)
+        let readFileResponse = try await readFileCommand.transmitAsync(to: Self.healthCard)
         expect(readFileResponse.responseStatus) == ResponseStatus.endOfFileWarning
     }
 }

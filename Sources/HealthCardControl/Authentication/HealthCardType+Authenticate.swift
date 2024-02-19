@@ -53,10 +53,10 @@ extension HealthCardType {
     ///
     /// - Parameter challenge: the data to sign
     /// - Returns: AuthenticationResult (Aut certificate and its signature method and DSA signed challenge data)
-    public func authenticate(challenge: Data) async throws -> AuthenticationResult {
-        let autCertificate = try await readAutCertificate()
+    public func authenticateAsync(challenge: Data) async throws -> AuthenticationResult {
+        let autCertificate = try await readAutCertificateAsync()
         let certificateInfo = try autCertificate.certificateInfo()
-        let signResponse = try await sign(data: challenge)
+        let signResponse = try await signAsync(data: challenge)
         guard signResponse.responseStatus == .success,
               let signatureData = signResponse.data
         else {

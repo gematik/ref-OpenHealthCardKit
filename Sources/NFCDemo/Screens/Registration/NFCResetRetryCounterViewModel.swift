@@ -23,11 +23,11 @@ import SwiftUI
 protocol ResetRetryCounter {
     var state: Published<ViewState<Bool, Error>>.Publisher { get }
 
-    func resetRetryCounter(can: String, puk: String)
+    func resetRetryCounter(can: String, puk: String) async
 
-    func resetRetryCounterWithNewPin(can: String, puk: String, newPin: String)
+    func resetRetryCounterWithNewPin(can: String, puk: String, newPin: String) async
 
-    func dismissError()
+    func dismissError() async
 }
 
 class NFCResetRetryCounterViewModel: ObservableObject {
@@ -57,15 +57,11 @@ class NFCResetRetryCounterViewModel: ObservableObject {
             .store(in: &disposables)
     }
 
-    func resetRetryCounter(can: String, puk: String) {
-        resetRetryCounterController.resetRetryCounter(can: can, puk: puk)
+    func resetRetryCounter(can: String, puk: String) async {
+        await resetRetryCounterController.resetRetryCounter(can: can, puk: puk)
     }
 
-    func resetRetryCounterWithNewPin(can: String, puk: String, newPin: String) {
-        resetRetryCounterController.resetRetryCounterWithNewPin(can: can, puk: puk, newPin: newPin)
-    }
-
-    func dismissError() {
-        resetRetryCounterController.dismissError()
+    func resetRetryCounterWithNewPin(can: String, puk: String, newPin: String) async {
+        await resetRetryCounterController.resetRetryCounterWithNewPin(can: can, puk: puk, newPin: newPin)
     }
 }

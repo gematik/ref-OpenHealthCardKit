@@ -49,6 +49,7 @@ internal class SecureCardChannel: CardChannelType {
         channel = card.currentCardChannel
     }
 
+    @_disfavoredOverload
     func transmit(command: CommandType, writeTimeout: TimeInterval, readTimeout: TimeInterval) throws -> ResponseType {
         DLog(">> \(command.bytes.hexString())")
         // we only log the header bytes to prevent logging user's PIN

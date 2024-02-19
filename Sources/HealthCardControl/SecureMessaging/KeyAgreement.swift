@@ -153,7 +153,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
         ///     - readTimeout: timeout in seconds. time <= 0 is no timeout
         /// - Returns: Instance of `SecureMessaging` employing the PACE key
         ///         that both this application and the card agreed on.
-        public func negotiateSessionKey(
+        public func negotiateSessionKeyAsync(
             card: HealthCardType,
             can: CAN,
             writeTimeout: TimeInterval = 10,
@@ -162,13 +162,13 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
             switch self {
             case .idPaceEcdhGmAesCbcCmac128:
                 // Set security environment
-                _ = try await step0PaceEcdhGmAesCbcCmac128(
+                _ = try await step0PaceEcdhGmAesCbcCmac128Async(
                     card: card,
                     writeTimeout: writeTimeout,
                     readTimeout: readTimeout
                 )
                 // Request nonceZ from card and decrypt it to nonceS as Data
-                let nonceS = try await step1PaceEcdhGmAesCbcCmac128(
+                let nonceS = try await step1PaceEcdhGmAesCbcCmac128Async(
                     card: card,
                     can: can,
                     writeTimeout: writeTimeout,
@@ -176,7 +176,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
                 )
                 // Generate first own public key (PK1_PCD) and send it to card.
                 // Receive first public key (PK1_PICC) from card
-                let (pk2Pcd, keyPair2) = try await step2PaceEcdhGmAesCbcCmac128(
+                let (pk2Pcd, keyPair2) = try await step2PaceEcdhGmAesCbcCmac128Async(
                     card: card,
                     nonceS: nonceS,
                     writeTimeout: writeTimeout,
@@ -184,7 +184,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
                 )
                 // Send own public key PK2_PCD to card and receive second public key (PK2_PICC) from card.
                 // Derive PaceKey from all the information.
-                let (pk2Picc, paceKey) = try await step3PaceEcdhGmAesCbcCmac128(
+                let (pk2Picc, paceKey) = try await step3PaceEcdhGmAesCbcCmac128Async(
                     card: card,
                     pk2Pcd: pk2Pcd,
                     keyPair2: keyPair2,
@@ -194,7 +194,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
                 // Derive MAC_PCD from a key mac and from a auth token and send it to card
                 // so the card can verify it.
                 // Receive MAC_PICC from card and verify it.
-                let verifyMacPicc = try await step4PaceEcdhGmAesCbcCmac128(
+                let verifyMacPicc = try await step4PaceEcdhGmAesCbcCmac128Async(
                     card: card,
                     pk2Picc: pk2Picc,
                     pk2Pcd: pk2Pcd,
@@ -234,7 +234,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
     }
 
     /// Set the appropriate security environment on card.
-    private static func step0PaceEcdhGmAesCbcCmac128(
+    private static func step0PaceEcdhGmAesCbcCmac128Async(
         card: HealthCardType,
         writeTimeout: TimeInterval,
         readTimeout: TimeInterval
@@ -248,7 +248,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
             dfSpecific: false,
             oid: oid
         )
-        let selectPaceResponse = try await selectPaceCommand.transmit(
+        let selectPaceResponse = try await selectPaceCommand.transmitAsync(
             to: card,
             writeTimeout: writeTimeout,
             readTimeout: readTimeout
@@ -283,14 +283,14 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
     }
 
     /// Request nonceZ from card and decrypt it to nonceS as Data
-    private static func step1PaceEcdhGmAesCbcCmac128(
+    private static func step1PaceEcdhGmAesCbcCmac128Async(
         card: HealthCardType,
         can: CAN,
         writeTimeout: TimeInterval,
         readTimeout: TimeInterval
     ) async throws -> Data {
         let paceStep1aCommand = HealthCardCommand.PACE.step1a()
-        let paceStep1aResponse = try await paceStep1aCommand.transmit(
+        let paceStep1aResponse = try await paceStep1aCommand.transmitAsync(
             to: card,
             writeTimeout: writeTimeout,
             readTimeout: readTimeout
@@ -348,7 +348,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
     /// Receive first public key (PK1_PICC) from card
     /// Calculate a shared secret generating point gTilde
     /// Generate a second keyPair2 PK2_PICD and public key PK2_PCD = gTilde * keyPair2.privateKey
-    private static func step2PaceEcdhGmAesCbcCmac128(
+    private static func step2PaceEcdhGmAesCbcCmac128Async(
         card: HealthCardType,
         nonceS: Data,
         writeTimeout: TimeInterval,
@@ -358,7 +358,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
 
         let paceStep2aCommand = try HealthCardCommand.PACE.step2a(publicKey: keyPair1.publicKey.x962Value())
 
-        let pk1PiccResponse = try await paceStep2aCommand.transmit(
+        let pk1PiccResponse = try await paceStep2aCommand.transmitAsync(
             to: card,
             writeTimeout: writeTimeout,
             readTimeout: readTimeout
@@ -404,7 +404,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
 
     /// Send own public key PK2_PCD to card and receive second public key (PK2_PICC) from card
     /// Derive PACE key from all the information
-    private static func step3PaceEcdhGmAesCbcCmac128(
+    private static func step3PaceEcdhGmAesCbcCmac128Async(
         card: HealthCardType,
         pk2Pcd: BrainpoolP256r1.KeyExchange.PublicKey,
         keyPair2: BrainpoolP256r1.KeyExchange.PrivateKey,
@@ -412,7 +412,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
         readTimeout: TimeInterval
     ) async throws -> (BrainpoolP256r1.KeyExchange.PublicKey, AES128PaceKey) {
         let paceStep3Command = try HealthCardCommand.PACE.step3a(publicKey: pk2Pcd.x962Value())
-        let pk2PiccResponse = try await paceStep3Command.transmit(
+        let pk2PiccResponse = try await paceStep3Command.transmitAsync(
             to: card,
             writeTimeout: writeTimeout,
             readTimeout: readTimeout
@@ -468,7 +468,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
 
     /// Derive MAC_PCD from a key mac and from a auth token and send it to card for verification
     /// Receive MAC_PICC from card and verify it
-    private static func step4PaceEcdhGmAesCbcCmac128( // swiftlint:disable:this function_parameter_count
+    private static func step4PaceEcdhGmAesCbcCmac128Async( // swiftlint:disable:this function_parameter_count
         card: HealthCardType,
         pk2Picc: BrainpoolP256r1.KeyExchange.PublicKey,
         pk2Pcd: BrainpoolP256r1.KeyExchange.PublicKey,
@@ -484,7 +484,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
         )
         let macPcdToken = macPcd.prefix(algorithm.macTokenPrefixSize)
         let paceStep4aCommand = try HealthCardCommand.PACE.step4a(token: macPcdToken)
-        let macPiccResponse = try await paceStep4aCommand.transmit(
+        let macPiccResponse = try await paceStep4aCommand.transmitAsync(
             to: card,
             writeTimeout: writeTimeout,
             readTimeout: readTimeout

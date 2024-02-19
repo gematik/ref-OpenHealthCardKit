@@ -72,7 +72,7 @@ extension CardChannelType {
             .eraseToAnyPublisher()
     }
 
-    func readKeyAgreementAlgorithm(
+    func readKeyAgreementAlgorithmAsync(
         cardAid: CardAid? = nil,
         writeTimeout: TimeInterval = 30.0,
         readTimeout: TimeInterval = 30.0
@@ -83,11 +83,11 @@ extension CardChannelType {
         if let cardAid = cardAid {
             determinedCardAid = cardAid
         } else {
-            determinedCardAid = try await channel.determineCardAid()
+            determinedCardAid = try await channel.determineCardAidAsync()
         }
 
         let selectCommand = HealthCardCommand.Select.selectFile(with: determinedCardAid.rawValue)
-        let selectResponse = try await selectCommand.transmit(
+        let selectResponse = try await selectCommand.transmitAsync(
             on: channel,
             writeTimeout: writeTimeout,
             readTimeout: readTimeout
@@ -100,7 +100,7 @@ extension CardChannelType {
             with: determinedCardAid.efCardAccess,
             ne: APDU.expectedLengthWildcardShort
         )
-        let readResponse = try await readCommand.transmit(
+        let readResponse = try await readCommand.transmitAsync(
             on: channel,
             writeTimeout: writeTimeout,
             readTimeout: readTimeout
