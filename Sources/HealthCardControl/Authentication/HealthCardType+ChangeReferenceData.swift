@@ -107,7 +107,7 @@ extension HealthCardType {
         CommandLogger.commands.append(Command(message: "Change Reference Data: Set New PIN", type: .description))
         let parameters = (password: type.rawValue, dfSpecific: dfSpecific, old: old, new: new)
         let changeReferenceDataCommand = try HealthCardCommand.ChangeReferenceData.change(password: parameters)
-        let changeReferenceDataResponse = try await changeReferenceDataCommand.transmit(to: self)
+        let changeReferenceDataResponse = try await changeReferenceDataCommand.transmitAsync(to: self)
 
         let responseStatus = changeReferenceDataResponse.responseStatus
         if ResponseStatus.wrongSecretWarnings.contains(responseStatus) {

@@ -37,7 +37,7 @@ final class HealthCardTypeExtResetRetryCounterIntegrationTestContCont: CardSimul
         // With setting a new PIN
         var response: ResetRetryCounterResponse
 
-        response = try await Self.healthCard.resetRetryCounterAndSetNewPin(
+        response = try await Self.healthCard.resetRetryCounterAndSetNewPinAsync(
             puk: wrongPuk,
             newPin: newPin,
             type: EgkFileSystem.Pin.mrpinHome,
@@ -45,7 +45,7 @@ final class HealthCardTypeExtResetRetryCounterIntegrationTestContCont: CardSimul
         )
         expect(response) == ResetRetryCounterResponse.wrongSecretWarning(retryCount: 9)
 
-        response = try await Self.healthCard.resetRetryCounterAndSetNewPin(
+        response = try await Self.healthCard.resetRetryCounterAndSetNewPinAsync(
             puk: wrongPuk,
             newPin: newPin,
             type: EgkFileSystem.Pin.mrpinHome,

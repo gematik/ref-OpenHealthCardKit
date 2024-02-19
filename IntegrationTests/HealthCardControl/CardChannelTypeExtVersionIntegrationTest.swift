@@ -35,7 +35,7 @@ final class CardChannelTypeExtVersionIntegrationTest: CardSimulationTerminalTest
     }
 
     func testReadCardTypeFromVersion() async throws {
-        let cardType = try await Self.healthCard.currentCardChannel.readCardType()
+        let cardType = try await Self.healthCard.currentCardChannel.readCardTypeAsync()
         expect(cardType) == HealthCardPropertyType.egk(generation: .g2_1)
     }
 
@@ -51,8 +51,8 @@ final class CardChannelTypeExtVersionIntegrationTest: CardSimulationTerminalTest
     }
 
     func testDetermineCardAidThenReadCardTypeFromVersion() async throws {
-        let cardAid = try await Self.healthCard.currentCardChannel.determineCardAid()
-        let cardType = try await Self.healthCard.currentCardChannel.readCardType(cardAid: cardAid)
+        let cardAid = try await Self.healthCard.currentCardChannel.determineCardAidAsync()
+        let cardType = try await Self.healthCard.currentCardChannel.readCardTypeAsync(cardAid: cardAid)
         expect(cardType) == HealthCardPropertyType.egk(generation: .g2_1)
     }
 
@@ -66,7 +66,7 @@ final class CardChannelTypeExtVersionIntegrationTest: CardSimulationTerminalTest
 
     func testReadCardTypeFromVersionWithKnownCardAid() async throws {
         let cardAid = CardAid.egk
-        let cardType = try await Self.healthCard.currentCardChannel.readCardType(cardAid: cardAid)
+        let cardType = try await Self.healthCard.currentCardChannel.readCardTypeAsync(cardAid: cardAid)
         expect(cardType) == HealthCardPropertyType.egk(generation: .g2_1)
     }
 }

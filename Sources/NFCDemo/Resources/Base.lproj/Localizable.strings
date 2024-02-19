@@ -63,6 +63,7 @@
 
 "nfc_txt_discoveryMessage" = "Please tap your eGK on top of your iPhone";
 "nfc_txt_connectMessage"= "Connecting";
+"nfc_txt_secureChannel" = "Establishing a secure connection";
 "nfc_txt_noCardMessage"= "No Card Found";
 "nfc_txt_multipleCardsMessage" = "Multiple cards found";
 "nfc_txt_unsupportedCardMessage" = "Unsupported card";

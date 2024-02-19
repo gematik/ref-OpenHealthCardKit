@@ -50,17 +50,19 @@ by setting the APDU-bytes manually.
 include::{integrationtestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=createCommand,indent=0]
 ----
 
-===== Setting an execution target
+===== Command execution
 
 We execute the created command `CardType` instance which has been typically provided by a `CardReaderType`.
 
 In the next example we use a `HealthCard` object representing an eGK (elektronische Gesundheitskarte)
-as one kind of a `HealthCardType` implementing the `CardType` protocol.
-
+as one kind of a `HealthCardType` implementing the `CardType` protocol and then send the command to the card (or card's channel):
 [source,swift]
 ----
-include::{integrationtestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=setExecutionTarget,indent=0]
+include::{integrationtestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=evaluateResponseStatus,indent=0]
 ----
+
+
+*Following paragraphs describe the deprecated way of executung commands via the _Combine_ inteface:*
 
 A created command can be lifted to the Combine framework with `publisher(for:writetimeout:readtimeout)`.
 The result of the command execution can be validated against an expected `ResponseStatus`,
@@ -68,7 +70,7 @@ e.g. +SUCCESS+ (+0x9000+).
 
 [source,swift]
 ----
-include::{integrationtestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=evaluateResponseStatus,indent=0]
+include::{integrationtestdir}/HealthCardAccess/PublisherIntegrationTest.swift[tags=evaluateResponseStatus_publisher,indent=0]
 ----
 
 ===== Create a Command Sequence

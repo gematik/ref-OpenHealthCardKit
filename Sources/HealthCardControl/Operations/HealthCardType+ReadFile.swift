@@ -115,7 +115,7 @@ extension HealthCardType {
     /// - Throws: Emits `ReadError` on the Publisher in case of failure.
     ///
     /// - Returns: `Data` that was read form the currently selected file
-    public func readSelectedFile(
+    public func readSelectedFileAsync(
         expected size: Int?,
         failOnEndOfFileWarning: Bool = true,
         offset: Int = 0
@@ -124,7 +124,7 @@ extension HealthCardType {
         let expectedResponseLength = size ?? 0x10000
         let responseLength = min(maxResponseLength, expectedResponseLength)
         let readFileCommand = try HealthCardCommand.Read.readFileCommand(ne: responseLength, offset: offset)
-        let readFileResponse = try await readFileCommand.transmit(to: self)
+        let readFileResponse = try await readFileCommand.transmitAsync(to: self)
         guard readFileResponse.responseStatus == .success ||
             (!failOnEndOfFileWarning && readFileResponse.responseStatus == .endOfFileWarning)
         else {
@@ -142,7 +142,7 @@ extension HealthCardType {
 
         if continueReading {
             // Continue reading
-            let continued = try await readSelectedFile(
+            let continued = try await readSelectedFileAsync(
                 expected: size != nil ? (expectedResponseLength - responseData.count) : nil,
                 failOnEndOfFileWarning: failOnEndOfFileWarning,
                 offset: offset + responseData.count
@@ -221,13 +221,13 @@ extension HealthCardType {
     /// - Throws: `SelectError` (or `ReadError` is case no FCP data could be read and fcp = true)
     ///
     /// - Returns: `(ResponseStatus, FileControlParameter?)` after trying to select the given file
-    public func selectDedicated(
+    public func selectDedicatedAsync(
         file: DedicatedFile,
         fcp: Bool = false,
         length: Int = 256
     ) async throws -> (ResponseStatus, FileControlParameter?) {
         let selectFileCommand = HealthCardCommand.Select.selectFile(with: file.aid)
-        let selectFileResponse = try await selectFileCommand.transmit(to: self)
+        let selectFileResponse = try await selectFileCommand.transmitAsync(to: self)
 
         guard selectFileResponse.responseStatus == .success
         else {
@@ -241,7 +241,7 @@ extension HealthCardType {
         let selectEfCommand = fcp ?
             try HealthCardCommand.Select.selectEfRequestingFcp(with: fid, expectedLength: length) :
             HealthCardCommand.Select.selectEf(with: fid)
-        let selectEfResponse = try await selectEfCommand.transmit(to: self)
+        let selectEfResponse = try await selectEfCommand.transmitAsync(to: self)
 
         guard selectEfResponse.responseStatus == .success
         else {

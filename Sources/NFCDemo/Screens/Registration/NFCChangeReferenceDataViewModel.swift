@@ -23,9 +23,9 @@ import SwiftUI
 protocol ChangeReferenceData {
     var state: Published<ViewState<Bool, Error>>.Publisher { get }
 
-    func changeReferenceDataSetNewPin(can: String, oldPin: String, newPin: String)
+    func changeReferenceDataSetNewPin(can: String, oldPin: String, newPin: String) async
 
-    func dismissError()
+    func dismissError() async
 }
 
 class NFCChangeReferenceDataViewModel: ObservableObject {
@@ -55,11 +55,7 @@ class NFCChangeReferenceDataViewModel: ObservableObject {
             .store(in: &disposables)
     }
 
-    func changeReferenceDataSetNewPin(can: String, oldPin: String, newPin: String) {
-        changeReferenceDataController.changeReferenceDataSetNewPin(can: can, oldPin: oldPin, newPin: newPin)
-    }
-
-    func dismissError() {
-        changeReferenceDataController.dismissError()
+    func changeReferenceDataSetNewPin(can: String, oldPin: String, newPin: String) async {
+        await changeReferenceDataController.changeReferenceDataSetNewPin(can: can, oldPin: oldPin, newPin: newPin)
     }
 }

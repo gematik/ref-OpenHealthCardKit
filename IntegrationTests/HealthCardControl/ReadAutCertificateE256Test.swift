@@ -53,7 +53,7 @@ final class ReadAutCertificateE256Test: CardSimulationTerminalTestCase {
 
     func testReadAutCertificateE256() async throws {
         var autCertificateResponse: AutCertificateResponse?
-        autCertificateResponse = try await Self.healthCard.readAutCertificate()
+        autCertificateResponse = try await Self.healthCard.readAutCertificateAsync()
 
         expect(autCertificateResponse?.info) == .efAutE256
         expect(autCertificateResponse?.certificate) == expectedCertificate

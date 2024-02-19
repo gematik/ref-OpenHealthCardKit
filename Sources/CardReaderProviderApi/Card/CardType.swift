@@ -47,6 +47,7 @@ public protocol CardType {
 
         - Returns: The (connected) card channel
      */
+    @_disfavoredOverload
     @available(*, deprecated, message: "Use structured concurrency version instead")
     func openLogicChannel() throws -> CardChannelType
 

@@ -84,7 +84,7 @@ extension CardChannelType {
     ///   - writeTimeout: time in seconds. Default: 30
     ///   - readTimeout: time in seconds. Default: 30
     /// - Returns: CardAID
-    func determineCardAid(
+    func determineCardAidAsync(
         writeTimeout: TimeInterval = 30.0,
         readTimeout: TimeInterval = 30.0
     ) async throws -> CardAid {
@@ -96,7 +96,7 @@ extension CardChannelType {
         } else {
             let expectedLength = expectedLengthWildcard
             let selectCommand = try HealthCardCommand.Select.selectRootRequestingFcp(expectedLength: expectedLength)
-            let selectResponse = try await selectCommand.transmit(
+            let selectResponse = try await selectCommand.transmitAsync(
                 on: self,
                 writeTimeout: writeTimeout,
                 readTimeout: readTimeout

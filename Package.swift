@@ -34,7 +34,13 @@ let package = Package(
     targets: [
         .target(
             name: "NFCCardReaderProvider",
-            dependencies: ["HealthCardAccess", "Helper", .product(name: "GemCommonsKit", package: "ref-GemCommonsKit"), "DataKit"]
+            dependencies: [
+                "HealthCardControl",
+                "HealthCardAccess",
+                 "Helper",
+                 .product(name: "GemCommonsKit", package: "ref-GemCommonsKit"),
+                  "DataKit"
+            ]
         ),
         .target(
             name: "HealthCardControl",

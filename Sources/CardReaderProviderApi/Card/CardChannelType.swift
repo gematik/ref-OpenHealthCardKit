@@ -49,6 +49,7 @@ public protocol CardChannelType {
 
          - Returns: the Command APDU Response or CardError on failure
      */
+    @_disfavoredOverload
     @available(*, deprecated, message: "Use structured concurrency version instead")
     func transmit(command: CommandType, writeTimeout: TimeInterval, readTimeout: TimeInterval) throws -> ResponseType
 
@@ -74,6 +75,7 @@ public protocol CardChannelType {
 
         - Throws `CardError`
      */
+    @_disfavoredOverload
     func close() throws
 
     /**

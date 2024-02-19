@@ -22,7 +22,7 @@ extension KeyAgreement.Error: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .illegalArgument:
-            return "illegalAgument"
+            return "illegalArgument"
         case .unexpectedFormedAnswerFromCard:
             return "unexpectedFormedAnswerFromCard"
         case .resultOfEcArithmeticWasInfinite:
@@ -36,7 +36,7 @@ extension KeyAgreement.Error: LocalizedError {
         case .efCardAccessNotAvailable:
             return "efCardAccessNotAvailable"
         case let .unsupportedKeyAgreementAlgorithm(identifier):
-            return "unsupportedKeyAgreementAlgorithm with identifeir: \(identifier)"
+            return "unsupportedKeyAgreementAlgorithm with identifier: \(identifier)"
         @unknown default:
             return "unknown KeyAgreement error"
         }

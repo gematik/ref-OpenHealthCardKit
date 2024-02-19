@@ -105,7 +105,7 @@ extension CardChannelType {
     ///     - writeTimeout: interval in seconds. Default: 30
     ///     - readTimeout: interval in seconds. Default: 30
     /// - Returns: HealthCardPropertyType on successful recognition of the AID and EF.Version2
-    public func readCardType(
+    public func readCardTypeAsync(
         cardAid: CardAid? = nil,
         writeTimeout: TimeInterval = 30.0,
         readTimeout: TimeInterval = 30.0
@@ -116,11 +116,11 @@ extension CardChannelType {
         if let cardAid = cardAid {
             determinedCardAid = cardAid
         } else {
-            determinedCardAid = try await channel.determineCardAid()
+            determinedCardAid = try await channel.determineCardAidAsync()
         }
 
         let selectCommand = HealthCardCommand.Select.selectFile(with: determinedCardAid.rawValue)
-        let selectResponse = try await selectCommand.transmit(
+        let selectResponse = try await selectCommand.transmitAsync(
             on: channel,
             writeTimeout: writeTimeout,
             readTimeout: readTimeout
@@ -134,7 +134,7 @@ extension CardChannelType {
             with: determinedCardAid.efVersion2Sfi,
             ne: channel.expectedLengthWildcard
         )
-        let readResponse = try await readCommand.transmit(
+        let readResponse = try await readCommand.transmitAsync(
             on: channel,
             writeTimeout: writeTimeout,
             readTimeout: readTimeout

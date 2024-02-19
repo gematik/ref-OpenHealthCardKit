@@ -46,8 +46,8 @@ final class SelectWithFCPOnSecureChannelIntegrationTest: CardSimulationTerminalT
     func testSelectEsignCChAutE256WithFCP() async throws {
         let can = try CAN.from(Data("123123".utf8))
 
-        let secureCard = try await Self.card.openSecureSession(can: can, writeTimeout: 0, readTimeout: 0)
-        let response = try await secureCard.selectDedicated(
+        let secureCard = try await Self.card.openSecureSessionAsync(can: can, writeTimeout: 0, readTimeout: 0)
+        let response = try await secureCard.selectDedicatedAsync(
             file: DedicatedFile(aid: EgkFileSystem.DF.ESIGN.aid, fid: EgkFileSystem.EF.esignCChAutE256.fid),
             fcp: true
         )

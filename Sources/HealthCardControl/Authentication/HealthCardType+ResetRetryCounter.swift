@@ -114,7 +114,7 @@ extension HealthCardType {
             dfSpecific: dfSpecific,
             puk: puk
         )
-        let response = try await command.transmit(to: self, writeTimeout: writeTimeout, readTimeout: readTimeout)
+        let response = try await command.transmitAsync(to: self, writeTimeout: writeTimeout, readTimeout: readTimeout)
         let responseStatus = response.responseStatus
         if ResponseStatus.wrongSecretWarnings.contains(responseStatus) {
             return .wrongSecretWarning(retryCount: responseStatus.retryCount)
@@ -245,7 +245,7 @@ extension HealthCardType {
     ///   - type: Password reference
     ///   - dfSpecific: is Password reference dfSpecific
     /// - Returns: Response after trying to reset the password's retry counter while setting a new secret
-    public func resetRetryCounterAndSetNewPin(
+    public func resetRetryCounterAndSetNewPinAsync(
         puk: Format2Pin,
         newPin: Format2Pin,
         type: EgkFileSystem.Pin = EgkFileSystem.Pin.mrpinHome,
@@ -258,7 +258,7 @@ extension HealthCardType {
             puk: puk,
             newPin: newPin
         )
-        let response = try await command.transmit(to: self)
+        let response = try await command.transmitAsync(to: self)
         let responseStatus = response.responseStatus
         if ResponseStatus.wrongSecretWarnings.contains(responseStatus) {
             return .wrongSecretWarning(retryCount: responseStatus.retryCount)
@@ -312,7 +312,7 @@ extension HealthCardType {
     ///   - newPin: The new secret of the password object
     ///   - affectedPassWord: convenience `ResetRetryCounterAffectedPassword` selector
     /// - Returns: Response after trying to reset the password's retry counter while setting a new secret
-    public func resetRetryCounterAndSetNewPin(
+    public func resetRetryCounterAndSetNewPinAsync(
         puk: String,
         newPin: String,
         affectedPassWord: ResetRetryCounterAffectedPassword
@@ -326,7 +326,7 @@ extension HealthCardType {
             type = .mrpinHome
             dfSpecific = false
         }
-        return try await resetRetryCounterAndSetNewPin(
+        return try await resetRetryCounterAndSetNewPinAsync(
             puk: parsedPuk,
             newPin: parsedPin,
             type: type,

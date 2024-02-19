@@ -56,12 +56,12 @@ extension HealthCardCommandType {
     ///     - writeTimeout: the time in seconds to allow for the write to begin. time <= 0 no timeout
     ///     - readTimeout: the time in seconds to allow for the receiving to begin. time <= 0 no timeout
     /// - Returns: HealthCardResponseType decoded from the answer received via channel.
-    public func transmit(
+    public func transmitAsync(
         to card: HealthCardType,
         writeTimeout: TimeInterval = 0,
         readTimeout: TimeInterval = 0
     ) async throws -> HealthCardResponseType {
-        try await transmit(on: card.currentCardChannel, writeTimeout: writeTimeout, readTimeout: readTimeout)
+        try await transmitAsync(on: card.currentCardChannel, writeTimeout: writeTimeout, readTimeout: readTimeout)
     }
 
     /// Execute the command on a given channel
@@ -98,7 +98,7 @@ extension HealthCardCommandType {
     ///     - writeTimeout: the time in seconds to allow for the write to begin. time <= 0 no timeout
     ///     - readTimeout: the time in seconds to allow for the receiving to begin. time <= 0 no timeout
     /// - Returns: HealthCardResponseType decoded from the answer received via channel.
-    public func transmit(
+    public func transmitAsync(
         on channel: CardChannelType,
         writeTimeout: TimeInterval = 0,
         readTimeout: TimeInterval = 0

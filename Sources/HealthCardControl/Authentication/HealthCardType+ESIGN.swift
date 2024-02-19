@@ -101,19 +101,19 @@ extension HealthCardType {
     ///
     /// - Returns: `AutCertificateResponse` after trying to read the authentication certificate file
     ///         and ESignInfo associated to it
-    public func readAutCertificate() async throws -> AutCertificateResponse {
+    public func readAutCertificateAsync() async throws -> AutCertificateResponse {
         CommandLogger.commands.append(Command(message: "Read Auth Certificate", type: .description))
         let expectedFcpLength = currentCardChannel.maxResponseLength
         guard let info = self.status.type?.autCertInfo else {
             throw HealthCard.Error.unsupportedCardType
         }
 
-        let (status, fcp) = try await selectDedicated(file: info.certificate, fcp: true, length: expectedFcpLength)
+        let (status, fcp) = try await selectDedicatedAsync(file: info.certificate, fcp: true, length: expectedFcpLength)
         guard let fcp = fcp, let readSize = fcp.readSize else {
             throw ReadError.fcpMissingReadSize(state: status)
         }
 
-        let certificate = try await readSelectedFile(expected: Int(readSize))
+        let certificate = try await readSelectedFileAsync(expected: Int(readSize))
         return AutCertificateResponse(info: info, certificate: certificate)
     }
 }
@@ -208,7 +208,7 @@ extension HealthCardType {
     /// - Note: If `data` is already hashed properly and/or needs no hashing, you must provide a no-op hasher
     ///         e.g. { data, _ in return data }
     /// - Returns: HealthCardResponseType after PsoDSA.sign trying to sign the given data on the card
-    public func sign(
+    public func signAsync(
         data: Data,
         hasher: @escaping (Data, AutCertInfo) -> Data = { data, cert in cert.signatureHashMethod(data) }
     ) async throws -> HealthCardResponseType {
@@ -217,7 +217,7 @@ extension HealthCardType {
             throw HealthCard.Error.unsupportedCardType
         }
         let selectFileCommand = HealthCardCommand.Select.selectFile(with: info.eSign)
-        let selectFileResponse = try await selectFileCommand.transmit(to: self)
+        let selectFileResponse = try await selectFileCommand.transmitAsync(to: self)
         guard selectFileResponse.responseStatus == .success
         else {
             throw HealthCard.Error.operational
@@ -227,14 +227,14 @@ extension HealthCardType {
             dfSpecific: true,
             algorithm: info.algorithm
         )
-        let selectSigningResponse = try await selectSigningCommand.transmit(to: self)
+        let selectSigningResponse = try await selectSigningCommand.transmitAsync(to: self)
         guard selectSigningResponse.responseStatus == .success
         else {
             throw HealthCard.Error.operational
         }
         let digest = hasher(data, info)
         let psoDsaSignCommand = try HealthCardCommand.PsoDSA.sign(digest)
-        let psoDsaSignResponse = try await psoDsaSignCommand.transmit(to: self)
+        let psoDsaSignResponse = try await psoDsaSignCommand.transmitAsync(to: self)
         return psoDsaSignResponse
     }
 }

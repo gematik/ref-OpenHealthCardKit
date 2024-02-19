@@ -111,6 +111,7 @@ extension NFCTagReaderSession {
     ///   - queue: default .global(qos: .userInitiated)
     ///   - messages: the NFC alert dialog messages for the various states
     /// - Returns: NFCTagReaderSession.Publisher
+    @available(*, deprecated, message: "Use NFCHealthCardSession instead")
     public static func publisher(for pollingOption: PollingOption = .iso14443,
                                  on queue: DispatchQueue = .global(qos: .userInitiated),
                                  messages: Messages) -> Publisher {

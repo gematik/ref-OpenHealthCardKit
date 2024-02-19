@@ -71,7 +71,7 @@ final class HealthCardTypeExtResetRetryCounterIntegrationTest: CardSimulationTer
         let puk = "12345678" as Format2Pin
         let newPin = "654321" as Format2Pin
 
-        let response = try await Self.healthCard.resetRetryCounterAndSetNewPin(
+        let response = try await Self.healthCard.resetRetryCounterAndSetNewPinAsync(
             puk: puk,
             newPin: newPin,
             type: EgkFileSystem.Pin.mrpinHome,
@@ -99,7 +99,7 @@ final class HealthCardTypeExtResetRetryCounterIntegrationTest: CardSimulationTer
         let puk = "12345678" as Format2Pin
         let tooLongNewPin = "654112341234" as Format2Pin
 
-        let response = try await Self.healthCard.resetRetryCounterAndSetNewPin(
+        let response = try await Self.healthCard.resetRetryCounterAndSetNewPinAsync(
             puk: puk,
             newPin: tooLongNewPin,
             type: EgkFileSystem.Pin.mrpinHome,
