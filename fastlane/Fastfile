@@ -5,7 +5,7 @@
 fastlane_version "2.210.1"
 
 xcodes(
-  version: ENV["FL_XCODE_VERSION"] || "15.0.0",
+  version: ENV["FL_XCODE_VERSION"] || "15.2.0",
   select_for_current_build_only: true, 
   update_list: false
 )
