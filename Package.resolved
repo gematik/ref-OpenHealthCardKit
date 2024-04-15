@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/gematik/OpenSSL-Swift",
       "state" : {
-        "revision" : "2ff3b2b7745f86eaa6a94c44299dd4f330a0943a",
-        "version" : "4.1.0"
+        "revision" : "37e10b7ef220afca4483d614a9d67697fb345959",
+        "version" : "4.2.0"
       }
     },
     {

@@ -1,3 +1,9 @@
+# Release 5.7.0
+
+## Changed
+
+- Update to OpenSSL-Swift version to 4.2.0 (OpenSSL 3.2.1)
+
 # Release 5.6.0
 
 ## Added
