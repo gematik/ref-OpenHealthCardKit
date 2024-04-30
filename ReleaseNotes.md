@@ -1,3 +1,13 @@
+# Release 5.8.0
+
+## Changed
+
+- Set access level of NFCCardReaderProvider entities to public
+
+## Fixed
+
+- Prevent NFCHealthCardSession's continuation from being called twice
+
 # Release 5.7.0
 
 ## Changed
