@@ -23,23 +23,23 @@ import Foundation
 import GemCommonsKit
 import HealthCardAccess
 
-class NFCCard: CardType {
+public class NFCCard: CardType {
     var tag: NFCISO7816Tag?
     private weak var basicChannel: NFCCardChannel?
 
-    init(isoTag tag: NFCISO7816Tag) {
+    public init(isoTag tag: NFCISO7816Tag) {
         self.tag = tag
     }
 
-    var atr: ATR {
+    public var atr: ATR {
         tag?.historicalBytes ?? Data()
     }
 
-    var `protocol`: CardProtocol {
+    public var `protocol`: CardProtocol {
         .t1
     }
 
-    func openBasicChannel() throws -> CardChannelType {
+    public func openBasicChannel() throws -> CardChannelType {
         if let channel = basicChannel {
             return channel
         }
@@ -51,7 +51,7 @@ class NFCCard: CardType {
         return nfcChannel
     }
 
-    func openLogicChannel() throws -> CardChannelType {
+    public func openLogicChannel() throws -> CardChannelType {
         guard let tag = tag else {
             throw NFCCardError.noCardPresent.illegalState
         }
@@ -74,7 +74,7 @@ class NFCCard: CardType {
         return NFCCardChannel(card: self, tag: tag, channelNo: Int(rspData[0]))
     }
 
-    func openLogicChannelAsync() async throws -> CardChannelType {
+    public func openLogicChannelAsync() async throws -> CardChannelType {
         guard let tag = tag else {
             throw NFCCardError.noCardPresent.illegalState
         }
@@ -97,7 +97,7 @@ class NFCCard: CardType {
         return NFCCardChannel(card: self, tag: tag, channelNo: Int(rspData[0]))
     }
 
-    func initialApplicationIdentifier() throws -> Data? {
+    public func initialApplicationIdentifier() throws -> Data? {
         guard let initialSelectedAID = tag?.initialSelectedAID else {
             ALog("NFC tag could not deliver initialSelectedAID when expected")
             return nil
@@ -105,7 +105,7 @@ class NFCCard: CardType {
         return try Data(hex: initialSelectedAID)
     }
 
-    func disconnect(reset _: Bool) throws {
+    public func disconnect(reset _: Bool) throws {
         DLog("Disconnecting card ...")
         tag = nil
         basicChannel = nil

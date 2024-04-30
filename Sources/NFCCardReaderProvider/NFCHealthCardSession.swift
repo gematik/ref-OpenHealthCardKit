@@ -274,6 +274,7 @@ public class NFCHealthCardSession<Output>: NSObject, NFCTagReaderSessionDelegate
             do {
                 let outcome = try await operation(myNFCCardSession)
                 operationContinuation?.resume(returning: outcome)
+                operationContinuation = nil
             } catch let error as CoreNFCError {
                 operationContinuation?.resume(throwing: NFCHealthCardSessionError.coreNFC(error))
                 operationContinuation = nil

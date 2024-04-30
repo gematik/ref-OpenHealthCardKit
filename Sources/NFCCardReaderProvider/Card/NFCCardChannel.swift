@@ -23,28 +23,28 @@ import Foundation
 import GemCommonsKit
 import Helper
 
-class NFCCardChannel: CardChannelType {
-    let maxMessageLength = 0x10000
-    let maxResponseLength = 0x10000
+public class NFCCardChannel: CardChannelType {
+    public let maxMessageLength = 0x10000
+    public let maxResponseLength = 0x10000
 
-    let channelNumber: Int
+    public let channelNumber: Int
     var tag: NFCISO7816Tag?
-    let extendedLengthSupported = true
+    public let extendedLengthSupported = true
 
     private let nfcCard: NFCCard
 
-    init(card: NFCCard, tag: NFCISO7816Tag, channelNo: Int = 0) {
+    public init(card: NFCCard, tag: NFCISO7816Tag, channelNo: Int = 0) {
         nfcCard = card
         self.tag = tag
         channelNumber = channelNo
     }
 
-    var card: CardType {
+    public var card: CardType {
         nfcCard
     }
 
     @available(*, deprecated, message: "Use structured concurrency version instead")
-    func transmit( // swiftlint:disable:this function_body_length
+    public func transmit( // swiftlint:disable:this function_body_length
         command: CommandType,
         writeTimeout _: TimeInterval,
         readTimeout: TimeInterval
@@ -107,7 +107,7 @@ class NFCCardChannel: CardChannelType {
         }
     }
 
-    func transmitAsync(
+    public func transmitAsync(
         command: CommandType,
         writeTimeout _: TimeInterval,
         readTimeout _: TimeInterval
@@ -149,7 +149,7 @@ class NFCCardChannel: CardChannelType {
         return try APDU.Response(body: data, sw1: sw1, sw2: sw2)
     }
 
-    func close() throws {
+    public func close() throws {
         defer {
             tag = nil
         }
@@ -172,7 +172,7 @@ class NFCCardChannel: CardChannelType {
         }
     }
 
-    func closeAsync() async throws {
+    public func closeAsync() async throws {
         defer {
             tag = nil
         }
