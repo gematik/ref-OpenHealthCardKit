@@ -10,5 +10,4 @@ OpenHealthCardKit consists of the submodules
 - HealthCardControl
 - NFCCardReaderProvider
 
-As a reference for each submodule see also the `IntegrationTests`.
-Also see a https://github.com/gematik/ref-OpenHealthCardApp-iOS[Demo App] on GitHub using this framework.
+As a reference for the usage of each submodule see also the `IntegrationTests`.

@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<channelcontexts>
+    <channelcontext channelID="0">
+        <attributes>
+            <attribute id="currentFolder">MF</attribute>
+            <attribute id="currentEF"/>
+            <attribute id="RND.ICC" />
+            <attribute id="seIdentifierList">1,1,1,1</attribute>
+            <attribute id="channelLifeCycleStatus">OPENED</attribute>
+        </attributes>
+        <keyReferenceList>
+            <elem name ="externalAuthenticate">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>
+			<elem name ="internalAuthenticate">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>				
+			<elem name ="verifyCertificate">
+                <attributes>
+                    <attribute id="keyReference" />
+                </attributes>
+            </elem>
+			<elem name ="signatureCreation">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>	
+			<elem name ="dataDecipher">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>		
+			<elem name ="dataEncipher">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>	
+			<elem name ="macCalculation">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>				
+        </keyReferenceList>
+        <securityLists>
+            <elem number ="1">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="cha"/>
+                    <attribute id="folderReference"/>
+                    <attribute id="keyReferenceAUT"/>
+                    <attribute id="keyReferenceINT"/>
+                </attributes>
+            </elem>
+        </securityLists>
+        <securityLists>
+            <elem number ="2">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="cha"/>
+                    <attribute id="folderReference"/>
+                    <attribute id="keyReferenceAUT"/>
+                    <attribute id="keyReferenceINT"/>
+                </attributes>
+            </elem>
+        </securityLists>
+        <passwordLists>
+            <elem number ="1">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="2">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="3">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="4">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="5">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="6">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="7">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="8">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+        </passwordLists>
+        <bitSecurityLists>
+            <elem number ="1">
+                <attributes>
+                    <attribute id="flagList" />
+                    <attribute id="folderReference"/>
+                </attributes>
+            </elem>
+        </bitSecurityLists>
+        <sessionkeycontext>
+            <attributes>
+                <attribute id="flagSessionEnabled">1</attribute>
+                <attribute id="keyMode">3DES</attribute>
+                <attribute id="Kenc"/>
+                <attribute id="SSCenc"/>
+                <attribute id="Kmac"/>
+                <attribute id="sSSCmac"/>
+                <attribute id="flagCmdEnc">false</attribute>
+                <attribute id="flagRspEnc">false</attribute>
+                <attribute id="accessRuleSessionKeys"/>
+            </attributes>
+            <negotiationKeyInformation>
+                <attribute id="keyReference"/>
+                <attribute id="accessRight"/>
+            </negotiationKeyInformation>
+        </sessionkeycontext>
+    </channelcontext>
+    <channelcontext channelID="1">
+        <attributes>
+            <attribute id="currentFolder">MF</attribute>
+            <attribute id="currentEF"/>
+            <attribute id="RND.ICC" />
+            <attribute id="seIdentifierList">1,1,1,1</attribute>
+            <attribute id="channelLifeCycleStatus">CLOSED</attribute>
+        </attributes>
+        <keyReferenceList>
+            <elem name ="externalAuthenticate">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>
+			<elem name ="internalAuthenticate">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>				
+			<elem name ="verifyCertificate">
+                <attributes>
+                    <attribute id="keyReference" />
+                </attributes>
+            </elem>
+			<elem name ="signatureCreation">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>	
+			<elem name ="dataDecipher">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>		
+			<elem name ="dataEncipher">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>	
+			<elem name ="macCalculation">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>				
+        </keyReferenceList>
+        <securityLists>
+            <elem number ="1">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="cha"/>
+                    <attribute id="folderReference"/>
+                    <attribute id="keyReferenceAUT"/>
+                    <attribute id="keyReferenceINT"/>
+                </attributes>
+            </elem>
+        </securityLists>
+        <securityLists>
+            <elem number ="2">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="cha"/>
+                    <attribute id="folderReference"/>
+                    <attribute id="keyReferenceAUT"/>
+                    <attribute id="keyReferenceINT"/>
+                </attributes>
+            </elem>
+        </securityLists>
+        <passwordLists>
+            <elem number ="1">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="2">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="3">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="4">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="5">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="6">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="7">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="8">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+        </passwordLists>
+        <bitSecurityLists>
+            <elem number ="1">
+                <attributes>
+                    <attribute id="flagList" />
+                    <attribute id="folderReference"/>
+                </attributes>
+            </elem>
+        </bitSecurityLists>
+        <sessionkeycontext>
+            <attributes>
+                <attribute id="flagSessionEnabled">1</attribute>
+                <attribute id="keyMode">3DES</attribute>
+                <attribute id="Kenc"/>
+                <attribute id="SSCenc"/>
+                <attribute id="Kmac"/>
+                <attribute id="sSSCmac"/>
+                <attribute id="flagCmdEnc">false</attribute>
+                <attribute id="flagRspEnc">false</attribute>
+                <attribute id="accessRuleSessionKeys"/>
+            </attributes>
+            <negotiationKeyInformation>
+                <attribute id="keyReference"/>
+                <attribute id="accessRight"/>
+            </negotiationKeyInformation>
+        </sessionkeycontext>
+    </channelcontext>
+    <channelcontext channelID="2">
+        <attributes>
+            <attribute id="currentFolder">MF</attribute>
+            <attribute id="currentEF"/>
+            <attribute id="RND.ICC" />
+            <attribute id="seIdentifierList">1,1,1,1</attribute>
+            <attribute id="channelLifeCycleStatus">CLOSED</attribute>
+        </attributes>
+        <keyReferenceList>
+            <elem name ="externalAuthenticate">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>
+			<elem name ="internalAuthenticate">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>				
+			<elem name ="verifyCertificate">
+                <attributes>
+                    <attribute id="keyReference" />
+                </attributes>
+            </elem>
+			<elem name ="signatureCreation">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>	
+			<elem name ="dataDecipher">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>		
+			<elem name ="dataEncipher">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>	
+			<elem name ="macCalculation">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>				
+        </keyReferenceList>
+        <securityLists>
+            <elem number ="1">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="cha"/>
+                    <attribute id="folderReference"/>
+                    <attribute id="keyReferenceAUT"/>
+                    <attribute id="keyReferenceINT"/>
+                </attributes>
+            </elem>
+        </securityLists>
+        <securityLists>
+            <elem number ="2">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="cha"/>
+                    <attribute id="folderReference"/>
+                    <attribute id="keyReferenceAUT"/>
+                    <attribute id="keyReferenceINT"/>
+                </attributes>
+            </elem>
+        </securityLists>
+        <passwordLists>
+            <elem number ="1">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="2">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="3">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="4">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="5">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="6">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="7">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="8">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+        </passwordLists>
+        <bitSecurityLists>
+            <elem number ="1">
+                <attributes>
+                    <attribute id="flagList" />
+                    <attribute id="folderReference"/>
+                </attributes>
+            </elem>
+        </bitSecurityLists>
+        <sessionkeycontext>
+            <attributes>
+                <attribute id="flagSessionEnabled">1</attribute>
+                <attribute id="keyMode">3DES</attribute>
+                <attribute id="Kenc"/>
+                <attribute id="SSCenc"/>
+                <attribute id="Kmac"/>
+                <attribute id="sSSCmac"/>
+                <attribute id="flagCmdEnc">false</attribute>
+                <attribute id="flagRspEnc">false</attribute>
+                <attribute id="accessRuleSessionKeys"/>
+            </attributes>
+            <negotiationKeyInformation>
+                <attribute id="keyReference"/>
+                <attribute id="accessRight"/>
+            </negotiationKeyInformation>
+        </sessionkeycontext>
+    </channelcontext>
+    <channelcontext channelID="3">
+        <attributes>
+            <attribute id="currentFolder">MF</attribute>
+            <attribute id="currentEF"/>
+            <attribute id="RND.ICC" />
+            <attribute id="seIdentifierList">1,1,1,1</attribute>
+            <attribute id="channelLifeCycleStatus">CLOSED</attribute>
+        </attributes>
+        <keyReferenceList>
+            <elem name ="externalAuthenticate">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>
+			<elem name ="internalAuthenticate">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>				
+			<elem name ="verifyCertificate">
+                <attributes>
+                    <attribute id="keyReference" />
+                </attributes>
+            </elem>
+			<elem name ="signatureCreation">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>	
+			<elem name ="dataDecipher">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>		
+			<elem name ="dataEncipher">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>	
+			<elem name ="macCalculation">
+                <attributes>
+                    <attribute id="keyReference" />
+                    <attribute id="algorithmIdentifier"/>
+                </attributes>
+            </elem>				
+        </keyReferenceList>
+        <securityLists>
+            <elem number ="1">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="cha"/>
+                    <attribute id="folderReference"/>
+                    <attribute id="keyReferenceAUT"/>
+                    <attribute id="keyReferenceINT"/>
+                </attributes>
+            </elem>
+        </securityLists>
+        <securityLists>
+            <elem number ="2">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="cha"/>
+                    <attribute id="folderReference"/>
+                    <attribute id="keyReferenceAUT"/>
+                    <attribute id="keyReferenceINT"/>
+                </attributes>
+            </elem>
+        </securityLists>
+        <passwordLists>
+            <elem number ="1">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="2">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="3">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="4">
+                <attributes>
+                    <attribute id="flagGlobal">true</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="5">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="6">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="7">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+            <elem number ="8">
+                <attributes>
+                    <attribute id="flagGlobal">false</attribute>
+                    <attribute id="ssec">-1</attribute>
+                    <attribute id="pwdReference" />
+                </attributes>
+            </elem>
+        </passwordLists>
+        <bitSecurityLists>
+            <elem number ="1">
+                <attributes>
+                    <attribute id="flagList" />
+                    <attribute id="folderReference"/>
+                </attributes>
+            </elem>
+        </bitSecurityLists>
+        <sessionkeycontext>
+            <attributes>
+                <attribute id="flagSessionEnabled">1</attribute>
+                <attribute id="keyMode">3DES</attribute>
+                <attribute id="Kenc"/>
+                <attribute id="SSCenc"/>
+                <attribute id="Kmac"/>
+                <attribute id="sSSCmac"/>
+                <attribute id="flagCmdEnc">false</attribute>
+                <attribute id="flagRspEnc">false</attribute>
+                <attribute id="accessRuleSessionKeys"/>
+            </attributes>
+            <negotiationKeyInformation>
+                <attribute id="keyReference"/>
+                <attribute id="accessRight"/>
+            </negotiationKeyInformation>
+        </sessionkeycontext>
+    </channelcontext>
+	
+	</channelcontexts>

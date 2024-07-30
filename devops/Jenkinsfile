@@ -1,0 +1,93 @@
+import org.jenkinsci.plugins.pipeline.modeldefinition.Utils
+
+pipeline {
+    agent { label 'IOSDEV2' }
+
+    triggers {
+        gitlab(
+            triggerOnNoteRequest: true,
+            noteRegex: "[jJ]enkins"
+        )
+    }
+
+    environment {
+        KEYCHAIN_PASSWORD = credentials('KEYCHAIN_PASSWORD')
+        MATCH_GIT_URL     = credentials('MATCH_GIT_URL')
+        MATCH_USERNAME    = credentials('MATCH_USERNAME')
+        MATCH_PASSWORD    = credentials('MATCH_PASSWORD')
+        APP_STORE_CONNECT = credentials('APPSTORE-CONNECT_API-KEY')
+        NEXUS_CREDENTIALS = credentials('Nexus')
+
+        APP_STORE_CONNECT_API_KEY_KEY_ID = "${APP_STORE_CONNECT_USR}"
+        APP_STORE_CONNECT_API_KEY_KEY    = "${APP_STORE_CONNECT_PSW}"
+
+        GEMATIK_DEVELOPMENT  = "true"
+    }
+
+    options {
+        ansiColor('xterm')
+        copyArtifactPermission('*')
+    }
+
+    stages {
+        stage('Setup') {
+            steps {
+                sh label: 'Install maven for integration tests', script: '''#!/bin/bash -l
+                    if [ -f $HOME/.bash_profile ]; then source $HOME/.bash_profile; fi
+
+                    brew list maven || brew install maven
+                    ''' 
+            }
+        }
+
+        stage('Fastlane cibuild') {
+            steps {
+                sh label: 'starting ios test run', script: '''#!/bin/bash -l
+                    if [ -f $HOME/.bash_profile ]; then source $HOME/.bash_profile; fi
+
+                    security -v unlock-keychain -p "${KEYCHAIN_PASSWORD}" ~/Library/Keychains/login.keychain
+
+                    make cibuild
+                    '''
+            }
+        }
+
+        stage('Distribute to Appstore') {
+            when {
+                anyOf {
+                    branch pattern: "release/.*", comparator: "REGEXP";
+                    expression {
+                       return params.DEPLOY_TO_APPSTORE
+                    }
+                }
+            }
+
+            steps {
+                sh label: 'list build environment', script: '''#!/bin/bash -l
+                    sw_vers
+                    rvm list
+                    brew list --versions
+                    '''
+
+                // Build and Upload Appstore IPA
+                sh label: 'start build and uload AppStore IPA', script: '''#!/bin/bash -l
+                    if [ -f $HOME/.bash_profile ]; then source $HOME/.bash_profile; fi
+
+                    set -ev
+
+                    security -v unlock-keychain -p "${KEYCHAIN_PASSWORD}" ~/Library/Keychains/login.keychain
+
+                    make setup
+                    bundle exec fastlane publish
+                    '''
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'artifacts/**,fastlane/test_output/*,DerivedData/Logs/Test/**', excludes: 'artifacts/**/*.xcarchive/**', allowEmptyArchive: true
+            junit 'fastlane/test_output/report.junit'
+        }
+    }
+}
