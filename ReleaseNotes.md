@@ -1,3 +1,8 @@
+# 5.9.0
+
+ - Publish CardSimulator loading/running code for running IntegrationTests (CardSimulation itself cannot be public though)
+ - Refresh some documentation
+
 # Release 5.8.0
 
 ## Changed

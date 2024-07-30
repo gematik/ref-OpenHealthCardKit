@@ -1,0 +1,14 @@
+output: docs
+author: gematik GmbH
+author_url: http://www.gematik.de
+exclude: /*/internal*
+# module references the 'Documentation' targets PRODUCT_NAME
+module: CardSimulationTestKit
+github_url: https://gematik.github.io
+theme: jony
+swift_build_tool: xcodebuild
+xcodebuild_arguments:
+  - "-project"
+  - 'CardSimulationTestKit.xcodeproj'
+  - "-scheme"
+  - 'Documentation'

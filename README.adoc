@@ -15,13 +15,19 @@ Execute `make readme` after editing <project_root>/README.adoc
 Controlling/Use-case framework for accessing smart cards of the telematic infrastructure.
 
 include::doc/userguide/OHCKIT_Introduction.adoc[]
+
 include::doc/userguide/OHCKIT_API.adoc[]
+
 include::doc/userguide/OHCKIT_GettingStarted.adoc[]
 
 include::doc/userguide/OHCKIT_Overview.adoc[]
+
 include::doc/userguide/OHCKIT_CardReaderProviderApi.adoc[]
+
 include::doc/userguide/OHCKIT_HealthCardAccess.adoc[]
+
 include::doc/userguide/OHCKIT_HealthCardControl.adoc[]
+
 include::doc/userguide/OHCKIT_NFCCardReaderProvider.adoc[]
 include::doc/userguide/OHCKIT_NFCDemo.adoc[]
 

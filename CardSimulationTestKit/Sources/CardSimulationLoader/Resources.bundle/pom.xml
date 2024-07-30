@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>CardSimulation-test</name>
+    <artifactId>cardsimulation.exec</artifactId>
+    <groupId>de.gematik.ti</groupId>
+    <version>[Do not edit - will be overriden]</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.gematik</groupId>
+            <artifactId>de.gematik.egk.g2sim.product</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <directory>./${project.name}-${project.version}</directory>
+    </build>
+</project>

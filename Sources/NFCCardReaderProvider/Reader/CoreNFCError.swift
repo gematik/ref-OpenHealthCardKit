@@ -71,3 +71,8 @@ extension Swift.Error {
 }
 
 #endif
+
+// This is a dummy implementation for non-iOS platforms so that `swift build` is able to compile the code.
+#if !os(iOS)
+public enum CoreNFCError: Swift.Error {}
+#endif

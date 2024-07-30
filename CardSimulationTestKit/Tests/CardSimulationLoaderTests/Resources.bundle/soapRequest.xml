@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <soap:Header>
+        <m:Trans xmlns:m="http://www.w3schools.com/transaction/" soap:mustUnderstand="1">234</m:Trans>
+    </soap:Header>
+    <soap:Body>
+        <m:GetStockPrice>
+            <m:StockName>AAPL</m:StockName>
+        </m:GetStockPrice>
+        <m:GetStockPrice>
+            <m:StockName>GOOG</m:StockName>
+        </m:GetStockPrice>
+        <m:GetStockPrice attribute="attr_value">
+            <m:StockName>ATTR</m:StockName>
+        </m:GetStockPrice>
+    </soap:Body>
+</soap:Envelope>

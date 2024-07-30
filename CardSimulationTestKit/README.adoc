@@ -1,0 +1,164 @@
+= CardSimulationTestKit
+
+NOTE: This framework rather is meant to be used for gematik-internal development purposes (since the actual CardSimulation application can neither be open sourced nor provided as of now). We publish this code anyway for further reference/usage.
+
+CardSimulationTestKit provides an easy-to-use interface for testing against a German Health Card Simulator.
+It comes bundled with
+
+* `CardSimulationLoader`: loads and starts a card simulation as a Java process listening on a TCP port
+* `CardSimulationCardReaderProvider`: implements the `CardReaderProviderApi` interface
+* `CardSimulationTerminalTestCase`: provides a fully initialized and functional `HealthCard` object to send commands to and receive responses from.
+
+
+The intended usage of this project is to ease integration and use the G2-Kartensimulation with Swift projects, specifically the test cases in this project.
+This guide is separated in two (2) main parts. Describing
+
+. the usage of the `CardSimulation-Loader` framework (How-to) and
+. how to maintain the technical consideration(s) and implementation(s).
+
+== Frameworks
+
+=== CardSimulation-Loader
+
+The sole purpose of this framework is to launch and monitor a G2-Kartensimulation Java process.
+For detailed usage information see the inlined documentation on `SimulationManager`
+and `SimulationRunner`.
+
+*Starting the simulator*:
+
+Of course the best way to find out how-to use the CardSimulation-Loader is by checking the `SimulationManagerTest` and `SimulationRunnerTest` to see their intended and tested use-cases.
+Next to checking the test-cases you also find some (example) configuration files in the _Configuration.bundle_ file.
+
+In general, you would prepare such a *card-configuration* XML as in the Configuration.bundle and pass it to the `SimulationManager.shared` by invoking its:
+
+[source,Swift]
+----
+func createSimulation(
+  configFile: URL,
+  preprocessor manipulators: [XMLPathManipulator] = [],
+  simulatorVersion: String = "2.7.6-352",
+  simulatorDirectory: String = "simulator",
+)
+----
+
+Note: you can specify the G2-Kartensimulation version it needs to download/use.
+
+The returned `SimulationRunnerType` can be used to monitor the newly started G2-Kartensimulation instance. To - for instance - figure out on which TLV-port the simulator is registered, just check the `SimulationRunnerType.mode`. When `running` the TLV TCP/IP port is projected there. And for convenience reasons made available through `var tlvPort: Int?` on SimulationRunnerType(s).
+
+This SimulationRunnerType instance will need a CardTerminalControllerType to expose this G2-Kartensimulation virtual `HealthCard` to the HealthCardAccess/Control realm.
+
+*Example*:
+
+[source,Swift]
+----
+/// Read configFile from included Resources Bundle
+let simulatorConfig = Bundle(for: MyClass.self)
+  .resourceFilePath(in: "Configuration", for: "configuration_EGKG2_80276883110000017222_gema5_TCP.xml")
+  .asURL
+/// Launch a G2-Kartensimulation with this configuration file
+let runner = try SimulationManager.shared.startSimulation(
+  configFile: simulatorConfig,
+  preprocessor: [
+    XMLPathManipulatorHolder.TLVPortManipulator(port: "0"),
+    XMLPathManipulatorHolder.RelativeToAbsolutePathManipulator(with: XMLPathManipulatorHolder.CardConfigFileXMLPath, absolutePath: simulatorConfig.deletingLastPathComponent()),
+    XMLPathManipulatorHolder.RelativeToAbsolutePathManipulator(with: XMLPathManipulatorHolder.ChannelConfigFileXMLPath, absolutePath: simulatorConfig.deletingLastPathComponent())
+  ],
+  waitUntilLaunched: true
+)
+
+// ... Do amazing things with the runner
+
+/// Stop the runner when done
+runner.stop(waitUntilTerminated: true)
+----
+
+==== Technical overview
+
+As described in the previous section(s) the CardSimulationLoader provides an easy-to-use API to launch and manage a G2-Kartensimulation.
+In order to achieve this we need to combine some various technologies/environments (read: Nexus <--> Java <--> Swift -> CardSimulationLoader API).
+
+The main components for this project to work:
+
+* Download G2-Kartensimulation Nexus artifacts
+* Launch and monitor Java Process
+
+These two (2) steps are taken care of when using the `SimulationManager` to launch a simulation.
+
+==== Maven step
+
+The `SimulationManager` reads the `pom.xml` and executes a shell script to run `mvn dependency:copy-dependencies`.
+And puts these artifacts in the same transient environment to be cleaned (manually) by calling `SimulationManager.clean` upon
+finishing with the simulator(s). Reason for this is to not download the artifacts for every simulator instance in case they
+are launch sequentially - which is reasonable to assume.
+
+==== Java process
+
+When the artifacts are in place, the `SimulationRunner` creates a JavaProcess that will be launched/forked in a separate process.
+And monitors this process by reading/parsing the `stdout` and `stderr` to detect the tlv-port number and successful initialization.
+
+To start developing the project follow the Project Setup section below 👇.
+
+=== CardSimulation-CardReaderProvider
+
+CardTerminalProvider for communication with G2-Kartensimulation
+
+=== CardSimulationTerminalTestCase
+
+CardSimulationTerminalTestCase provides a fully initialized and functional `HealthCard` object to send commands
+against and receive responses from.
+
+== Getting Started
+
+CardSimulationLoader requires Swift 5.1.
+
+=== Usage
+
+In your Test class, derive from the `CardSimulationTerminalTestCase` which itself is a `XCTestCase`.
+You then have a `HealthCard` and a `CardTerminal` object directly link to an up and running CardSimulation at your disposal.
+
+[source,Swift]
+----
+final class SelectCommandIntegrationTest: CardSimulationTerminalTestCase {
+    func testSelectRoot() {
+        let healthCard = CardSimulationTerminalTestCase.healthCard
+        HealthCardCommand.Select.selectRoot()
+                .execute(on: healthCard)
+                .run(on: Executor.trampoline)
+    }
+}
+----
+
+CardSimulationTestKit comes with various CardImage configuration files.
+You can choose between the following images
+
+* configuration_EGK_G2_1_80276883110000095711_GuD_TCP.xml (default)
+* configuration_EGK_G2_1_ecc.xml
+* configuration_EGKG2_80276883110000017222_gema5_TCP.xml
+* configuration_HBA_G2_1_80276883110000205690_gema5_TCP.xml
+* configuration_HBAG2_80276883110000017289_gema5_TCP.xml
+* configuration_TLK_COS_image-kontaktlos128.xml
+
+by overwriting the `class func configFile() -> URL?` like this:
+
+[source,Swift]
+----
+final class SelectCommandIntegrationTest: CardSimulationTerminalTestCase {
+    override class func configFile() -> URL? {
+        let bundle = Bundle(for: CardSimulationTerminalTestCase.self)
+        let path = bundle.resourceFilePath(in: "Resources", for: "Configuration/configuration_EGK_G2_1_ecc.xml")
+        return path.asURL
+    }
+}
+----
+or bring your own image:
+
+[source,Swift]
+----
+final class SelectCommandIntegrationTest: CardSimulationTerminalTestCase {
+    override class func configFile() -> URL? {
+        // this assumes, your use a test class and have a resource bundle called "Resources2.bundle"
+        let bundle = Bundle(for: self)
+        let path = bundle.testResourceFilePath(in: "Resources2", for: "Configuration/configuration_EGK_G2_1_ecc.xml")
+        return path.asURL
+    }
+}

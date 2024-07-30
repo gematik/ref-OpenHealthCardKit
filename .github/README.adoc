@@ -21,9 +21,11 @@ when implementing a system that performs the communication between an iOS based 
 and a German Health Card (elektronische Gesundheitskarte) using an NFC, Blue Tooth oder USB interface.
 
 This document describes the functionalitiy and structure of OpenHealthCardKit.
+
 == API Documentation
 
 Generated API docs are available at https://gematik.github.io/ref-OpenHealthCardKit.
+
 == Getting Started
 
 OpenHealthCardKit requires Swift 5.6.
@@ -32,7 +34,7 @@ OpenHealthCardKit requires Swift 5.6.
 
 - **Swift Package Manager:** Put this in your `Package.swift`:
 
-    `.package(url: "https://github.com/gematik/ref-OpenHealthCardKit", from: "5.6.0"),`
+    .package(url: "https://github.com/gematik/ref-OpenHealthCardKit", from: "5.6.0"),
 
 - **Carthage:** Put this in your `Cartfile`:
 
@@ -57,12 +59,13 @@ OpenHealthCardKit consists of the submodules
 - HealthCardControl
 - NFCCardReaderProvider
 
-As a reference for each submodule see also the `IntegrationTests`.
-Also see a https://github.com/gematik/ref-OpenHealthCardApp-iOS[Demo App] on GitHub using this framework.
+As a reference for the usage of each submodule see also the `IntegrationTests`.
+
 [#CardReaderProviderApi]
 === CardReaderProviderApi
 
 (Smart)CardReader protocols for interacting with `HealthCardAccess`.
+
 [#HealthCardAccess]
 === HealthCardAccess
 This library contains the classes for cards, commands, card file systems and error handling.
@@ -124,7 +127,7 @@ In the next example we use a `HealthCard` object representing an eGK (elektronis
 as one kind of a `HealthCardType` implementing the `CardType` protocol and then send the command to the card (or card's channel):
 [source,swift]
 ----
-let healthCardResponse = try await selectEsignCommand.transmit(to: Self.healthCard)
+let healthCardResponse = try await selectEsignCommand.transmitAsync(to: Self.healthCard)
 guard healthCardResponse.responseStatus == ResponseStatus.success else {
     throw HealthCard.Error.operational // TO-DO: handle this or throw a meaningful Error
 }
@@ -199,6 +202,7 @@ readCertificate
         }
     )
 ----
+
 [#HealthCardControl]
 === HealthCardControl
 
@@ -223,7 +227,7 @@ Take the necessary preparatory steps for signing a challenge on the Health Card,
 let challenge = Data([0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8])
 let format2Pin = try Format2Pin(pincode: "123456")
 _ = try await Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
-let signResponse = try await Self.healthCard.sign(data: challenge)
+let signResponse = try await Self.healthCard.signAsync(data: challenge)
 expect(signResponse.responseStatus) == ResponseStatus.success
 ----
 
@@ -243,6 +247,7 @@ let secureMessaging = try await KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128
 
 See the integration tests link:include::{integrationtestdir}/HealthCardControl/[IntegrationTests/HealthCardControl/]
 for more already implemented use cases.
+
 [#NFCCardReaderProvider]
 === NFCCardReaderProvider
 
