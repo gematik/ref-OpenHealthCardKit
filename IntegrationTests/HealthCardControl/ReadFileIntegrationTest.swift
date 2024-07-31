@@ -16,7 +16,6 @@
 
 import CardReaderProviderApi
 import CardSimulationCardReaderProvider
-import DataKit
 import Foundation
 import GemCommonsKit
 import HealthCardAccess

@@ -14,7 +14,6 @@
 //  limitations under the License.
 //
 
-import DataKit
 import Foundation
 @testable import HealthCardAccess
 import Nimble

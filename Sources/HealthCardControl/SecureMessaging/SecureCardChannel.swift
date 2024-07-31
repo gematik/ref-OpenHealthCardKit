@@ -110,7 +110,7 @@ internal class SecureCardChannel: CardChannelType {
 }
 
 extension UInt16 {
-    func hexString(separator: String = "") -> String {
-        Data([UInt8(self >> 8 & 0xFF), UInt8(self & 0xFF)]).hexString(separator: separator)
+    func hexString() -> String {
+        Data([UInt8(self >> 8 & 0xFF), UInt8(self & 0xFF)]).hexString()
     }
 }

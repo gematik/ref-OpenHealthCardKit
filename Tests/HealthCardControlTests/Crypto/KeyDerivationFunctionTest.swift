@@ -14,7 +14,6 @@
 //  limitations under the License.
 //
 
-import DataKit
 @testable import HealthCardControl
 import Nimble
 import XCTest

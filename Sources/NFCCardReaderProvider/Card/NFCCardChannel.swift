@@ -18,7 +18,6 @@
 
 import CardReaderProviderApi
 import CoreNFC
-import DataKit
 import Foundation
 import GemCommonsKit
 import Helper
