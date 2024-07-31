@@ -24,6 +24,16 @@ import Foundation
 ///     - apduResponse
 ///     - responseStatus
 public struct HealthCardResponse {
+    /// Default initializer for `HealthCardResponse`
+    ///
+    /// - Parameters:
+    ///    - response: `ResponseType` holding the response data.
+    ///    - responseStatus: `ResponseStatus` derived from the executed `HealthCardCommand`
+    public init(response: ResponseType, responseStatus: ResponseStatus) {
+        self.response = response
+        self.responseStatus = responseStatus
+    }
+
     /// `ResponseType` holding the response data.
     public let response: ResponseType
     /// `ResponseStatus` derived from the executed `HealthCardCommand` and *sw* value of `ResponseType
