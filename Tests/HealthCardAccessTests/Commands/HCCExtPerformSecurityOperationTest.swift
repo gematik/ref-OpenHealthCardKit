@@ -17,7 +17,6 @@
 import ASN1Kit
 import CardReaderProviderApi
 import Foundation
-import GemCommonsKit
 @testable import HealthCardAccess
 import Nimble
 import Security

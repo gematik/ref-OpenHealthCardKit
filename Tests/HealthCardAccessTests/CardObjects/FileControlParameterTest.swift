@@ -14,7 +14,6 @@
 //  limitations under the License.
 //
 
-import GemCommonsKit
 @testable import HealthCardAccess
 import Nimble
 import XCTest

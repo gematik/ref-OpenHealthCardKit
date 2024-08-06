@@ -1,3 +1,8 @@
+# 5.10.0
+
+- Remove dependency on GemCommonsKit
+- Remove dependency on DataKit
+
 # 5.9.0
 
  - Publish CardSimulator loading/running code for running IntegrationTests (CardSimulation itself cannot be public though)

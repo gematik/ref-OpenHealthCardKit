@@ -15,7 +15,6 @@
 //
 
 import Foundation
-import GemCommonsKit
 
 /// Short File Identifier - gemSpec_COS#N007.000
 public struct ShortFileIdentifier: CardObjectIdentifierType {

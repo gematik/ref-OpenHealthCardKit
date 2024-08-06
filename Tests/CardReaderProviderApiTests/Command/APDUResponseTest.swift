@@ -20,31 +20,31 @@ import XCTest
 
 final class APDUResponseTest: XCTestCase {
     func testAPDUResponse_valid() throws {
-        let responseMessage = [0xFE, 0x12, 0x34, 0x90, 0x00].data
+        let responseMessage = Data([0xFE, 0x12, 0x34, 0x90, 0x00])
         let response = try APDU.Response(apdu: responseMessage)
 
         expect(response.sw1).to(equal(0x90))
         expect(response.sw2).to(equal(0x0))
         expect(response.sw).to(equal(0x9000))
         expect(response.nr).to(equal(3))
-        let expectedData = [0xFE, 0x12, 0x34].data
+        let expectedData = Data([0xFE, 0x12, 0x34])
         expect(response.data).to(equal(expectedData))
     }
 
     func testAPDUResponse_valid_convenience_initializer() throws {
-        let responseBody = [0xFE, 0x12, 0x34].data
+        let responseBody = Data([0xFE, 0x12, 0x34])
         let response = try APDU.Response(body: responseBody, sw1: 0x90, sw2: 0x0)
 
         expect(response.sw1).to(equal(0x90))
         expect(response.sw2).to(equal(0x0))
         expect(response.sw).to(equal(0x9000))
         expect(response.nr).to(equal(3))
-        let expectedData = [0xFE, 0x12, 0x34].data
+        let expectedData = Data([0xFE, 0x12, 0x34])
         expect(response.data).to(equal(expectedData))
     }
 
     func testAPDUResponse_ok() throws {
-        let responseMessage = [0x90, 0x00].data
+        let responseMessage = Data([0x90, 0x00])
         let response = try APDU.Response(apdu: responseMessage)
 
         expect(response.sw1).to(equal(0x90))
@@ -56,23 +56,23 @@ final class APDUResponseTest: XCTestCase {
     }
 
     func testAPDUResponse_equality() throws {
-        let responseMessage = [0x01, 0x02, 0x90, 0x00].data
+        let responseMessage = Data([0x01, 0x02, 0x90, 0x00])
         let response = try APDU.Response(apdu: responseMessage)
-        let responseMessage2 = [0x01, 0x02, 0x90, 0x00].data
+        let responseMessage2 = Data([0x01, 0x02, 0x90, 0x00])
         let response2 = try APDU.Response(apdu: responseMessage2)
-        let responseMessage3 = [0x03, 0x02, 0x90, 0x00].data
+        let responseMessage3 = Data([0x03, 0x02, 0x90, 0x00])
         let response3 = try APDU.Response(apdu: responseMessage3)
         expect(response == response2).to(beTrue())
         expect(response == response3).to(beFalse())
     }
 
     func testAPDUResponse_emptyData() {
-        expect(try APDU.Response(apdu: Data.empty))
-            .to(throwError(APDU.Error.insufficientResponseData(data: Data.empty)))
+        expect(try APDU.Response(apdu: Data()))
+            .to(throwError(APDU.Error.insufficientResponseData(data: Data())))
     }
 
     func testAPDUResponseException_insufficientResponseData() {
-        let responseData = [0x01].data
+        let responseData = Data([0x01])
         expect {
             try APDU.Response(apdu: responseData)
         }.to(throwError { (error: APDU.Error) in

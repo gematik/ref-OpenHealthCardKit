@@ -15,7 +15,6 @@
 //
 
 import Foundation
-import GemCommonsKit
 import OSLog
 import StreamReader
 
@@ -87,7 +86,7 @@ public class SimulationRunner {
      */
     public required init(simulator file: URL,
                          classPath: URL,
-                         workingDirectory dir: URL = FileManager.default.currentDirectoryPath.asURL,
+                         workingDirectory dir: URL,
                          in thread: KeepAliveRunLoop = KeepAliveRunLoop()) {
         simulatorConfig = file
         javaClassPath = classPath

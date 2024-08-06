@@ -16,7 +16,6 @@
 
 import CardReaderProviderApi
 import Foundation
-import GemCommonsKit
 import HealthCardAccess
 import Helper
 import OSLog

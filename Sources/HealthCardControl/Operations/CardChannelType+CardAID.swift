@@ -57,7 +57,7 @@ extension CardChannelType {
                             $0.publisher(for: channel)
                         }
                         .tryMap {
-                            let fcp = try FileControlParameter.parse(data: $0.data ?? Data.empty)
+                            let fcp = try FileControlParameter.parse(data: $0.data ?? Data())
                             guard let aid = fcp.applicationIdentifier else {
                                 throw HealthCard.Error.unknownCardType(aid: nil)
                             }

@@ -17,8 +17,8 @@
 import CardReaderProviderApi
 import CardSimulationLoader
 import Foundation
-import GemCommonsKit
 import HealthCardAccess
+import OSLog
 import XCTest
 
 /// 'Abstract' `XCTestCase` that prepares and sets up a G2-Kartensimulator (through `CardSimulationLoader`)
@@ -107,7 +107,7 @@ class CardSimulationTerminalTestCase: XCTestCase {
         do {
             try createHealthCard()
         } catch {
-            ALog("Could not create HealthCard: \(error)")
+            Logger.integrationTest.fault("Could not create HealthCard: \(error)")
         }
     }
 
@@ -115,7 +115,7 @@ class CardSimulationTerminalTestCase: XCTestCase {
         do {
             try disconnectCard()
         } catch {
-            ALog("Could not disconnect card: \(error)")
+            Logger.integrationTest.fault("Could not disconnect card: \(error)")
         }
         super.tearDown()
     }

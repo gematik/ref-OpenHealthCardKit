@@ -19,7 +19,6 @@
 import CardReaderProviderApi
 import CoreNFC
 import Foundation
-import GemCommonsKit
 import HealthCardAccess
 import OSLog
 
@@ -99,7 +98,7 @@ public class NFCCard: CardType {
 
     public func initialApplicationIdentifier() throws -> Data? {
         guard let initialSelectedAID = tag?.initialSelectedAID else {
-            ALog("NFC tag could not deliver initialSelectedAID when expected")
+            Logger.nfcCardReaderProvider.fault("NFC tag could not deliver initialSelectedAID when expected")
             return nil
         }
         return try Data(hex: initialSelectedAID)
@@ -116,7 +115,7 @@ public class NFCCard: CardType {
         do {
             try disconnect(reset: false)
         } catch {
-            ALog("Error while disconnecting: \(error)")
+            Logger.nfcCardReaderProvider.fault("Error while disconnecting: \(error)")
         }
     }
 

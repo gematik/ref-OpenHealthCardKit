@@ -17,7 +17,6 @@
 import CardReaderProviderApi
 import CardSimulationLoader
 import Foundation
-import GemCommonsKit
 
 public class SimulatorCardReader: CardReaderType {
     public enum CardReaderError: Error {

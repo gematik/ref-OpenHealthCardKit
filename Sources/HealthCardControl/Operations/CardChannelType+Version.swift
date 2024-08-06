@@ -90,7 +90,7 @@ extension CardChannelType {
                         $0.publisher(for: channel, writeTimeout: writeTimeout, readTimeout: readTimeout)
                     }
                     .tryMap { response in
-                        let cardVersion2 = try CardVersion2(data: response.data ?? Data.empty)
+                        let cardVersion2 = try CardVersion2(data: response.data ?? Data())
                         return try HealthCardPropertyType.from(cardAid: cardAid, cardVersion2: cardVersion2)
                     }
             }
@@ -140,7 +140,7 @@ extension CardChannelType {
             readTimeout: readTimeout
         )
 
-        let cardVersion2 = try CardVersion2(data: readResponse.data ?? Data.empty)
+        let cardVersion2 = try CardVersion2(data: readResponse.data ?? Data())
         return try HealthCardPropertyType.from(cardAid: determinedCardAid, cardVersion2: cardVersion2)
     }
 }

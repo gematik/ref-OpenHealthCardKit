@@ -18,7 +18,6 @@ import CardReaderProviderApi
 import Combine
 import CoreNFC
 import Foundation
-import GemCommonsKit
 import HealthCardAccess
 import HealthCardControl
 import Helper

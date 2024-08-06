@@ -15,7 +15,6 @@
 //
 
 import Foundation
-import GemCommonsKit
 
 /// ApplicationIdentifier representation to prevent (accidental) misuse
 /// E.g. using any 'random' String as function parameter where a AID is expected
