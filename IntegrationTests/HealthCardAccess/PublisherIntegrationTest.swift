@@ -20,6 +20,7 @@ import Foundation
 import GemCommonsKit
 @testable import HealthCardAccess
 import Nimble
+import OSLog
 import XCTest
 
 final class PublisherIntegrationTest: CardSimulationTerminalTestCase {
@@ -109,13 +110,13 @@ final class PublisherIntegrationTest: CardSimulationTerminalTestCase {
                     receiveCompletion: { completion in
                         switch completion {
                         case .finished:
-                            DLog("Completed")
+                            Logger.integrationTest.debug("Completed")
                         case let .failure(error):
-                            DLog("Error: \(error)")
+                            Logger.integrationTest.debug("Error: \(error)")
                         }
                     },
                     receiveValue: { healthCardResponse in
-                        DLog("Got a certifcate")
+                        Logger.integrationTest.debug("Got a certifcate")
                         let certificate = healthCardResponse.data!
                         // proceed with certificate data here
                         // use swiftUI to a show success message on screen etc.

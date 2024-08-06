@@ -7,7 +7,7 @@ include:
 options:
   bundleIdPrefix: de.gematik.ti.ohcapp4ios
   deploymentTarget:
-    macOS: 10.15
+    macOS: 11.0
     iOS: 14.0
   minimumXcodeGenVersion: 2.3.0
 schemes:

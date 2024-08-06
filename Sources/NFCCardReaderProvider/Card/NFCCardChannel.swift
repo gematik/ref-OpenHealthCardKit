@@ -21,6 +21,7 @@ import CoreNFC
 import Foundation
 import GemCommonsKit
 import Helper
+import OSLog
 
 public class NFCCardChannel: CardChannelType {
     public let maxMessageLength = 0x10000
@@ -70,7 +71,7 @@ public class NFCCardChannel: CardChannelType {
                 .p2Parameter]).hexString()
 
         let send = "[\(sendHeader)\(apdu.data?.hexString() ?? "")|ne:\(String(apdu.expectedResponseLength))]"
-        DLog("SEND:     \(send)")
+        Logger.nfcCardReaderProvider.debug("SEND:     \(send)")
         CommandLogger.commands.append(Command(message: send, type: .send))
 
         tag.sendCommand(apdu: apdu) { lData, lSw1, lSw2, err in
@@ -88,7 +89,7 @@ public class NFCCardChannel: CardChannelType {
         }
 
         if case .timedOut = semaphore.wait(timeout: timeoutTime) {
-            DLog("NFC send timed out [\(sendHeader)]")
+            Logger.nfcCardReaderProvider.debug("NFC send timed out [\(sendHeader)]")
             throw NFCCardError.sendTimeout.connectionError
         }
         if let error = error?.asCoreNFCError() {
@@ -96,7 +97,7 @@ public class NFCCardChannel: CardChannelType {
         }
 
         let response = "[\(Data(data + [sw1, sw2]).hexString())]"
-        DLog("RESPONSE: \(response)")
+        Logger.nfcCardReaderProvider.debug("RESPONSE: \(response)")
         CommandLogger.commands.append(Command(message: response, type: .response))
 
         do {
@@ -132,7 +133,7 @@ public class NFCCardChannel: CardChannelType {
         ).hexString()
 
         let send = "[\(sendHeader)\(apdu.data?.hexString() ?? "")|ne:\(String(apdu.expectedResponseLength))]"
-        DLog("SEND:     \(send)")
+        Logger.nfcCardReaderProvider.debug("SEND:     \(send)")
         CommandLogger.commands.append(Command(message: send, type: .send))
 
         do {
@@ -142,7 +143,7 @@ public class NFCCardChannel: CardChannelType {
         }
 
         let response = "[\(Data(data + [sw1, sw2]).hexString())]"
-        DLog("RESPONSE: \(response)")
+        Logger.nfcCardReaderProvider.debug("RESPONSE: \(response)")
         CommandLogger.commands.append(Command(message: response, type: .response))
 
         return try APDU.Response(body: data, sw1: sw1, sw2: sw2)

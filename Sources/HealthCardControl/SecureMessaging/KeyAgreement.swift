@@ -22,6 +22,7 @@ import Foundation
 import GemCommonsKit
 import HealthCardAccess
 import OpenSSL
+import OSLog
 
 /// Holds functionality to negotiate a common key with a given `HealthCard` and a `CardAccessNumber`.
 public enum KeyAgreement { // swiftlint:disable:this type_body_length
@@ -541,7 +542,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
         )
         let cmac = try AES.CMAC(key: sessionKeyMac, data: asn1AuthToken)
 
-        DLog("Derived cmac: \(cmac.hexString())")
+        Logger.healthCardControl.debug("Derived cmac: \(cmac.hexString())")
         return cmac
     }
 
@@ -551,7 +552,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
         let asn1Vector = create(tag: .applicationTag(0x49), data: .constructed([asn1OID, asn1]))
 
         let serialized = try asn1Vector.serialize()
-        DLog("Authentication token to derive a MAC from: \(serialized.hexString())")
+        Logger.healthCardControl.debug("Authentication token to derive a MAC from: \(serialized.hexString())")
         return serialized
     }
 }

@@ -1,5 +1,5 @@
 //
-//  Copyright (c) 2023 gematik GmbH
+//  Copyright (c) 2024 gematik GmbH
 //
 //  Licensed under the Apache License, Version 2.0 (the License);
 //  you may not use this file except in compliance with the License.
@@ -14,16 +14,11 @@
 //  limitations under the License.
 //
 
-import CardSimulationLoader
+import OSLog
 
-class MockSimulationRunner: SimulationRunnerType {
-    var mode: SimulationProcessMode = .notStarted
-
-    func start(waitUntilLaunched _: Bool) {}
-
-    func stop(waitUntilTerminated _: Bool) {}
-
-    var description: String {
-        "MockSimulationRunner"
-    }
+extension Logger {
+    static let nfcCardReaderProvider = Logger(
+        subsystem: "de.gematik.ti.ohcapp4ios",
+        category: "nfcCardReaderProvider"
+    )
 }

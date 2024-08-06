@@ -16,10 +16,11 @@
 
 import Foundation
 import GemCommonsKit
+import OSLog
 import StreamReader
 
 /// Protocol that describes `SimulationRunnerType` behaviour.
-public protocol SimulationRunnerType: AnyObject {
+public protocol SimulationRunnerType: AnyObject, CustomStringConvertible {
     /// The mode the runner is currently in
     var mode: SimulationProcessMode { get }
 
@@ -124,7 +125,7 @@ extension SimulationRunner: SimulationRunnerType {
     /// - Parameter flag: whether to pause further execution until the JavaProcess has been (successfully) launched.
     public func start(waitUntilLaunched flag: Bool) {
         guard mode.isNotRunning else {
-            DLog("WARN: double start")
+            Logger.cardSimulationLoader.debug("WARN: double start")
             return
         }
         mode = .initializing
@@ -140,13 +141,17 @@ extension SimulationRunner: SimulationRunnerType {
             }
         }
 
-        DLog("start END")
+        Logger.cardSimulationLoader.debug("start END")
     }
 
     /// Stop the simulation runner
     /// - Parameter flag: whether to pause further execution until the JavaProcess has been terminated.
     public func stop(waitUntilTerminated flag: Bool) {
-        DLog("Simulator runner STOP [wait:\(String(describing: flag))]")
+        Logger.cardSimulationLoader.debug("Simulator runner STOP [wait:\(String(describing: flag))]")
         processLoader?.terminate(waitUntilDone: flag)
+    }
+
+    public var description: String {
+        "SimulationRunner: \(mode)"
     }
 }

@@ -21,7 +21,7 @@ import GemCommonsKit
 public typealias ATR = Data
 
 /// General card representation
-public protocol CardType {
+public protocol CardType: CustomStringConvertible {
     /// Card Answer-to-reset configuration
     var atr: ATR { get }
 

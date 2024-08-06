@@ -17,10 +17,11 @@
 import Foundation
 import GemCommonsKit
 import ObjCCommonsKit
+import OSLog
 
 extension SimulationRunner: JavaProcessUpdateDelegate {
     func processDidLaunch(_: JavaProcess, pid: Int32) {
-        DLog("Simulator process launched PID: [\(pid)]")
+        Logger.cardSimulationLoader.debug("Simulator process launched PID: [\(pid)]")
         streamThread = KeepAliveRunLoop()
         streamThread.start()
         streamThread.runloop.perform(inModes: [.default]) { [unowned self] in
@@ -28,7 +29,7 @@ extension SimulationRunner: JavaProcessUpdateDelegate {
                 preconditionFailure("New thread runs on Main thread")
             }
 
-            DLog("Card simulator: [STREAM START]")
+            Logger.cardSimulationLoader.debug("Card simulator: [STREAM START]")
 
             var tcpPort: Int32?
             var successfullyLaunched = false
@@ -37,7 +38,7 @@ extension SimulationRunner: JavaProcessUpdateDelegate {
             if let exception = gemTryBlock({
                 var line = self.stdoutInfo.reader.nextLine()
                 repeat {
-                    DLog("Card simulator: [\(String(describing: line))]")
+                    Logger.cardSimulationLoader.debug("Card simulator: [\(String(describing: line))]")
                     if let line = line, !successfullyLaunched {
                         // Check for TCP TLV interface port
                         if tcpPort == nil, let port = line.match(pattern: "TCPIP: TLV Interface at Port (\\d*)$",
@@ -49,7 +50,7 @@ extension SimulationRunner: JavaProcessUpdateDelegate {
 
                     // !mode.isRunning means mode.isInitializing = true
                     if !self.mode.isRunning, successfullyLaunched, let tcpPort = tcpPort {
-                        DLog("Simulator started successfully in port [\(tcpPort)]")
+                        Logger.cardSimulationLoader.debug("Simulator started successfully in port [\(tcpPort)]")
                         self.mode = .running(onTCPPort: tcpPort)
                     } else if successfullyLaunched {
                         tcpPort = 12350 // G2-Kartensimulation does not log default TLV port 12350
@@ -60,16 +61,19 @@ extension SimulationRunner: JavaProcessUpdateDelegate {
             }) {
                 // Caught NSException
                 ALog("Raised NSException while reading Process stdout")
-                DLog("NSException: \(exception)")
+                Logger.cardSimulationLoader.debug("NSException: \(exception)")
             }
 
-            DLog("Card simulator: [STREAM END]")
+            Logger.cardSimulationLoader.debug("Card simulator: [STREAM END]")
         }
     }
 
     func processDidTerminate(_: JavaProcess, with status: Int32) {
         mode = .terminated(terminationStatus: status)
-        DLog("Simulator process ended with: [\(status)] - [CONFIG: \(config)]")
+        let statusDescription = status.description
+        let configDescription = config.description
+        Logger.cardSimulationLoader
+            .debug("Simulator process ended with: [\(statusDescription)] - [CONFIG: \(configDescription)]")
         processThread.cancel()
         streamThread.cancel()
         stdoutInfo.reader.close()

@@ -81,4 +81,8 @@ public class SimulatorCard: CardType {
             ALog("Error while deinit: [\(error)]")
         }
     }
+
+    public var description: String {
+        "SimulatorCard: [\(host):\(port)]"
+    }
 }

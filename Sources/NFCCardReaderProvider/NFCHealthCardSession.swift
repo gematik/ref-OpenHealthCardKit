@@ -23,6 +23,7 @@ import Foundation
 import GemCommonsKit
 import HealthCardAccess
 import HealthCardControl
+import OSLog
 
 /// `NFCHealthCardSession` facilitates communication between iOS applications and NFC-enabled health cards.
 /// It leverages Core NFC to establish a session with a health card and perform operations on it,
@@ -149,7 +150,8 @@ public class NFCHealthCardSession<Output>: NSObject, NFCTagReaderSessionDelegate
             queue: queue
         )
         else {
-            DLog("Could not start discovery for NFCCardReader: refused to init a NFCTagReaderSession")
+            Logger.nfcCardReaderProvider
+                .debug("Could not start discovery for NFCCardReader: refused to init a NFCTagReaderSession")
             return nil
         }
 
@@ -171,7 +173,7 @@ public class NFCHealthCardSession<Output>: NSObject, NFCTagReaderSessionDelegate
             throw NFCHealthCardSessionError.couldNotInitializeSession
         }
         session.alertMessage = messages.discoveryMessage
-        DLog("Starting session: \(String(describing: self.session))")
+        Logger.nfcCardReaderProvider.debug("Starting session: \(String(describing: self.session))")
         session.begin()
 
         let outcome = try await withCheckedThrowingContinuation { continuation in
@@ -181,7 +183,7 @@ public class NFCHealthCardSession<Output>: NSObject, NFCTagReaderSessionDelegate
     }
 
     deinit {
-        DLog("Deinit MyNFCSession")
+        Logger.nfcCardReaderProvider.debug("Deinit MyNFCSession")
         session?.invalidate()
     }
 
@@ -200,11 +202,11 @@ public class NFCHealthCardSession<Output>: NSObject, NFCTagReaderSessionDelegate
     // MARK: - NFCTagReaderSessionDelegate
 
     public func tagReaderSessionDidBecomeActive(_: NFCTagReaderSession) {
-        DLog("NFC reader session became active")
+        Logger.nfcCardReaderProvider.debug("NFC reader session became active")
     }
 
     public func tagReaderSession(_: NFCTagReaderSession, didInvalidateWithError error: Swift.Error) {
-        DLog("NFC reader session was invalidated: \(error)")
+        Logger.nfcCardReaderProvider.debug("NFC reader session was invalidated: \(error)")
         let coreNFCError = error.asCoreNFCError()
         operationContinuation?.resume(throwing: NFCHealthCardSessionError.coreNFC(coreNFCError))
         operationContinuation = nil
@@ -212,7 +214,7 @@ public class NFCHealthCardSession<Output>: NSObject, NFCTagReaderSessionDelegate
 
     // swiftlint:disable:next function_body_length
     public func tagReaderSession(_ session: NFCTagReaderSession, didDetect tags: [NFCTag]) {
-        DLog("tagReaderSession:didDetect - [\(tags)]")
+        Logger.nfcCardReaderProvider.debug("tagReaderSession:didDetect - [\(tags)]")
         if tags.count > 1 {
             session.alertMessage = messages.multipleCardsMessage
             DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(500)) {
