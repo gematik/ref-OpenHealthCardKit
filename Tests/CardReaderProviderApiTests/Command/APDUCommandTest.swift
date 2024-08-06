@@ -43,7 +43,7 @@ final class APDUCommandTest: XCTestCase {
         expect(command.ne).to(beNil())
         expect(command.nc).to(equal(0))
 
-        expect(command.bytes).to(equal([0x1, 0x2, 0x3, 0x4].data))
+        expect(command.bytes).to(equal(Data([0x1, 0x2, 0x3, 0x4])))
     }
 
     func testCommandAPDU_case2s() throws {
@@ -58,7 +58,7 @@ final class APDUCommandTest: XCTestCase {
         expect(command.ne).to(equal(6))
         expect(command.nc).to(equal(0))
 
-        expect(command.bytes).to(equal([0x1, 0x2, 0x3, 0x4, 0x6].data))
+        expect(command.bytes).to(equal(Data([0x1, 0x2, 0x3, 0x4, 0x6])))
     }
 
     func testCommandAPDU_case2s_max() throws {
@@ -73,7 +73,7 @@ final class APDUCommandTest: XCTestCase {
         expect(command.ne).to(equal(256))
         expect(command.nc).to(equal(0))
 
-        expect(command.bytes).to(equal([0x1, 0x2, 0x3, 0x4, 0x00].data))
+        expect(command.bytes).to(equal(Data([0x1, 0x2, 0x3, 0x4, 0x00])))
     }
 
     func testCommandAPDU_case3s() throws {
@@ -91,7 +91,7 @@ final class APDUCommandTest: XCTestCase {
         expect(command.nc).to(equal(10))
 
         let expectedCommandData = [0x1, 0x2, 0x3, 0x4, 0xA] + data
-        expect(command.bytes).to(equal(expectedCommandData.data))
+        expect(command.bytes).to(equal(Data(expectedCommandData)))
     }
 
     func testCommandAPDU_case4s() throws {
@@ -110,7 +110,7 @@ final class APDUCommandTest: XCTestCase {
         expect(command.nc).to(equal(10))
 
         let expectedCommandData = [0x1, 0x2, 0x3, 0x4, 0xA] + data + [0xC]
-        expect(command.bytes).to(equal(expectedCommandData.data))
+        expect(command.bytes).to(equal(Data(expectedCommandData)))
     }
 
     func testCommandAPDU_case4s_max() throws {
@@ -128,7 +128,7 @@ final class APDUCommandTest: XCTestCase {
         expect(command.nc).to(equal(10))
 
         let expectedCommandData = [0x1, 0x2, 0x3, 0x4, 0xA] + data + [0x00]
-        expect(command.bytes).to(equal(expectedCommandData.data))
+        expect(command.bytes).to(equal(Data(expectedCommandData)))
     }
 
     func testCommandAPDU_case2e() throws {
@@ -143,7 +143,7 @@ final class APDUCommandTest: XCTestCase {
         expect(command.ne).to(equal(30000))
         expect(command.nc).to(equal(0))
 
-        expect(command.bytes).to(equal([0x1, 0x2, 0x3, 0x4, 0x00, 0x75, 0x30].data))
+        expect(command.bytes).to(equal(Data([0x1, 0x2, 0x3, 0x4, 0x00, 0x75, 0x30])))
     }
 
     func testCommandAPDU_case2e_max() throws {
@@ -158,7 +158,7 @@ final class APDUCommandTest: XCTestCase {
         expect(command.ne).to(equal(APDU.expectedLengthWildcardExtended))
         expect(command.nc).to(equal(0))
 
-        expect(command.bytes).to(equal([0x1, 0x2, 0x3, 0x4, 0x0, 0x0, 0x0].data))
+        expect(command.bytes).to(equal(Data([0x1, 0x2, 0x3, 0x4, 0x0, 0x0, 0x0])))
     }
 
     func testCommandAPDU_case3e() throws {
@@ -185,7 +185,7 @@ final class APDUCommandTest: XCTestCase {
         let lc2 = UInt8(size & 0xFF)
 
         let expectedCommandData = [0x1, 0x2, 0x3, 0x4, 0x00, lc1, lc2] + data
-        expect(command.bytes).to(equal(expectedCommandData.data))
+        expect(command.bytes).to(equal(Data(expectedCommandData)))
     }
 
     func testCommandAPDU_case4e_ne_512() throws {
@@ -209,7 +209,7 @@ final class APDUCommandTest: XCTestCase {
         let lc2 = UInt8(size)
 
         let expectedCommandData = [0x1, 0x2, 0x3, 0x4, 0x00, lc1, lc2] + data + [0x2, 0x0]
-        expect(command.bytes).to(equal(expectedCommandData.data))
+        expect(command.bytes).to(equal(Data(expectedCommandData)))
     }
 
     func testCommandAPDU_case4e_big_data() throws {
@@ -233,7 +233,7 @@ final class APDUCommandTest: XCTestCase {
         let lc2 = UInt8(size & 0xFF)
 
         let expectedCommandData = [0x1, 0x2, 0x3, 0x4, 0x00, lc1, lc2] + data + [0x1, 0x0]
-        expect(command.bytes).to(equal(expectedCommandData.data))
+        expect(command.bytes).to(equal(Data(expectedCommandData)))
     }
 
     func testCommandAPDU_case4e_small_data() throws {
@@ -253,7 +253,7 @@ final class APDUCommandTest: XCTestCase {
         let lc2: UInt8 = 0xA
 
         let expectedCommandData = [0x1, 0x2, 0x3, 0x4, 0x00, lc1, lc2] + data + [0x2, 0x0]
-        expect(command.bytes).to(equal(expectedCommandData.data))
+        expect(command.bytes).to(equal(Data(expectedCommandData)))
     }
 
     func testCommandAPDU_case4e_too_big_data() throws {

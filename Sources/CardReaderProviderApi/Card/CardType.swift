@@ -15,7 +15,6 @@
 //
 
 import Foundation
-import GemCommonsKit
 
 /// Answer-to-reset is of Type Data
 public typealias ATR = Data
@@ -91,7 +90,7 @@ public protocol CardType: CustomStringConvertible {
 extension CardType {
     /// Default implementation returns empty data object.
     public func transmitControl(command _: Int, data _: Data) throws -> Data {
-        Data.empty
+        Data()
     }
 
     /// Default implementation returns nil.

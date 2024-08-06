@@ -64,7 +64,7 @@ public class APDU {
         }
 
         /// Success response [0x9000]
-        public static let OK = try! Response(apdu: [0x90, 0x0].data)
+        public static let OK = try! Response(apdu: Data([0x90, 0x0]))
         // swiftlint:disable:previous identifier_name force_try
     }
 

@@ -15,7 +15,6 @@
 //
 
 import Foundation
-import GemCommonsKit
 
 public protocol CardObjectIdentifierType: Equatable, ExpressibleByStringLiteral {
     /// The representation for the Card Object Identifier (E.g. AID, FID)

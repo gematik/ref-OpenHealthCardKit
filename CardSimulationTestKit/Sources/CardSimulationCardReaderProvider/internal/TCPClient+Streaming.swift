@@ -15,8 +15,8 @@
 //
 
 import Foundation
-import GemCommonsKit
 import SwiftSocket
+import OSLog
 
 extension TCPClient: TCPClientType {
     var hasBytesAvailable: Bool {
@@ -33,7 +33,7 @@ extension TCPClient: TCPClientType {
 
         let bufferSize = min(Int(availableBytes), len)
         guard let bytes = read(bufferSize) else {
-            ALog("Read error")
+            Logger.cardSimulationCardReaderProvider.fault("Read error")
             return -1
         }
         buffer.assign(from: bytes, count: bytes.count)

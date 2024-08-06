@@ -17,7 +17,6 @@
 import CardReaderProviderApi
 @testable import CardSimulationCardReaderProvider
 import Foundation
-import GemCommonsKit
 import Nimble
 import XCTest
 

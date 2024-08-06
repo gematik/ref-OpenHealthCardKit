@@ -16,8 +16,8 @@
 
 import CardReaderProviderApi
 import Foundation
-import GemCommonsKit
 import SwiftSocket
+import OSLog
 
 public class SimulatorCard: CardType {
     public private(set) var atr: ATR
@@ -59,18 +59,18 @@ public class SimulatorCard: CardType {
     }
 
     public func openLogicChannel() throws -> CardChannelType {
-        throw CardError.connectionError(CommonError.notImplementedError)
+        throw CardError.connectionError(nil)
     }
 
     public func openLogicChannelAsync() async throws -> CardChannelType {
-        throw CardError.connectionError(CommonError.notImplementedError)
+        throw CardError.connectionError(nil)
     }
 
     public func disconnect(reset _: Bool) throws {
         do {
             try basicChannel?.close()
         } catch {
-            ALog("Error while closing basicChannel: [\(error)]")
+            Logger.cardSimulationCardReaderProvider.fault("Error while closing basicChannel: [\(error)]")
         }
     }
 
@@ -78,7 +78,7 @@ public class SimulatorCard: CardType {
         do {
             try disconnect(reset: false)
         } catch {
-            ALog("Error while deinit: [\(error)]")
+            Logger.cardSimulationCardReaderProvider.fault("Error while deinit: [\(error)]")
         }
     }
 
