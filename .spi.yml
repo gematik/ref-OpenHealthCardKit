@@ -1,4 +1,4 @@
 version: 1
 builder:
   configs:
-    - documentation_targets: [HealthCardControl, HealthCardAccess, NFCCardReaderProvider, CardReaderProviderApi]
+    - documentation_targets: [HealthCardAccess, NFCCardReaderProvider, CardReaderProviderApi]

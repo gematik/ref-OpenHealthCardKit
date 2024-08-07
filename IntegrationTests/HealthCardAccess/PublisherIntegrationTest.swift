@@ -16,7 +16,6 @@
 
 import CardReaderProviderApi
 import Combine
-import DataKit
 import Foundation
 import GemCommonsKit
 @testable import HealthCardAccess

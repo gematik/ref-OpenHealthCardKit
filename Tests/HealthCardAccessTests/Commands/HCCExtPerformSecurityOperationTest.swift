@@ -16,7 +16,6 @@
 
 import ASN1Kit
 import CardReaderProviderApi
-import DataKit
 import Foundation
 import GemCommonsKit
 @testable import HealthCardAccess

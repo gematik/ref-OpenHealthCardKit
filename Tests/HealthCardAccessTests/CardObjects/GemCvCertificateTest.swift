@@ -15,7 +15,6 @@
 //
 
 import ASN1Kit
-import DataKit
 import GemCommonsKit
 @testable import HealthCardAccess
 import Nimble

@@ -14,7 +14,6 @@
 //  limitations under the License.
 //
 
-import DataKit
 import Foundation
 
 /// PIN block, formatted according to gemSpec_COS 8.1.7
@@ -56,8 +55,11 @@ public struct Format2Pin: CardItemType {
      */
     public init(pincode: String) throws {
         // gemSpec_COS#N008.000
-        guard Format2Pin.pinRegex.numberOfMatches(in: pincode,
-                                                  range: NSRange(location: 0, length: pincode.count)) == 1 else {
+        guard Format2Pin.pinRegex.numberOfMatches(
+            in: pincode,
+            range: NSRange(location: 0, length: pincode.count)
+        ) == 1
+        else {
             throw Error.illegalArgument("Invalid pin: [\(pincode)] does not conform to regex: [\(Format2Pin.regex)]")
         }
         // gemSpec_COS#N008.100.b,c,d,e

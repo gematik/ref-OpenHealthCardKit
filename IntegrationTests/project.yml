@@ -175,7 +175,6 @@ targets:
       - target: CardSimulationCardReaderProvider
       - target: AEXMLExt
       - framework: Carthage/Build/Nimble.xcframework
-      - package: DataKit
       - package: GemCommonsKit
         product: GemCommonsKit
     gatherCoverageData: true

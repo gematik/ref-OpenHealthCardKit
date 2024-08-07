@@ -15,7 +15,6 @@
 //
 
 import ASN1Kit
-import DataKit
 import Foundation
 
 public struct FileControlParameter: CardItemType {

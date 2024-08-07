@@ -26,7 +26,6 @@ let package = Package(
             targets: ["Helper"]),    
     ],
     dependencies: [
-        .package(url: "https://github.com/SwiftCommon/DataKit.git", from: "1.1.0"),
         .package(url: "https://github.com/gematik/ASN1Kit.git", from: "1.2.0"),
         .package(url: "https://github.com/gematik/OpenSSL-Swift", from: "4.2.0"),
         .package(url: "https://github.com/gematik/ref-GemCommonsKit", from: "1.3.0"),
@@ -39,8 +38,7 @@ let package = Package(
                 "HealthCardControl",
                 "HealthCardAccess",
                 "Helper",
-                .product(name: "GemCommonsKit", package: "ref-GemCommonsKit"),
-                "DataKit"
+                .product(name: "GemCommonsKit", package: "ref-GemCommonsKit")
             ]
         ),
         .target(
@@ -48,13 +46,12 @@ let package = Package(
             dependencies: [
                 "HealthCardAccess",
                 "Helper",
-                "OpenSSL-Swift",
-                "DataKit"
+                "OpenSSL-Swift"
             ]
         ),
         .target(
             name: "HealthCardAccess",
-            dependencies: ["CardReaderAccess", "CardReaderProviderApi", "ASN1Kit", "DataKit"]
+            dependencies: ["CardReaderAccess", "CardReaderProviderApi", "ASN1Kit"]
         ),
         .target(
             name: "CardReaderAccess",
