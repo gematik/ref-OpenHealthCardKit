@@ -19,7 +19,6 @@ import CardReaderProviderApi
 import CardSimulationCardReaderProvider
 import CardSimulationLoader
 import Foundation
-import GemCommonsKit
 import OSLog
 
 /// Wrapper around a resource that holds the configuration for a G2-Kartensimulation Runner
@@ -169,5 +168,62 @@ class DisconnectedCard: CardType {
 
     var description: String {
         "DisconnectedCard"
+    }
+}
+
+class BlockingVar<T> {
+    private enum State: Int {
+        case empty = 0
+        case fulfilled
+    }
+
+    private var _value: T!
+    private let lock: NSConditionLock
+
+    /// Initialize w/o value
+    public init() {
+        lock = NSConditionLock(condition: State.empty.rawValue)
+    }
+
+    /// Initialize w/ value value
+    init(_ value: T) {
+        _value = value
+        lock = NSConditionLock(condition: State.fulfilled.rawValue)
+    }
+
+    /// Access value
+    var value: T {
+        get {
+            if Thread.isMainThread {
+                // wait for self.isFulfilled
+                while !isFulfilled {
+                    Logger.integrationTest.fault("Caution: trying to obtain a lock on the main thread")
+                    RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: 0.001))
+                }
+            }
+            /// Obtain a lock when the condition is fulfilled. This may seem counter intuitive since,
+            /// we want to wait/lock while empty and continue when fulfilled.
+            /// So what lock(whenCondition:) actually does, is waiting/blocking execution until the lock
+            /// unlocks with fulfilled. Then and only then the lock can be obtained and execution resumed.
+            lock.lock(whenCondition: State.fulfilled.rawValue)
+            defer {
+                /// Of course we unlock the lock so consecutive calls make it through as well.
+                lock.unlock(withCondition: State.fulfilled.rawValue)
+            }
+            return _value
+        }
+        set {
+            /// Obtain a lock before writing the value
+            lock.lock()
+            _value = newValue
+            /// Unlock stating that we have fulfilled the value
+            lock.unlock(withCondition: State.fulfilled.rawValue)
+        }
+    }
+
+    /// Non-blocking check whether self has been fulfilled or not
+    /// - Returns: `true` on .fulfilled `false` when .empty
+    var isFulfilled: Bool {
+        return lock.condition == State.fulfilled.rawValue
     }
 }
