@@ -17,6 +17,7 @@
 import CardReaderProviderApi
 import Foundation
 import GemCommonsKit
+import OSLog
 import SwiftSocket
 
 protocol TCPClientType: InputStreaming, OutputStreaming {
@@ -98,7 +99,8 @@ public class SimulatorCardChannel: CardChannelType {
                 .illegalState
         }
         let message = try command.bytes.berTlvEncoded()
-        DLog("SEND:     \(message.map { String(format: "%02hhX", $0) }.joined())") // hexString
+        Logger.cardSimulationCardReaderProvider
+            .debug("SEND:     \(message.map { String(format: "%02hhX", $0) }.joined())")
         _ = message.withUnsafeBytes {
             outputStream.write($0, maxLength: message.count)
         }
@@ -122,12 +124,16 @@ public class SimulatorCardChannel: CardChannelType {
         } while inputStream.hasBytesAvailable || (responseData.isEmpty && Date() < timeoutTime)
 
         guard !responseData.isEmpty else {
-            ALog("Error when reading the response from the CardSimulator connection" +
-                " or there were no bytes available to be read.")
+            Logger.cardSimulationCardReaderProvider
+                .warning(
+                    // swiftlint:disable:next line_length
+                    "Error when reading the response from the CardSimulator connection or there were no bytes available to be read."
+                )
             throw SimulatorError.noResponse.connectionError
         }
 
-        DLog("RESPONSE: \(responseData.map { String(format: "%02hhX", $0) }.joined())") // hexString
+        Logger.cardSimulationCardReaderProvider
+            .debug("RESPONSE: \(responseData.map { String(format: "%02hhX", $0) }.joined())") // hexString
         let extractedResponseData = try responseData.berTlvDecoded()
         guard extractedResponseData.count <= maxResponseLength else {
             throw SimulatorError.responseSizeTooLarge(maxSize: maxResponseLength, length: responseData.count)
@@ -150,7 +156,8 @@ public class SimulatorCardChannel: CardChannelType {
                 .illegalState
         }
         let message = try command.bytes.berTlvEncoded()
-        DLog("SEND:     \(message.map { String(format: "%02hhX", $0) }.joined())") // hexString
+        Logger.cardSimulationCardReaderProvider
+            .debug("SEND:     \(message.map { String(format: "%02hhX", $0) }.joined())") // hexString
         _ = message.withUnsafeBytes {
             outputStream.write($0, maxLength: message.count)
         }
@@ -174,12 +181,16 @@ public class SimulatorCardChannel: CardChannelType {
         } while inputStream.hasBytesAvailable || (responseData.isEmpty && Date() < timeoutTime)
 
         guard !responseData.isEmpty else {
-            ALog("Error when reading the response from the CardSimulator connection" +
-                " or there were no bytes available to be read.")
+            Logger.cardSimulationCardReaderProvider
+                .warning(
+                    // swiftlint:disable:next line_length
+                    "Error when reading the response from the CardSimulator connection or there were no bytes available to be read."
+                )
             throw SimulatorError.noResponse.connectionError
         }
 
-        DLog("RESPONSE: \(responseData.map { String(format: "%02hhX", $0) }.joined())") // hexString
+        Logger.cardSimulationCardReaderProvider
+            .debug("RESPONSE: \(responseData.map { String(format: "%02hhX", $0) }.joined())") // hexString
         let extractedResponseData = try responseData.berTlvDecoded()
         guard extractedResponseData.count <= maxResponseLength else {
             throw SimulatorError.responseSizeTooLarge(maxSize: maxResponseLength, length: responseData.count)

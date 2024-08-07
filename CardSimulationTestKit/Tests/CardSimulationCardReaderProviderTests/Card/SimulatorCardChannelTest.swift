@@ -39,6 +39,10 @@ final class SimulatorCardChannelTest: XCTestCase {
         }
 
         func disconnect(reset _: Bool) throws {}
+
+        var description: String {
+            "MockSimulatorCard"
+        }
     }
 
     class MockStreaming: TCPClientType {

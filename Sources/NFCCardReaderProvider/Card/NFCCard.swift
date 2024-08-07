@@ -21,6 +21,7 @@ import CoreNFC
 import Foundation
 import GemCommonsKit
 import HealthCardAccess
+import OSLog
 
 public class NFCCard: CardType {
     var tag: NFCISO7816Tag?
@@ -105,10 +106,10 @@ public class NFCCard: CardType {
     }
 
     public func disconnect(reset _: Bool) throws {
-        DLog("Disconnecting card ...")
+        Logger.nfcCardReaderProvider.debug("Disconnecting card ...")
         tag = nil
         basicChannel = nil
-        DLog("Card disconnected")
+        Logger.nfcCardReaderProvider.debug("Card disconnected")
     }
 
     deinit {
@@ -117,6 +118,10 @@ public class NFCCard: CardType {
         } catch {
             ALog("Error while disconnecting: \(error)")
         }
+    }
+
+    public var description: String {
+        "NFCCard"
     }
 }
 

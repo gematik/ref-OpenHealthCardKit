@@ -16,6 +16,7 @@
 
 import Foundation
 import GemCommonsKit
+import OSLog
 
 /// Protocol that describes G2-Kartensimulation Configuration files (pre-)processors
 public protocol ConfigurationFileProcessor {
@@ -139,7 +140,7 @@ public class SimulationManager {
     public init(tempDir: URL = NSTemporaryDirectory().asURL.appendingPathComponent(
         ProcessInfo.processInfo.globallyUniqueString, isDirectory: true
     )) {
-        DLog("Init with tempDir: [\(tempDir)]")
+        Logger.cardSimulationLoader.debug("Init with tempDir: [\(tempDir)]")
         tempDirectory = tempDir
     }
 
@@ -225,7 +226,7 @@ public class SimulationManager {
         - Parameter flag: indicate whether this function should wait until all the processes have been terminated
      */
     public func stopAll(waitUntilDone flag: Bool = true) {
-        DLog("Stop all simulators")
+        Logger.cardSimulationLoader.debug("Stop all simulators")
         runners.forEach { [unowned self] in
             self.stop(simulation: $0, waitUntilDone: flag)
         }
@@ -237,7 +238,7 @@ public class SimulationManager {
             $0.1 === simulation
         }
         .forEach {
-            DLog("Cleaning: \($0.url)")
+            Logger.cardSimulationLoader.debug("Cleaning: \($0.url)")
             do {
                 try FileManager.default.removeItem(at: $0.url)
             } catch {
@@ -301,7 +302,8 @@ extension SimulationManager: SimulationRunnerDelegate {
         Simulation manager's delegate for the runner.
      */
     public func simulation(runner: SimulationRunnerType, changed mode: SimulationProcessMode) {
-        DLog("Simulation: \(runner) -> [\(mode)]")
+        let runnerDescription = runner.description
+        Logger.cardSimulationLoader.debug("Simulation: \(runnerDescription) -> [\(mode)]")
         if mode.isRunning {
             /// Inform delegates
             _delegates.array.forEach {

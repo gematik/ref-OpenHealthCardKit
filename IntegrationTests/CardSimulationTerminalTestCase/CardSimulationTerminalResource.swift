@@ -20,6 +20,7 @@ import CardSimulationCardReaderProvider
 import CardSimulationLoader
 import Foundation
 import GemCommonsKit
+import OSLog
 
 /// Wrapper around a resource that holds the configuration for a G2-Kartensimulation Runner
 /// which features startUp and shutDown the SimulationRunner
@@ -79,7 +80,7 @@ public class CardSimulationTerminalResource {
     /// - Parameter flag: whether to pause execution till the runner has been terminated
     public func shutDown(wait flag: Bool = true) {
         guard let runner = runner else {
-            DLog("Not running?")
+            Logger.integrationTest.debug("Not running?")
             return
         }
         runner.stop(waitUntilTerminated: flag)
@@ -94,7 +95,7 @@ public class CardSimulationTerminalResource {
 
 extension CardSimulationTerminalResource: CardReaderControllerDelegate {
     public func cardReader(controller _: CardReaderControllerType, didConnect reader: CardReaderType) {
-        DLog("We got a reader: \(reader.name)")
+        Logger.integrationTest.debug("We got a reader: \(reader.name)")
         guard let runnerPort = runner?.tlvPort else {
             return
         }
@@ -104,7 +105,8 @@ extension CardSimulationTerminalResource: CardReaderControllerDelegate {
     }
 
     public func cardReader(controller _: CardReaderControllerType, didDisconnect reader: CardReaderType) {
-        DLog("We lost a reader: \(reader)")
+        let readerDescription = reader.description
+        Logger.integrationTest.debug("We lost a reader: \(readerDescription)")
         if reader === _connectedReader.value {
             _connectedReader.value = DisconnectedTerminal(reader: reader)
         }
@@ -129,6 +131,10 @@ class DisconnectedTerminal: CardReaderType {
 
     func connect(protocol _: CardProtocol) throws -> CardType {
         card
+    }
+
+    var description: String {
+        "Disconnected: \(name)"
     }
 }
 
@@ -159,5 +165,9 @@ class DisconnectedCard: CardType {
 
     func disconnect(reset _: Bool) throws {
         throw Error(description: "[DisconnectedCard] disconnect() has not been implemented")
+    }
+
+    var description: String {
+        "DisconnectedCard"
     }
 }

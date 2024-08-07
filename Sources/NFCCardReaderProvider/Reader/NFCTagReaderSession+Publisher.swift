@@ -21,6 +21,7 @@ import Combine
 import CoreNFC
 import Foundation
 import GemCommonsKit
+import OSLog
 
 /// Abstraction to the NFCTagReaderSession to update the alertMessage that is being displayed to the user.
 /// And to close/invalidate the session
@@ -159,10 +160,11 @@ extension NFCTagReaderSession.Publisher {
             if let mNfcReaderSession = NFCTagReaderSession(pollingOption: pollingOption, delegate: self, queue: queue) {
                 session = mNfcReaderSession
                 mNfcReaderSession.alertMessage = messages.discoveryMessage
-                DLog("Starting session: \(mNfcReaderSession)")
+                Logger.nfcCardReaderProvider.debug("Starting session: \(mNfcReaderSession)")
                 mNfcReaderSession.begin()
             } else {
-                DLog("Could not start discovery for NFCCardReader refused to init a NFCTagReaderSession")
+                Logger.nfcCardReaderProvider
+                    .debug("Could not start discovery for NFCCardReader refused to init a NFCTagReaderSession")
                 complete(with: .couldNotInitializeSession)
             }
         }
@@ -188,7 +190,7 @@ extension NFCTagReaderSession.Publisher {
             // fulfill when demand > 0
             if demand > 0, let card = card, let session = session {
                 queue.async {
-                    DLog("Fulfilling demand: \(card), session: \(session)")
+                    Logger.nfcCardReaderProvider.debug("Fulfilling demand: \(card), session: \(session)")
                     // moreDemand is the downstream's way of letting us know, how many *more* than the initial demand,
                     // it wishes to receive after this fulfillment.
                     let moreDemand = self.downstream.receive(PublishedCardSession(session: session, card: card))
@@ -214,18 +216,18 @@ extension NFCTagReaderSession.Publisher {
         /// PRAGMA MARK: NFCTagReaderSessionDelegate
 
         func tagReaderSessionDidBecomeActive(_: NFCTagReaderSession) {
-            DLog("NFC reader session became active")
+            Logger.nfcCardReaderProvider.debug("NFC reader session became active")
         }
 
         func tagReaderSession(_: NFCTagReaderSession, didInvalidateWithError error: Swift.Error) {
-            DLog("NFC reader session was invalidated: \(error)")
+            Logger.nfcCardReaderProvider.debug("NFC reader session was invalidated: \(error)")
             let coreNFCError = error.asCoreNFCError()
             complete(with: .nfcTag(error: coreNFCError))
             demand = .none
         }
 
         func tagReaderSession(_ session: NFCTagReaderSession, didDetect tags: [NFCTag]) {
-            DLog("tagReaderSession:didDetect - [\(tags)]")
+            Logger.nfcCardReaderProvider.debug("tagReaderSession:didDetect - [\(tags)]")
             if tags.count > 1 {
                 session.alertMessage = messages.multipleCardsMessage
                 DispatchQueue.global().asyncAfter(deadline: .now() + .milliseconds(500)) {

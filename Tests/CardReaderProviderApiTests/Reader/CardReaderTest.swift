@@ -33,6 +33,10 @@ public class TestReader: CardReaderType {
     init(_ name: String) {
         self.name = name
     }
+
+    public var description: String {
+        "TestReader: \(name)"
+    }
 }
 
 final class CardReaderTest: XCTestCase {

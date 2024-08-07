@@ -16,6 +16,7 @@
 
 import Foundation
 import GemCommonsKit
+import OSLog
 
 protocol JavaProcessConfig {
     #if os(macOS) || os(Linux)
@@ -77,6 +78,19 @@ class JavaProcess {
     }
 }
 
+extension JavaProcess.Config: CustomStringConvertible {
+    var description: String {
+        """
+        Config:
+        - classPath: \(classPath)
+        - mainClass: \(mainClass)
+        - arguments: \(arguments)
+        - workingDirectory: \(workingDirectory)
+        - launchPath: \(launchPath)
+        """
+    }
+}
+
 protocol JavaProcessUpdateDelegate: AnyObject {
     func processDidLaunch(_ process: JavaProcess, pid: Int32)
     func processDidTerminate(_ process: JavaProcess, with status: Int32)
@@ -132,7 +146,7 @@ extension JavaProcess {
         }
 
         task.launch()
-        DLog("JavaProcess launched PID: [\(task.processIdentifier)]")
+        Logger.cardSimulationLoader.debug("JavaProcess launched PID: [\(task.processIdentifier)]")
         process = task
         DispatchQueue.global().async {
             DispatchQueue.main.sync {

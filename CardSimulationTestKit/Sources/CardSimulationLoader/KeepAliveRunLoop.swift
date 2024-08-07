@@ -16,6 +16,7 @@
 
 import Foundation
 import GemCommonsKit
+import OSLog
 
 /**
     KeepAliveRunLoop keeps a thread running in .default until the thread gets cancelled
@@ -44,7 +45,7 @@ public class KeepAliveRunLoop: Thread {
 
     /// Do not call directly
     override public func main() {
-        DLog("KeepAliveRunLoop started")
+        Logger.cardSimulationLoader.debug("KeepAliveRunLoop started")
         runloop = RunLoop.current
         let port = Port()
         RunLoop.current.add(port, forMode: .common)
@@ -53,7 +54,7 @@ public class KeepAliveRunLoop: Thread {
         }
         RunLoop.current.remove(port, forMode: .common)
         port.invalidate()
-        DLog("Port invalidated and thread ended")
+        Logger.cardSimulationLoader.debug("Port invalidated and thread ended")
     }
 
     /// Cancel the Thread and RunLoop

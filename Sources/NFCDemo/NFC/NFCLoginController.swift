@@ -23,6 +23,7 @@ import HealthCardAccess
 import HealthCardControl
 import Helper
 import NFCCardReaderProvider
+import OSLog
 
 public class NFCLoginController: LoginController {
     public enum Error: Swift.Error, LocalizedError {
@@ -150,7 +151,7 @@ public class NFCLoginController: LoginController {
             return
         }
         // end::nfcHealthCardSession_errorHandling[]
-        DLog("Signed Data: \(signedData)")
+        Logger.nfcDemo.debug("Signed Data: \(signedData)")
     }
 }
 

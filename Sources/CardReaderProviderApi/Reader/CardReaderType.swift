@@ -20,7 +20,7 @@ import Foundation
 ///
 /// A card reader represents only one (logical) slot, when a CardReader supports multiple
 /// cards at the same time it needs to provide a CardReaderType for each slot.
-public protocol CardReaderType: AnyObject {
+public protocol CardReaderType: AnyObject, CustomStringConvertible {
     /// CardReader name
     var name: String { get }
 

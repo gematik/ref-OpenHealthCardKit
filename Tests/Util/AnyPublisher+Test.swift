@@ -45,7 +45,6 @@ extension AnyPublisher {
         )
 
         while !done && (timeoutTime > DispatchTime.now() || millis <= 0) {
-            DLog("!done")
             RunLoop.current.run(mode: .default, before: Date(timeIntervalSinceNow: interval))
         }
         if !done {

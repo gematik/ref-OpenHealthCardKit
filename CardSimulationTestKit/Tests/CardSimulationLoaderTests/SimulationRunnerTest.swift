@@ -17,6 +17,7 @@
 @testable import CardSimulationLoader
 import GemCommonsKit
 import Nimble
+import OSLog
 import XCTest
 
 final class SimulationRunnerTest: XCTestCase {
@@ -29,7 +30,7 @@ final class SimulationRunnerTest: XCTestCase {
 
     override class func setUp() {
         super.setUp()
-        DLog("Start simulator test at path: \(simTempPath)")
+        Logger.cardSimulationLoader.debug("Start simulator test at path: \(simTempPath)")
 
         do {
             let pomXml = try Data(contentsOf: Bundle(for: Self.self)

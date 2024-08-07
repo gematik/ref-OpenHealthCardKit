@@ -19,11 +19,11 @@ import Foundation
 import GemCommonsKit
 
 func main() throws {
-    DLog("Cmdline working directory: [\(FileManager.default.currentDirectoryPath)]")
-    DLog("Cmdline argc: \(CommandLine.argc)")
-    DLog("Cmdline: \(CommandLine.arguments)")
+    Logger.cardSimulationRunner.debug("Cmdline working directory: [\(FileManager.default.currentDirectoryPath)]")
+    Logger.cardSimulationRunner.debug("Cmdline argc: \(CommandLine.argc)")
+    Logger.cardSimulationRunner.debug("Cmdline: \(CommandLine.arguments)")
     guard CommandLine.arguments.count > 1 else {
-        ALog("No argument passed for configuration file")
+        Logger.cardSimulationRunner.fault("No argument passed for configuration file")
         exit(1)
     }
 
@@ -52,12 +52,12 @@ func main() throws {
         RunLoop.current.run(mode: .default, before: Date.distantFuture)
     }
 
-    DLog("Sleep one seconds")
+    Logger.cardSimulationRunner.debug("Sleep one seconds")
     Thread.sleep(forTimeInterval: 1)
 }
 
 do {
     try main()
 } catch {
-    ALog("Exception: \(error)")
+    Logger.cardSimulationRunner.fault("Exception: \(error)")
 }

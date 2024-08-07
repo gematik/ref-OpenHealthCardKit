@@ -19,6 +19,7 @@ import Foundation
 import GemCommonsKit
 import HealthCardAccess
 import Helper
+import OSLog
 
 internal class SecureCardChannel: CardChannelType {
     private let channel: CardChannelType
@@ -51,7 +52,7 @@ internal class SecureCardChannel: CardChannelType {
 
     @_disfavoredOverload
     func transmit(command: CommandType, writeTimeout: TimeInterval, readTimeout: TimeInterval) throws -> ResponseType {
-        DLog(">> \(command.bytes.hexString())")
+        Logger.healthCardControl.debug(">> \(command.bytes.hexString())")
         // we only log the header bytes to prevent logging user's PIN
         CommandLogger.commands.append(
             Command(message: ">> \(command.bytes.prefix(4).hexString())", type: .sendSecureChannel)
@@ -61,7 +62,8 @@ internal class SecureCardChannel: CardChannelType {
                                                      writeTimeout: writeTimeout,
                                                      readTimeout: readTimeout)
         let decryptedAPDU = try session.decrypt(response: encryptedResponse)
-        DLog("<< \(decryptedAPDU.sw.hexString()) | [\(decryptedAPDU.data?.hexString() ?? "")]")
+        Logger.healthCardControl
+            .debug("<< \(decryptedAPDU.sw.hexString()) | [\(decryptedAPDU.data?.hexString() ?? "")]")
         CommandLogger.commands.append(
             Command(
                 message: "<< \(decryptedAPDU.sw.hexString())",
@@ -76,7 +78,7 @@ internal class SecureCardChannel: CardChannelType {
         writeTimeout: TimeInterval,
         readTimeout: TimeInterval
     ) async throws -> CardReaderProviderApi.ResponseType {
-        DLog(">> \(command.bytes.hexString())")
+        Logger.healthCardControl.debug(">> \(command.bytes.hexString())")
         // we only log the header bytes to prevent logging user's PIN
         CommandLogger.commands.append(
             Command(message: ">> \(command.bytes.prefix(4).hexString())", type: .sendSecureChannel)
@@ -88,7 +90,8 @@ internal class SecureCardChannel: CardChannelType {
             readTimeout: readTimeout
         )
         let decryptedAPDU = try session.decrypt(response: encryptedResponse)
-        DLog("<< \(decryptedAPDU.sw.hexString()) | [\(decryptedAPDU.data?.hexString() ?? "")]")
+        Logger.healthCardControl
+            .debug("<< \(decryptedAPDU.sw.hexString()) | [\(decryptedAPDU.data?.hexString() ?? "")]")
         CommandLogger.commands.append(
             Command(
                 message: "<< \(decryptedAPDU.sw.hexString())",

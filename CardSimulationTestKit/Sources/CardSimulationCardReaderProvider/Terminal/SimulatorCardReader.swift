@@ -78,6 +78,10 @@ public class SimulatorCardReader: CardReaderType {
             }
         }
     }
+
+    public var description: String {
+        "SimulatorCardReader: \(name)"
+    }
 }
 
 extension SimulationProcessMode {

@@ -17,6 +17,7 @@
 import AEXML
 import Foundation
 import GemCommonsKit
+import OSLog
 
 extension SimulationManager {
     struct DependencyInfo {
@@ -96,8 +97,11 @@ extension SimulationManager {
         .flatMap { dependencyInfo in
             guard !dependencyInfo.simulatorExists else {
                 // Skip (consecutive) downloading of same/existing simulator version
-                DLog("Skip (consecutive) download of same/existing simulator version.\n* classPath: " +
-                    "[\(String(describing: dependencyInfo.simulatorClassPath?.absoluteString))]")
+                Logger.cardSimulationLoader
+                    .debug(
+                        // swiftlint:disable:next line_length
+                        "Skip (consecutive) download of same/existing simulator version.\n* classPath: [\(String(describing: dependencyInfo.simulatorClassPath?.absoluteString))]"
+                    )
                 return Result.success(dependencyInfo)
             }
 
