@@ -20,7 +20,6 @@ import CardReaderProviderApi
 import Combine
 import CoreNFC
 import Foundation
-import GemCommonsKit
 import OSLog
 
 /// Abstraction to the NFCTagReaderSession to update the alertMessage that is being displayed to the user.
@@ -268,3 +267,69 @@ extension NFCTagReaderSession.Publisher {
 }
 
 #endif
+
+@propertyWrapper
+struct Synchronized<T> {
+    private let backing: SynchronizedVar<T>
+
+    /// Initialize a Synchronized wrapper
+    ///
+    /// - Parameter backing: the initial value
+    init(wrappedValue backing: T) {
+        self.backing = SynchronizedVar(backing)
+    }
+
+    /// Get/Set the backed value
+    var wrappedValue: T {
+        get {
+            backing.value
+        }
+        set {
+            backing.set { _ in
+                newValue
+            }
+        }
+    }
+
+    /// Projected self
+    var projectedValue: Synchronized<T> {
+        get {
+            return self
+        }
+        mutating set {
+            self = newValue
+        }
+    }
+}
+
+class SynchronizedVar<T> {
+    private var _value: T
+    private let mutex = NSRecursiveLock()
+
+    /// Canonical constructor
+    init(_ value: T) {
+        _value = value
+    }
+
+    /**
+        Get/Set the value for this SynchronizedVar in a
+        thread-safe (blocking) manner
+     */
+    var value: T {
+        mutex.lock()
+        defer {
+            mutex.unlock()
+        }
+        return _value
+    }
+
+    /// Set a new value in a transaction to make sure there is no potential 'gap' between get and consecutive set
+    ///
+    /// - Parameter block: the transaction that gets the oldValue and must return the newValue that will be stored
+    ///                    in the backing value.
+    func set(transaction block: @escaping (T) -> T) {
+        mutex.lock()
+        _value = block(_value)
+        mutex.unlock()
+    }
+}
