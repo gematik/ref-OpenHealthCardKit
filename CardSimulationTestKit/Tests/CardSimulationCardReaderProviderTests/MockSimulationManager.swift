@@ -15,8 +15,8 @@
 //
 
 import CardSimulationLoader
+@testable import CardSimulationCardReaderProvider
 import Foundation
-import GemCommonsKit
 
 class MockSimulationManager: SimulationManagerType {
     var delegates = WeakArray<SimulationManagerDelegate>()
