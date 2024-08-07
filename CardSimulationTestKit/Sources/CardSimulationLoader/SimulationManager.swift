@@ -15,7 +15,6 @@
 //
 
 import Foundation
-import GemCommonsKit
 import OSLog
 
 /// Protocol that describes G2-Kartensimulation Configuration files (pre-)processors
@@ -242,7 +241,7 @@ public class SimulationManager {
             do {
                 try FileManager.default.removeItem(at: $0.url)
             } catch {
-                ALog("Failed to clean simulator runner environment: [\(error)]")
+                Logger.cardSimulationLoader.fault("Failed to clean simulator runner environment: [\(error)]")
             }
         }
         /// Remove the simulation from the runners array
@@ -262,7 +261,7 @@ public class SimulationManager {
         do {
             try FileManager.default.removeItem(at: tempDirectory)
         } catch {
-            ALog("Failed to clean [\(error)]")
+            Logger.cardSimulationLoader.fault("Failed to clean [\(error)]")
         }
     }
 }
