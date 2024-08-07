@@ -111,7 +111,7 @@ extension JavaProcess {
                     delegate: JavaProcessUpdateDelegate? = nil) {
         #if os(macOS) || os(Linux)
         guard process == nil else {
-            ALog("WARN: double start. Process already started/initialized")
+            Logger.cardSimulationLoader.fault("WARN: double start. Process already started/initialized")
             return
         }
         #endif
