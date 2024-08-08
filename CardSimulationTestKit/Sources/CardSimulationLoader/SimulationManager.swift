@@ -112,7 +112,9 @@ public protocol SimulationManagerType {
 public class SimulationManager {
     /// Singleton instance of `SimulationManager`
     public static let shared = {
-        SimulationManager()
+        SimulationManager(tempDir: NSTemporaryDirectory().asURL.appendingPathComponent(
+            ProcessInfo.processInfo.globallyUniqueString, isDirectory: true
+        ))
     }()
 
     /// The default G2-Kartensimulation version
@@ -136,9 +138,7 @@ public class SimulationManager {
     /// - Parameters:
     ///     - tempDir: path to a directory to be used as temporary directory for storing dependencies and configuration.
     /// - Returns: a new SimulationManger
-    public init(tempDir: URL = NSTemporaryDirectory().asURL.appendingPathComponent(
-        ProcessInfo.processInfo.globallyUniqueString, isDirectory: true
-    )) {
+    public init(tempDir: URL) {
         Logger.cardSimulationLoader.debug("Init with tempDir: [\(tempDir)]")
         tempDirectory = tempDir
     }
@@ -193,6 +193,7 @@ public class SimulationManager {
         }
         .get()
     }
+    
 
     // Create and Manage the SimulationRunner (but not yet launch it)
     func manageSimulation(
@@ -201,7 +202,8 @@ public class SimulationManager {
         guard let simClassPath = info.simulatorClassPath else {
             throw SimulationLoaderError.malformedConfiguration
         }
-        let simulator = SimulationRunner(simulator: file, classPath: simClassPath)
+        let currentDir = FileManager.default.currentDirectoryPath.asURL
+        let simulator = SimulationRunner(simulator: file, classPath: simClassPath, workingDirectory: currentDir)
         simulator.delegate = self
         _runners.append((url: file, simulator: simulator))
         return simulator

@@ -36,7 +36,7 @@ public class SimulatorCard: CardType {
 
     required init(host: String, port: Int32, channel protocol: CardProtocol = .t1, timeout: Int = 10) {
         self.protocol = `protocol`
-        atr = Data.empty
+        atr = Data()
         self.host = host
         self.port = port
         connectTimeout = timeout

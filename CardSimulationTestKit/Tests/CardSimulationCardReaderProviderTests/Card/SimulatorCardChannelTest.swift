@@ -22,7 +22,7 @@ import XCTest
 
 final class SimulatorCardChannelTest: XCTestCase {
     class MockSimulatorCard: CardType {
-        var atr: ATR = Data.empty
+        var atr: ATR = Data()
         var `protocol`: CardProtocol = .t1
 
         func openBasicChannel() throws -> CardChannelType {

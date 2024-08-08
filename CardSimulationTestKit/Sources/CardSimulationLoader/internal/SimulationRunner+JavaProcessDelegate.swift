@@ -15,7 +15,6 @@
 //
 
 import Foundation
-import GemCommonsKit
 import ObjCCommonsKit
 import OSLog
 
@@ -60,7 +59,7 @@ extension SimulationRunner: JavaProcessUpdateDelegate {
                 } while line != nil
             }) {
                 // Caught NSException
-                ALog("Raised NSException while reading Process stdout")
+                Logger.cardSimulationLoader.fault("Raised NSException while reading Process stdout")
                 Logger.cardSimulationLoader.debug("NSException: \(exception)")
             }
 

@@ -146,7 +146,7 @@ class DisconnectedCard: CardType {
     let `protocol`: CardProtocol
 
     init() {
-        atr = Data.empty
+        atr = Data()
         self.protocol = CardProtocol(rawValue: 0)
     }
 
