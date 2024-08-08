@@ -15,7 +15,6 @@
 //
 
 import Foundation
-import GemCommonsKit
 import OSLog
 
 protocol JavaProcessConfig {
