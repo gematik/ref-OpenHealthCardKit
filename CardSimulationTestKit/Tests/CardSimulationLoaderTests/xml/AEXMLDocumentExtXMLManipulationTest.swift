@@ -16,8 +16,8 @@
 
 import AEXML
 @testable import CardSimulationLoader
-import GemCommonsKit
 import Nimble
+import OSLog
 import XCTest
 
 final class AEXMLDocumentExtXMLManipulationTest: XCTestCase {
@@ -43,7 +43,7 @@ final class AEXMLDocumentExtXMLManipulationTest: XCTestCase {
             expect(configElement?.value).to(equal("changed_../images/HBAG2_80276883110000017289_gema5.xml"))
             expect(xmlResult.root["ioConfiguration"]["port"].value).to(equal("0"))
         } catch {
-            ALog("Test-case failed: [\(error)]")
+            Logger.cardSimulationLoaderTests.fault("Test-case failed: [\(error)]")
             Nimble.fail("Failed with error \(error)")
         }
     }

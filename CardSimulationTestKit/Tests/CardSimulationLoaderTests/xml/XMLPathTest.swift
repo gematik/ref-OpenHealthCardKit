@@ -16,8 +16,8 @@
 
 import AEXML
 @testable import CardSimulationLoader
-import GemCommonsKit
 import Nimble
+import OSLog
 import XCTest
 
 final class XMLPathTest: XCTestCase {
@@ -85,7 +85,7 @@ final class XMLPathTest: XCTestCase {
             expect(elementAfter?.xml).to(equal(element.xml))
             expect(elementAfter?.xml).toNot(equal(elementBefore?.xml))
         } catch {
-            ALog("Test-case failed with exception: [\(error)]")
+            Logger.cardSimulationLoaderTests.fault("Test-case failed with exception: [\(error)]")
             Nimble.fail("Failed with error \(error)")
         }
     }

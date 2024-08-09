@@ -152,3 +152,20 @@ extension AEXMLDocument {
         return true
     }
 }
+
+extension String {
+    /**
+         Returns the nth found group by the pattern matched as a string.
+     */
+    public func match(pattern: String, group number: Int = 1) -> String? {
+        guard let regex = try? NSRegularExpression(pattern: "\(pattern)") else {
+            return nil
+        }
+        let result = regex.matches(in: self, options: [], range: NSRange(location: 0, length: count))
+        guard !result.isEmpty, result[0].numberOfRanges > 1, result[0].numberOfRanges > number else {
+            return nil
+        }
+
+        return (self as NSString).substring(with: result[0].range(at: number))
+    }
+}

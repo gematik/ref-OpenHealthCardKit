@@ -15,7 +15,6 @@
 //
 
 import Foundation
-import GemCommonsKit
 import Nimble
 
 @testable import CardSimulationCardReaderProvider

@@ -16,7 +16,6 @@
 
 import CardSimulationLoader
 import Foundation
-import GemCommonsKit
 
 func main() throws {
     Logger.cardSimulationRunner.debug("Cmdline working directory: [\(FileManager.default.currentDirectoryPath)]")

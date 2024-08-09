@@ -15,7 +15,6 @@
 //
 
 import Foundation
-import GemCommonsKit
 import OSLog
 
 /// Protocol that describes G2-Kartensimulation Configuration files (pre-)processors
@@ -113,7 +112,9 @@ public protocol SimulationManagerType {
 public class SimulationManager {
     /// Singleton instance of `SimulationManager`
     public static let shared = {
-        SimulationManager()
+        SimulationManager(tempDir: NSTemporaryDirectory().asURL.appendingPathComponent(
+            ProcessInfo.processInfo.globallyUniqueString, isDirectory: true
+        ))
     }()
 
     /// The default G2-Kartensimulation version
@@ -137,9 +138,7 @@ public class SimulationManager {
     /// - Parameters:
     ///     - tempDir: path to a directory to be used as temporary directory for storing dependencies and configuration.
     /// - Returns: a new SimulationManger
-    public init(tempDir: URL = NSTemporaryDirectory().asURL.appendingPathComponent(
-        ProcessInfo.processInfo.globallyUniqueString, isDirectory: true
-    )) {
+    public init(tempDir: URL) {
         Logger.cardSimulationLoader.debug("Init with tempDir: [\(tempDir)]")
         tempDirectory = tempDir
     }
@@ -202,7 +201,8 @@ public class SimulationManager {
         guard let simClassPath = info.simulatorClassPath else {
             throw SimulationLoaderError.malformedConfiguration
         }
-        let simulator = SimulationRunner(simulator: file, classPath: simClassPath)
+        let currentDir = FileManager.default.currentDirectoryPath.asURL
+        let simulator = SimulationRunner(simulator: file, classPath: simClassPath, workingDirectory: currentDir)
         simulator.delegate = self
         _runners.append((url: file, simulator: simulator))
         return simulator
@@ -242,7 +242,7 @@ public class SimulationManager {
             do {
                 try FileManager.default.removeItem(at: $0.url)
             } catch {
-                ALog("Failed to clean simulator runner environment: [\(error)]")
+                Logger.cardSimulationLoader.fault("Failed to clean simulator runner environment: [\(error)]")
             }
         }
         /// Remove the simulation from the runners array
@@ -262,7 +262,7 @@ public class SimulationManager {
         do {
             try FileManager.default.removeItem(at: tempDirectory)
         } catch {
-            ALog("Failed to clean [\(error)]")
+            Logger.cardSimulationLoader.fault("Failed to clean [\(error)]")
         }
     }
 }

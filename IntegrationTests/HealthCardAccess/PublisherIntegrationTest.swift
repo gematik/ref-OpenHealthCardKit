@@ -17,7 +17,6 @@
 import CardReaderProviderApi
 import Combine
 import Foundation
-import GemCommonsKit
 @testable import HealthCardAccess
 import Nimble
 import OSLog

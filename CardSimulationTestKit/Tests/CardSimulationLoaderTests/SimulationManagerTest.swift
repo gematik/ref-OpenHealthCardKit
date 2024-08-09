@@ -15,8 +15,8 @@
 //
 
 @testable import CardSimulationLoader
-import GemCommonsKit
 import Nimble
+import OSLog
 import XCTest
 
 final class SimulationManagerTest: XCTestCase {
@@ -130,7 +130,7 @@ final class SimulationManagerTest: XCTestCase {
             expect(weakDelegate?.didCallEnded ?? false).to(beFalse())
             expect(weakDelegate).to(beNil())
         } catch {
-            ALog("Exception thrown in test-case [\(error)]")
+            Logger.cardSimulationLoaderTests.fault("Exception thrown in test-case [\(error)]")
             #if os(macOS) || os(Linux)
             Nimble.fail("Failed with error \(error)")
             #else
@@ -168,7 +168,7 @@ final class SimulationManagerTest: XCTestCase {
             expect(delegate.didCallEnded).to(beTrue())
 
         } catch {
-            ALog("Exception thrown in test-case [\(error)]")
+            Logger.cardSimulationLoaderTests.fault("Exception thrown in test-case [\(error)]")
             #if os(macOS) || os(Linux)
             Nimble.fail("Failed with error \(error)")
             #else

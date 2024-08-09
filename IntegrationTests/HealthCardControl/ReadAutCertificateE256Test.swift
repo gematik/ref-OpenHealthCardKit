@@ -15,10 +15,10 @@
 //
 
 import Foundation
-import GemCommonsKit
 import HealthCardAccess
 @testable import HealthCardControl
 import Nimble
+import OSLog
 import Util
 import XCTest
 
@@ -36,7 +36,7 @@ final class ReadAutCertificateE256Test: CardSimulationTerminalTestCase {
         do {
             expectedCertificate = try Data(contentsOf: path)
         } catch {
-            ALog("Could not read certificate file: \(path)\nError: \(error)")
+            Logger.integrationTest.fault("Could not read certificate file: \(path)\nError: \(error)")
         }
     }
 

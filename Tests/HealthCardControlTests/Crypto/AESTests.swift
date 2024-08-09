@@ -15,7 +15,6 @@
 //
 
 import CommonCrypto
-import GemCommonsKit
 @testable import HealthCardControl
 import Nimble
 import XCTest

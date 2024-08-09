@@ -32,7 +32,7 @@ class CommandTypeExtLogicChannelTests: XCTestCase {
         expect(command.ne).to(equal(256))
         expect(command.nc).to(equal(0))
 
-        expect(command.bytes).to(equal([0x1, 0x2, 0x3, 0x4, 0x00].data))
+        expect(command.bytes).to(equal(Data([0x1, 0x2, 0x3, 0x4, 0x00])))
     }
 
     func testCommandAPDU_toChannel4() throws {
@@ -48,7 +48,7 @@ class CommandTypeExtLogicChannelTests: XCTestCase {
         expect(command.ne).to(equal(256))
         expect(command.nc).to(equal(0))
 
-        expect(command.bytes).to(equal([0x40, 0x2, 0x3, 0x4, 0x00].data))
+        expect(command.bytes).to(equal(Data([0x40, 0x2, 0x3, 0x4, 0x00])))
     }
 
     func testCommandAPDU_toChannel19() throws {
@@ -64,7 +64,7 @@ class CommandTypeExtLogicChannelTests: XCTestCase {
         expect(command.ne).to(equal(256))
         expect(command.nc).to(equal(0))
 
-        expect(command.bytes).to(equal([0x4F, 0x2, 0x3, 0x4, 0x00].data))
+        expect(command.bytes).to(equal(Data([0x4F, 0x2, 0x3, 0x4, 0x00])))
     }
 
     func testCommandAPDU_toChannel20() throws {

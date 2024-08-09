@@ -17,7 +17,6 @@
 import ASN1Kit
 import CardReaderProviderApi
 import Foundation
-import GemCommonsKit
 
 extension HealthCardCommand {
     /// Use case Manage Security Environment - gemSpec_COS#14.9.9

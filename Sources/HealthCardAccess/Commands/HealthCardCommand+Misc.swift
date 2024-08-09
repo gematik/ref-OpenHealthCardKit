@@ -17,7 +17,6 @@
 import ASN1Kit
 import CardReaderProviderApi
 import Foundation
-import GemCommonsKit
 
 extension HealthCardCommand {
     /// Builder representing Miscellaneous Commands in gemSpec_COS#14.9

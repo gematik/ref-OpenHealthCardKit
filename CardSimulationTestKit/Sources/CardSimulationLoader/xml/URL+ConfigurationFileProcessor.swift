@@ -16,7 +16,6 @@
 
 import AEXML
 import Foundation
-import GemCommonsKit
 
 /**
     This extension is supposed to copy the configuration file to a tmp path

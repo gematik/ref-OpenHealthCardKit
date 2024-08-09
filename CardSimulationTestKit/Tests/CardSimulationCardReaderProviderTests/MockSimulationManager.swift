@@ -14,9 +14,9 @@
 //  limitations under the License.
 //
 
+@testable import CardSimulationCardReaderProvider
 import CardSimulationLoader
 import Foundation
-import GemCommonsKit
 
 class MockSimulationManager: SimulationManagerType {
     var delegates = WeakArray<SimulationManagerDelegate>()
