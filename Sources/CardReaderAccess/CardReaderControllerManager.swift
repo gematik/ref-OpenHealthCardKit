@@ -16,7 +16,6 @@
 
 import CardReaderProviderApi
 import Foundation
-import GemCommonsKit
 
 /// The protocol represents the behavior for a ServiceLoader that provides `CardReaderControllerType`s
 public protocol CardReaderControllerManagerType: AnyObject {

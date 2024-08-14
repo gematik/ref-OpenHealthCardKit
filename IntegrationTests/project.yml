@@ -42,8 +42,6 @@ targets:
       - target: AEXMLExt
       - package: StreamReader
       - framework: Carthage/Build/SwiftSocket.xcframework
-      - package: GemCommonsKit
-        product: GemCommonsKit
 
 
   # CardSimulationTestKit
@@ -58,15 +56,12 @@ targets:
     settings:
       base:
         BUILD_LIBRARY_FOR_DISTRIBUTION: NO
+        SWIFT_OBJC_BRIDGING_HEADER: CardSimulationTestKit/Sources/CardSimulationLoader/exception/include/ExceptionCatcher.h
     dependencies:
       - package: AEXML
       - target: AEXMLExt
         embed: true
       - package: StreamReader
-      - package: GemCommonsKit
-        product: GemCommonsKit
-      - package: GemCommonsKit
-        product: ObjCCommonsKit
     transitivelyLinkDependencies: true
     scheme:
       testTargets:
@@ -114,8 +109,6 @@ targets:
       - target: CardSimulationLoader
       - package: AEXML
       - package: StreamReader
-      - package: GemCommonsKit
-        product: GemCommonsKit
   CardSimulationCardReaderProvider:
     type: framework
     platform: macOS
@@ -147,8 +140,6 @@ targets:
       - package: AEXML
       - target: AEXMLExt
       - target: CardSimulationLoader
-      - package: GemCommonsKit
-        product: GemCommonsKit
       - framework: Carthage/Build/Nimble.xcframework
     gatherCoverageData: true
   AEXMLExtTests:
@@ -175,6 +166,4 @@ targets:
       - target: CardSimulationCardReaderProvider
       - target: AEXMLExt
       - framework: Carthage/Build/Nimble.xcframework
-      - package: GemCommonsKit
-        product: GemCommonsKit
     gatherCoverageData: true

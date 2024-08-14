@@ -19,7 +19,6 @@ import ASN1Kit
 import CardReaderProviderApi
 import Combine
 import Foundation
-import GemCommonsKit
 import HealthCardAccess
 import OpenSSL
 import OSLog

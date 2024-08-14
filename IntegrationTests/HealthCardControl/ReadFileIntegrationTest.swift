@@ -17,10 +17,10 @@
 import CardReaderProviderApi
 import CardSimulationCardReaderProvider
 import Foundation
-import GemCommonsKit
 import HealthCardAccess
 @testable import HealthCardControl
 import Nimble
+import OSLog
 import XCTest
 
 final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
@@ -44,7 +44,7 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
         do {
             expectedCertificate = try Data(contentsOf: path)
         } catch {
-            ALog("Could not read certificate file: \(path)\nError: \(error)")
+            Logger.integrationTest.fault("Could not read certificate file: \(path)\nError: \(error)")
         }
 
         do {
@@ -52,7 +52,7 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
                 .publisher(for: Self.healthCard)
                 .test()
         } catch {
-            ALog("Could not execute select root command while setup\nError: \(error)")
+            Logger.integrationTest.fault("Could not execute select root command while setup\nError: \(error)")
         }
     }
 

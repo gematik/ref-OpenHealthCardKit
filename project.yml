@@ -55,9 +55,6 @@ packages:
   ASN1Kit:
     url: https://github.com/gematik/ASN1Kit
     majorVersion: 1.2.0
-  GemCommonsKit:
-    url: https://github.com/gematik/ref-GemCommonsKit.git
-    majorVersion: 1.3.0
   OpenSSL-Swift:
    url: https://github.com/gematik/OpenSSL-Swift
    majorVersion: 4.2.0
@@ -110,8 +107,6 @@ targets:
       - target: Helper_iOS
       - package: ASN1Kit
       - package: OpenSSL-Swift
-      - package: GemCommonsKit
-        product: GemCommonsKit
       - target: HealthCardAccess_iOS
       - target: HealthCardControl_iOS
       - sdk: CoreNFC.framework
@@ -137,8 +132,6 @@ targets:
     info:
       path: Resources/CardReaderProviderApi_Info.plist
     dependencies:
-      - package: GemCommonsKit
-        product: GemCommonsKit
       - target: Helper_${platform}
     scheme:
       testTargets:
@@ -176,8 +169,6 @@ targets:
       - Tests/CardReaderProviderApiTests
     dependencies:
       - target: CardReaderProviderApi_${platform}
-      - package: GemCommonsKit
-        product: GemCommonsKit
       - framework: Carthage/Build/Nimble.xcframework
   CardReaderAccessTests:
     type: bundle.unit-test
@@ -216,8 +207,6 @@ targets:
     dependencies:
       - target: HealthCardAccess_${platform}
       - package: ASN1Kit
-      - package: GemCommonsKit
-        product: GemCommonsKit
       - framework: Carthage/Build/Nimble.xcframework
       - target: Util_${platform}
   HealthCardControl:
@@ -247,8 +236,6 @@ targets:
     dependencies:
       - target: HealthCardControl_${platform}
       - target: Util_${platform}
-      - package: GemCommonsKit
-        product: GemCommonsKit
       - framework: Carthage/Build/Nimble.xcframework
       - sdk: Combine.framework
   NFCCardReaderProvider:
@@ -262,8 +249,6 @@ targets:
       - target: HealthCardAccess_iOS
       - target: HealthCardControl_iOS
       - target: Helper_iOS
-      - package: GemCommonsKit
-        product: GemCommonsKit
       - sdk: CoreNFC.framework
     scheme:
       testTargets:
@@ -287,8 +272,6 @@ targets:
     sources:
       - Tests/Util
     dependencies:
-      - package: GemCommonsKit
-        product: GemCommonsKit
       - sdk: Combine.framework
 
 buildImplicitDependencies: true

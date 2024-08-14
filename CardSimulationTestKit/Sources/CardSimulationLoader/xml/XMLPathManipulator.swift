@@ -96,8 +96,10 @@ extension XMLPathManipulatorHolder {
 
         - Returns: XML manipulator that modifies relative path for the give path
      */
-    public static func relativeToAbsolutePathManipulator(with path: XMLPath, absolutePath: URL = FileManager.default
-        .currentDirectoryPath.asURL) -> XMLPathManipulator {
+    public static func relativeToAbsolutePathManipulator(
+        with path: XMLPath,
+        absolutePath: URL
+    ) -> XMLPathManipulator {
         XMLPathManipulatorHolder(path: path) { _, element in
             if var elementValue = element.value {
                 if elementValue.hasPrefix("../") || elementValue.hasPrefix("./") {

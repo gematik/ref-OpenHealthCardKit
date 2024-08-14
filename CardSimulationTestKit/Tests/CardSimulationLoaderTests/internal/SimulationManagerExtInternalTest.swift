@@ -17,8 +17,8 @@
 import AEXML
 @testable import CardSimulationLoader
 import Foundation
-import GemCommonsKit
 import Nimble
+import OSLog
 import XCTest
 
 final class SimulationManagerExtInternalTest: XCTestCase {
@@ -52,7 +52,7 @@ final class SimulationManagerExtInternalTest: XCTestCase {
             expect(dependencyInfo.simulatorExists).to(beTrue())
             try FileManager.default.removeItem(at: simPath)
         } catch {
-            ALog("Test-case failed with exception: [\(error)]")
+            Logger.cardSimulationLoaderTests.fault("Test-case failed with exception: [\(error)]")
             Nimble.fail("Failed with error \(error)")
         }
     }
@@ -91,7 +91,7 @@ final class SimulationManagerExtInternalTest: XCTestCase {
             // cleanup
             try FileManager.default.removeItem(at: outputPath)
         } catch {
-            ALog("Test-case failed with exception: [\(error)]")
+            Logger.cardSimulationLoaderTests.fault("Test-case failed with exception: [\(error)]")
             Nimble.fail("Failed with error \(error)")
         }
     }

@@ -19,7 +19,6 @@
 import CardReaderProviderApi
 import CoreNFC
 import Foundation
-import GemCommonsKit
 import Helper
 import OSLog
 

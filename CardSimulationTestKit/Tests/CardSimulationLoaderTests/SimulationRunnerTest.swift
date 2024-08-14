@@ -15,7 +15,6 @@
 //
 
 @testable import CardSimulationLoader
-import GemCommonsKit
 import Nimble
 import OSLog
 import XCTest
@@ -43,7 +42,7 @@ final class SimulationRunnerTest: XCTestCase {
             )
             .get()
         } catch {
-            ALog("Error while loading dependencies: \(error)")
+            Logger.cardSimulationLoader.fault("Error while loading dependencies: \(error)")
         }
     }
 
@@ -52,7 +51,7 @@ final class SimulationRunnerTest: XCTestCase {
         do {
             try FileManager.default.removeItem(at: simTempPath)
         } catch {
-            ALog("Error while cleaning up test-case. \(String(describing: error))")
+            Logger.cardSimulationLoader.fault("Error while cleaning up test-case. \(String(describing: error))")
         }
         super.tearDown()
     }

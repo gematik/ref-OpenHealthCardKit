@@ -41,7 +41,7 @@ class CardGenerationTest: XCTestCase {
         expect(CardGeneration.parseCardGeneration(data: Data([0x4, 0x03, 0x63]))) == .g2
         expect(CardGeneration.parseCardGeneration(data: Data([0x4, 0x04, 0x00]))) == .g2_1
         expect(CardGeneration.parseCardGeneration(data: Data([0x5, 0x00, 0x00]))) == .g2_1
-        expect(CardGeneration.parseCardGeneration(data: Data.empty)).to(beNil())
+        expect(CardGeneration.parseCardGeneration(data: Data())).to(beNil())
     }
 
     static let allTests = [
