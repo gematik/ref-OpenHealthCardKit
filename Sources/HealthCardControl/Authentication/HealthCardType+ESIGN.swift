@@ -61,6 +61,16 @@ public enum AutCertInfo {
 
 /// Alias for the certificate response that holds the raw certificate + the AutCertInfo associated with it.
 public struct AutCertificateResponse {
+    /// Default initializer for AutCertificateResponse
+    ///
+    /// - Parameters:
+    ///  - info: The AutCertInfo associated with the certificate
+    ///  - certificate: Raw certificate data
+    public init(info: AutCertInfo, certificate: Data) {
+        self.info = info
+        self.certificate = certificate
+    }
+
     /// The AutCertInfo associated with the certificate
     public let info: AutCertInfo
     /// Raw certificate data
