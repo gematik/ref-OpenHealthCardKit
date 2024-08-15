@@ -1,3 +1,10 @@
 == API Documentation
 
-Generated API docs are available at https://gematik.github.io/ref-OpenHealthCardKit.
+Generated API docs are available at https://swiftpackageindex.com/gematik/ref-OpenHealthCardKit[Swift Package Index]:
+
+* HealthCardControl (tbd)
+* https://swiftpackageindex.com/gematik/ref-OpenHealthCardKit/main/documentation/healthcardaccess[HealthCardAccess]
+* https://swiftpackageindex.com/gematik/ref-OpenHealthCardKit/main/documentation/nfccardreaderprovider[NFCCardReaderProvider]
+* https://swiftpackageindex.com/gematik/ref-OpenHealthCardKit/main/documentation/cardreaderproviderapi[CardReaderProviderApi]
+
+NOTE: As of now the automatic API doc generation for `HealthCardControl` is broken. It's possible to generate it manually via Xcode: Select the target `HealthCardControl` and select `Product -> Build Documentation`.

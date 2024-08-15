@@ -43,7 +43,7 @@ final class KeyAgreementIntegrationTest: CardSimulationTerminalTestCase {
     func testNegotiatePaceEcdhGmAesCbcCmac128() async throws {
         let can = try! CAN.from(Data("123123".utf8)) // swiftlint:disable:this force_try
         // tag::negotiateSessionKey[]
-        let secureMessaging = try await KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128.negotiateSessionKey(
+        let secureMessaging = try await KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128.negotiateSessionKeyAsync(
             card: CardSimulationTerminalTestCase.healthCard,
             can: can,
             writeTimeout: 0,

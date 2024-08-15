@@ -1,14 +1,8 @@
 # 5.10.0
 
-## Added
-
-- Add public initializer for HealthCardResponse
-- Add public initializer for AutCertificateResponse
-
-## Removed
-
-- Remove dependency on GemCommonsKit
-- Remove dependency on DataKit
+- Add public initializers for `HealthCardResponse` and `AutCertificateResponse`
+- Remove dependency on `GemCommonsKit`
+- Remove dependency on `DataKit`
 
 # 5.9.0
 

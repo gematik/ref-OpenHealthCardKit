@@ -24,7 +24,14 @@ This document describes the functionalitiy and structure of OpenHealthCardKit.
 
 == API Documentation
 
-Generated API docs are available at https://gematik.github.io/ref-OpenHealthCardKit.
+Generated API docs are available at https://swiftpackageindex.com/gematik/ref-OpenHealthCardKit[Swift Package Index]:
+
+* HealthCardControl (tbd)
+* https://swiftpackageindex.com/gematik/ref-OpenHealthCardKit/main/documentation/healthcardaccess[HealthCardAccess]
+* https://swiftpackageindex.com/gematik/ref-OpenHealthCardKit/main/documentation/nfccardreaderprovider[NFCCardReaderProvider]
+* https://swiftpackageindex.com/gematik/ref-OpenHealthCardKit/main/documentation/cardreaderproviderapi[CardReaderProviderApi]
+
+NOTE: As of now the automatic API doc generation for `HealthCardControl` is broken. It's possible to generate it manually via Xcode: Select the target `HealthCardControl` and select `Product -> Build Documentation`.
 
 == Getting Started
 
@@ -184,19 +191,20 @@ convenience publisher is useful.
 
 [source,swift]
 ----
-readCertificate
+_ = readCertificate
     .sink(
         receiveCompletion: { completion in
             switch completion {
             case .finished:
-                DLog("Completed")
+                Logger.integrationTest.debug("Completed")
             case let .failure(error):
-                DLog("Error: \(error)")
+                Logger.integrationTest.debug("Error: \(error)")
             }
         },
         receiveValue: { healthCardResponse in
-            DLog("Got a certifcate")
+            Logger.integrationTest.debug("Got a certifcate")
             let certificate = healthCardResponse.data!
+            Logger.integrationTest.debug("Certificate: \(certificate.hexString())")
             // proceed with certificate data here
             // use swiftUI to a show success message on screen etc.
         }
@@ -237,7 +245,7 @@ steps for establishing a secure channel with the Health Card and expose only a s
 
 [source,swift]
 ----
-let secureMessaging = try await KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128.negotiateSessionKey(
+let secureMessaging = try await KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128.negotiateSessionKeyAsync(
     card: CardSimulationTerminalTestCase.healthCard,
     can: can,
     writeTimeout: 0,

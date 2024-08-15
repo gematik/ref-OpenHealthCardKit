@@ -19,5 +19,5 @@ import Foundation
 protocol OutputStreaming {
     var hasSpaceAvailable: Bool { get }
 
-    func write(_ buffer: UnsafePointer<UInt8>, maxLength len: Int) -> Int
+    func write(_ buffer: UnsafeRawBufferPointer, maxLength len: Int) -> Int
 }

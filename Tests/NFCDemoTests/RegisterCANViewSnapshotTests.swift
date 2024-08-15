@@ -20,15 +20,9 @@ import SwiftUI
 import XCTest
 
 class RegisterCANViewSnapshotTests: XCTestCase {
-    override func setUp() {
-        super.setUp()
-
-        diffTool = "open"
-    }
-
     func testRegisterCANViewSnapshotTests() throws {
         let sut = RegisterCANView()
             .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        assertSnapshots(matching: sut, as: snapshotModi())
+        assertSnapshots(of: sut, as: snapshotModi())
     }
 }
