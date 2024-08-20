@@ -68,8 +68,10 @@ final class SimulatorCardChannelTest: XCTestCase {
             }
             let count = Swift.min(bytes.count, len)
 
-            bytes.withUnsafeBytes {
-                buffer.assign(from: $0, count: count)
+            bytes.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) in
+                // swiftlint:disable:next force_unwrapping
+                let rawPtr = ptr.baseAddress!.assumingMemoryBound(to: UInt8.self)
+                buffer.update(from: rawPtr, count: count)
             }
             availableBytes?.removeFirst(count)
             return count
@@ -79,8 +81,10 @@ final class SimulatorCardChannelTest: XCTestCase {
             !closedOutputStream
         }
 
-        func write(_ buffer: UnsafePointer<UInt8>, maxLength len: Int) -> Int {
-            let data = Data(bytes: buffer, count: len)
+        func write(_ buffer: UnsafeRawBufferPointer, maxLength len: Int) -> Int {
+            // swiftlint:disable:next force_unwrapping
+            let rawPtr = buffer.baseAddress!
+            let data = Data(bytes: rawPtr, count: len)
             bytesWritten.append(data)
             return data.count
         }

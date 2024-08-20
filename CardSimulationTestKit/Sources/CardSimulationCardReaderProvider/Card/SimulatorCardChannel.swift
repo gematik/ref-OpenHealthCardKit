@@ -100,8 +100,8 @@ public class SimulatorCardChannel: CardChannelType {
         let message = try command.bytes.berTlvEncoded()
         Logger.cardSimulationCardReaderProvider
             .debug("SEND:     \(message.map { String(format: "%02hhX", $0) }.joined())")
-        _ = message.withUnsafeBytes {
-            outputStream.write($0, maxLength: message.count)
+        _ = message.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) in
+            outputStream.write(ptr, maxLength: message.count)
         }
 
         var buffer = [UInt8](repeating: 0x0, count: maxResponseLength)

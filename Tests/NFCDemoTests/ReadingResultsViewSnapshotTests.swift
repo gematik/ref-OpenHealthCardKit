@@ -22,12 +22,6 @@ import XCTest
 
 // swiftlint:disable force_unwrapping
 class ReadingResultsViewSnapshotTests: XCTestCase {
-    override func setUp() {
-        super.setUp()
-
-        diffTool = "open"
-    }
-
     func testReadingResultsViewSnapshotTests() throws {
         let sut = NavigationView {
             ReadingResultsView(
@@ -49,7 +43,7 @@ class ReadingResultsViewSnapshotTests: XCTestCase {
             )
         }
         .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        assertSnapshots(matching: sut, as: snapshotModi())
+        assertSnapshots(of: sut, as: snapshotModi())
     }
 
     func testReadingResultsDetailViewSnapshotTests() throws {
@@ -72,7 +66,7 @@ class ReadingResultsViewSnapshotTests: XCTestCase {
             )
         }
         .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        assertSnapshots(matching: sut, as: snapshotModi())
+        assertSnapshots(of: sut, as: snapshotModi())
     }
 }
 

@@ -104,7 +104,7 @@ final class PublisherIntegrationTest: CardSimulationTerminalTestCase {
             // end::createCommandSequence[]
 
             // tag::processExecutionResult[]
-            readCertificate
+            _ = readCertificate
                 .sink(
                     receiveCompletion: { completion in
                         switch completion {
@@ -117,6 +117,7 @@ final class PublisherIntegrationTest: CardSimulationTerminalTestCase {
                     receiveValue: { healthCardResponse in
                         Logger.integrationTest.debug("Got a certifcate")
                         let certificate = healthCardResponse.data!
+                        Logger.integrationTest.debug("Certificate: \(certificate.hexString())")
                         // proceed with certificate data here
                         // use swiftUI to a show success message on screen etc.
                     }

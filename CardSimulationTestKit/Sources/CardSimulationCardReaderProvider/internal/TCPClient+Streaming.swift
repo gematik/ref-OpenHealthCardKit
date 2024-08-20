@@ -36,7 +36,7 @@ extension TCPClient: TCPClientType {
             Logger.cardSimulationCardReaderProvider.fault("Read error")
             return -1
         }
-        buffer.assign(from: bytes, count: bytes.count)
+        buffer.update(from: bytes, count: bytes.count)
         return bytes.count
     }
 
@@ -44,8 +44,10 @@ extension TCPClient: TCPClientType {
         fd != nil
     }
 
-    func write(_ buffer: UnsafePointer<UInt8>, maxLength len: Int) -> Int {
-        let data = Data(bytes: buffer, count: len)
+    func write(_ buffer: UnsafeRawBufferPointer, maxLength len: Int) -> Int {
+        // swiftlint:disable:next force_unwrapping
+        let rawPtr = buffer.baseAddress!
+        let data = Data(bytes: rawPtr, count: len)
         switch send(data: data) {
         case .failure: return -1
         case .success: return data.count
