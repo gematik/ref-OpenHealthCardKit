@@ -1,3 +1,7 @@
+# 5.10.1
+
+- Increase Package.swift iOS version
+
 # 5.10.0
 
 - Add public initializers for `HealthCardResponse` and `AutCertificateResponse`
