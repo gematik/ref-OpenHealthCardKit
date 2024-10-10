@@ -45,8 +45,7 @@ final class AuthenticateChallengeE256Test: CardSimulationTerminalTestCase {
 
     func testSignChallenge() async throws {
         let challenge = "1234567890".data(using: .utf8)!
-        _ = try await Self.healthCard
-            .verify(pin: "123456", type: .mrpinHome)
+        _ = try await Self.healthCard.verifyAsync(pin: "123456", type: .mrpinHome)
         let authenticatedResult = try await Self.healthCard.authenticateAsync(challenge: challenge)
 
         expect(authenticatedResult.certificate.signatureAlgorithm) == .ecdsaSha256

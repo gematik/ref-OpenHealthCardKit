@@ -41,3 +41,11 @@ extension XCTestCase {
         ]
     }
 }
+
+class ERPSnapshotTestCase: XCTestCase {
+    override func invokeTest() {
+        withSnapshotTesting(record: .failed, diffTool: "open") {
+            super.invokeTest()
+        }
+    }
+}

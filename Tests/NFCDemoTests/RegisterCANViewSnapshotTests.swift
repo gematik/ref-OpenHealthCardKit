@@ -19,7 +19,7 @@ import SnapshotTesting
 import SwiftUI
 import XCTest
 
-class RegisterCANViewSnapshotTests: XCTestCase {
+class RegisterCANViewSnapshotTests: ERPSnapshotTestCase {
     func testRegisterCANViewSnapshotTests() throws {
         let sut = RegisterCANView()
             .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
