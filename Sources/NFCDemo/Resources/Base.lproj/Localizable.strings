@@ -12,6 +12,7 @@
 "can_btn_next_login_test" = "Login-Test";
 "can_btn_next_reset_pin" = "Unlock card";
 "can_btn_next_reset_pin_with_new_pin" = "Set custom PIN";
+"can_btn_next_read_personal_data" = "Read personal data";
 "can_txt_help_title" = "Where can I find my CAN?";
 "can_txt_help_explanation" = "Don't see a CAN printed on your card?\nThen you need a new health insurance card. You can request one from your statutory health insurer.";
 
@@ -47,6 +48,17 @@
 "change_btn_next" = "Next";
 
 /*
+  PERSONAL DATA
+*/
+"pd_txt_title" = "Read personal data";
+"pd_txt_intro" = "Personal data will be presented after successfully reading the card. No PIN is needed.";
+"pd_btn_next" = "Next";
+"pd_lbl_name" = "Name";
+"pd_lbl_first_name" = "First Name";
+"pd_lbl_address" = "Address";
+"pd_lbl_insurance_number" = "Insurance Number";
+
+/*
   StartNFC
 */
 
@@ -71,6 +83,7 @@
 "nfc_txt_msg_secure_channel" = "Establishing secure connection..";
 "nfc_txt_msg_verify_pin" = "Verifying pin...";
 "nfc_txt_msg_reading_auth_cert"= "Reading authentication certificate...";
+"nfc_txt_meg_reading_personal_data" = "Reading personal data...";
 "nfc_txt_msg_signing" = "Signing...";
 "nfc_txt_msg_success" = "Successful signing!";
 "nfc_txt_msg_failure" = "Error!";

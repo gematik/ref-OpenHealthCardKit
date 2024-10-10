@@ -28,11 +28,14 @@ struct StartNFCView: View {
     @StateObject var loginState = NFCLoginViewModel()
     @StateObject var resetRetryCounterState = NFCResetRetryCounterViewModel()
     @StateObject var changeReferenceDataState = NFCChangeReferenceDataViewModel()
+    @EnvironmentObject var readPersonalDataState: NFCReadPersonalDataViewModel
     @State var error: Swift.Error?
     @State private var showAlert = false
     @State var loading = false
     @State var loggedIn = false
     @State var checkBrainpoolAlgorithm = false
+
+    @Environment(\.dismiss) var dismiss
 
     var readingResults: [ReadingResult] {
         (loginState.results + resetRetryCounterState.results + changeReferenceDataState.results)
@@ -114,6 +117,9 @@ struct StartNFCView: View {
                             oldPin: oldPin,
                             newPin: pin
                         )
+                    case .readPersonalData:
+                        await readPersonalDataState.readPersonalData(can: can)
+                        dismiss()
                     }
                 }
 
@@ -180,6 +186,7 @@ struct StartNFCView: View {
         case resetRetryCounter
         case resetRetryCounterWithNewPin // do not use this for solely setting a new PIN value
         case changeReferenceDataSetNewPin
+        case readPersonalData
     }
 }
 

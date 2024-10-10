@@ -73,6 +73,12 @@ struct RegisterCANView: View {
                                 .accessibility(identifier: "can_btn_next_login_test")
                         }
                         .disabled(!buttonEnabled)
+
+                        NavigationLink(destination: ReadPersonalDataView(can: storedCan)) {
+                            GTextButton(label: "can_btn_next_read_personal_data", enabled: buttonEnabled)
+                                .accessibility(identifier: "can_btn_next_read_personal_data")
+                        }
+                        .disabled(!buttonEnabled)
                     }
 
                     Text("can_txt_help_title")
