@@ -8,7 +8,7 @@ options:
   bundleIdPrefix: de.gematik.ti.ohcapp4ios
   deploymentTarget:
     macOS: 11.0
-    iOS: 14.0
+    iOS: 17.0
   minimumXcodeGenVersion: 2.3.0
 schemes:
   AllTests_iOS:
@@ -67,6 +67,12 @@ packages:
   StreamReader:
     url: https://github.com/hectr/swift-stream-reader/
     majorVersion: 0.3.0   
+  Gzip:
+    url: https://github.com/1024jp/GzipSwift
+    majorVersion: 6.0.0
+  SwiftyXMLParser:
+    url: https://github.com/yahoojapan/SwiftyXMLParser
+    majorVersion: 5.6.0
 settings:
   base:
     DEVELOPMENT_TEAM: A9FL89PFFL
@@ -107,6 +113,8 @@ targets:
       - target: Helper_iOS
       - package: ASN1Kit
       - package: OpenSSL-Swift
+      - package: Gzip
+      - package: SwiftyXMLParser
       - target: HealthCardAccess_iOS
       - target: HealthCardControl_iOS
       - sdk: CoreNFC.framework

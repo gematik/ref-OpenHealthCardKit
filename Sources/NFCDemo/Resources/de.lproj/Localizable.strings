@@ -12,6 +12,7 @@
 "can_btn_next_login_test" = "Login-Test";
 "can_btn_next_reset_pin" = "Karte entsperren";
 "can_btn_next_reset_pin_with_new_pin" = "Wunsch-PIN vergeben";
+"can_btn_next_read_personal_data" = "Persönliche Daten lesen";
 "can_txt_help_title" = "Wo kann ich meine CAN finden?";
 "can_txt_help_explanation" = "Falls sie auf Ihrer Karte keine Zugangsnummer (CAN) sehen, benötigen Sie eine neue Gesundheitskarte mit NFC-Chip.";
 
@@ -47,6 +48,17 @@
 "change_btn_next" = "Weiter";
 
 /*
+  PERSONAL DATA
+*/
+"pd_txt_title" = "Persönliche Daten lesen";
+"pd_txt_intro" = "Die persönlichen Daten werden nach dem erfolgreichen Einlesen der Karte angezeigt. Eine PIN ist nicht erforderlich.";
+"pd_btn_next" = "Weiter";
+"pd_lbl_name" = "Name";
+"pd_lbl_first_name" = "Vorname";
+"pd_lbl_address" = "Adresse";
+"pd_lbl_insurance_number" = "Versichertennummer";
+
+/*
   StartNFC
 */
 
@@ -71,6 +83,7 @@
 "nfc_txt_msg_secure_channel" = "Sichere Verbindung aufbauen...";
 "nfc_txt_msg_verify_pin" = "PIN verifizieren...";
 "nfc_txt_msg_reading_auth_cert"= "Zertifikat lesen...";
+"nfc_txt_meg_reading_personal_data" = "Lese persönliche Daten...";
 "nfc_txt_msg_signing" = "Signieren...";
 "nfc_txt_msg_success" = "Erfolgreich signiert!";
 "nfc_txt_msg_failure" = "Fehler!";
