@@ -19,7 +19,7 @@ import SnapshotTesting
 import SwiftUI
 import XCTest
 
-class RegisterPINViewSnapshotTests: XCTestCase {
+class RegisterPINViewSnapshotTests: ERPSnapshotTestCase {
     func testRegisterPINViewSnapshotTests() throws {
         let sut = NavigationView { RegisterPINView(can: "123456") }
             .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)

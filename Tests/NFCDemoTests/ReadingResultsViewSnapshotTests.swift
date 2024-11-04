@@ -21,14 +21,16 @@ import SwiftUI
 import XCTest
 
 // swiftlint:disable force_unwrapping
-class ReadingResultsViewSnapshotTests: XCTestCase {
+class ReadingResultsViewSnapshotTests: ERPSnapshotTestCase {
     func testReadingResultsViewSnapshotTests() throws {
         let sut = NavigationView {
             ReadingResultsView(
                 readingResults: [
-                    ReadingResult(timestamp: "2021-05-26T10:59:37+00:00".date!,
-                                  result: ViewState.value(true),
-                                  commands: []),
+                    ReadingResult(
+                        timestamp: "2021-05-26T10:59:37+00:00".date!,
+                        result: ViewState.value(true),
+                        commands: []
+                    ),
                     ReadingResult(
                         timestamp: "2021-05-26T10:59:38+00:00".date!,
                         result: ViewState.value(true),
