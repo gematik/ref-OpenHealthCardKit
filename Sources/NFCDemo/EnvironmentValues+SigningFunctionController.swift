@@ -16,13 +16,13 @@
 
 import SwiftUI
 
-struct LoginControllerKey: EnvironmentKey {
-    static let defaultValue: LoginController = NFCLoginController()
+struct SigningFunctionControllerKey: EnvironmentKey {
+    static let defaultValue: SigningFunctionController = NFCSigningFunctionController()
 }
 
 extension EnvironmentValues {
-    var loginController: LoginController {
-        get { self[LoginControllerKey.self] }
-        set { self[LoginControllerKey.self] = newValue }
+    var signingFunctionController: SigningFunctionController {
+        get { self[SigningFunctionControllerKey.self] }
+        set { self[SigningFunctionControllerKey.self] = newValue }
     }
 }

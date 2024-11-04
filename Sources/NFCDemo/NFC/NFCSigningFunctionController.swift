@@ -24,7 +24,7 @@ import Helper
 import NFCCardReaderProvider
 import OSLog
 
-public class NFCLoginController: LoginController {
+public class NFCSigningFunctionController: SigningFunctionController {
     public enum Error: Swift.Error, LocalizedError {
         /// In case the PIN or CAN could not be constructed from input
         case cardError(NFCHealthCardSessionError)
@@ -82,7 +82,7 @@ public class NFCLoginController: LoginController {
     )
 
     // swiftlint:disable:next function_body_length
-    func login(can: String, pin: String, checkBrainpoolAlgorithm: Bool) async {
+    func signingFunction(can: String, pin: String, checkBrainpoolAlgorithm: Bool) async {
         if case .loading = await pState { return }
         Task { @MainActor in
             self.pState = .loading(nil)
@@ -105,11 +105,11 @@ public class NFCLoginController: LoginController {
                 type: EgkFileSystem.Pin.mrpinHome
             )
             if case let VerifyPinResponse.wrongSecretWarning(retryCount: count) = verifyPinResponse {
-                throw NFCLoginController.Error.wrongPin(retryCount: count)
+                throw NFCSigningFunctionController.Error.wrongPin(retryCount: count)
             } else if case VerifyPinResponse.passwordBlocked = verifyPinResponse {
-                throw NFCLoginController.Error.passwordBlocked
+                throw NFCSigningFunctionController.Error.passwordBlocked
             } else if VerifyPinResponse.success != verifyPinResponse {
-                throw NFCLoginController.Error.verifyPinResponse
+                throw NFCSigningFunctionController.Error.verifyPinResponse
             }
 
             session.updateAlert(message: NSLocalizedString("nfc_txt_msg_signing", comment: ""))
@@ -158,14 +158,14 @@ extension HealthCardType {
     func sign(payload: Data, checkAlgorithm: Bool) async throws -> Data {
         let certificate = try await readAutCertificateAsync()
         if checkAlgorithm, !certificate.info.algorithm.isBp256r1 {
-            throw NFCLoginController.Error.invalidAlgorithm(certificate.info.algorithm)
+            throw NFCSigningFunctionController.Error.invalidAlgorithm(certificate.info.algorithm)
         }
 
         CommandLogger.commands.append(Command(message: "Sign payload with card", type: .description))
         let response = try await signAsync(data: payload)
         guard response.responseStatus == ResponseStatus.success, let signature = response.data
         else {
-            throw NFCLoginController.Error.signatureFailure(response.responseStatus)
+            throw NFCSigningFunctionController.Error.signatureFailure(response.responseStatus)
         }
         Swift.print("SIGNATURE: \(signature.hexString())")
         return signature

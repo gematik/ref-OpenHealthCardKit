@@ -130,7 +130,7 @@ struct ReadingResultsView_Previews: PreviewProvider {
                     readingResults: [
                         ReadingResult(result: ViewState.value(true), commands: []),
                         ReadingResult(
-                            result: .error(NFCLoginController.Error.invalidCanOrPinFormat),
+                            result: .error(NFCSigningFunctionController.Error.invalidCanOrPinFormat),
                             commands: [
                                 Command(message: "Establish secure connection", type: .description),
                                 Command(message: "00A4040CD2760001448000|ne:-1]", type: .send),
@@ -145,7 +145,7 @@ struct ReadingResultsView_Previews: PreviewProvider {
 
             ReadingResultsView.DetailView(
                 result: ReadingResult(
-                    result: .error(NFCLoginController.Error.invalidCanOrPinFormat),
+                    result: .error(NFCSigningFunctionController.Error.invalidCanOrPinFormat),
                     commands: [
                         Command(message: "Establish secure connection", type: .description),
                         Command(message: "00A4040CD2760001448000|ne:-1]", type: .send),

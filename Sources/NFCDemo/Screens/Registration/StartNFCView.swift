@@ -25,7 +25,7 @@ struct StartNFCView: View {
     let pin: String
     let useCase: UseCase
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @StateObject var loginState = NFCLoginViewModel()
+    @StateObject var signingFunctionState = NFCSigningFunctionViewModel()
     @StateObject var resetRetryCounterState = NFCResetRetryCounterViewModel()
     @StateObject var changeReferenceDataState = NFCChangeReferenceDataViewModel()
     @EnvironmentObject var readPersonalDataState: NFCReadPersonalDataViewModel
@@ -38,7 +38,7 @@ struct StartNFCView: View {
     @Environment(\.dismiss) var dismiss
 
     var readingResults: [ReadingResult] {
-        (loginState.results + resetRetryCounterState.results + changeReferenceDataState.results)
+        (signingFunctionState.results + resetRetryCounterState.results + changeReferenceDataState.results)
             .sorted { $0.timestamp > $1.timestamp }
     }
 
@@ -87,7 +87,7 @@ struct StartNFCView: View {
                 .fixedSize(horizontal: false, vertical: true)
 
             #if DEBUG
-            if useCase == .login {
+            if useCase == .signingFunction {
                 Toggle("Check for brainpool algorithm", isOn: $checkBrainpoolAlgorithm).padding()
             }
             #endif
@@ -105,8 +105,12 @@ struct StartNFCView: View {
             Button {
                 Task {
                     switch useCase {
-                    case .login:
-                        await loginState.login(can: can, pin: pin, checkBrainpoolAlgorithm: checkBrainpoolAlgorithm)
+                    case .signingFunction:
+                        await signingFunctionState.signingFunction(
+                            can: can,
+                            pin: pin,
+                            checkBrainpoolAlgorithm: checkBrainpoolAlgorithm
+                        )
                     case .resetRetryCounter:
                         await resetRetryCounterState.resetRetryCounter(can: can, puk: puk)
                     case .resetRetryCounterWithNewPin:
@@ -157,12 +161,12 @@ struct StartNFCView: View {
                 message: Text(error?.localizedDescription ?? "alert_error_message_unknown"),
                 dismissButton: .default(Text("alert_btn_ok")) {
                     Task {
-                        await self.loginState.dismissError()
+                        await self.signingFunctionState.dismissError()
                     }
                 }
             )
         }
-        .onReceive(loginState.$state) { state in
+        .onReceive(signingFunctionState.$state) { state in
             self.loading = state.isLoading
             if let success = state.value {
                 self.loggedIn = success
@@ -182,7 +186,7 @@ struct StartNFCView: View {
     }
 
     enum UseCase {
-        case login
+        case signingFunction
         case resetRetryCounter
         case resetRetryCounterWithNewPin // do not use this for solely setting a new PIN value
         case changeReferenceDataSetNewPin
@@ -198,7 +202,7 @@ struct StartNFCView_Previews: PreviewProvider {
             puk: "",
             oldPin: "123456",
             pin: "123456",
-            useCase: .login
+            useCase: .signingFunction
         )
     }
 }

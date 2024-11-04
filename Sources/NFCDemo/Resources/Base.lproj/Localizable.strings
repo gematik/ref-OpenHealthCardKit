@@ -9,7 +9,7 @@
 "can_txt_title" = "CAN";
 "can_txt_can_intro" = "Please enter your card's CAN.";
 "can_edt_can_enter_can" = "CAN";
-"can_btn_next_login_test" = "Login-Test";
+"can_btn_next_signing_function" = "Signing function";
 "can_btn_next_reset_pin" = "Unlock card";
 "can_btn_next_reset_pin_with_new_pin" = "Set custom PIN";
 "can_btn_next_read_personal_data" = "Read personal data";
