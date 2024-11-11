@@ -50,16 +50,17 @@ internal class SecureCardChannel: CardChannelType {
     }
 
     @_disfavoredOverload
-    func transmit(command: CommandType, writeTimeout: TimeInterval, readTimeout: TimeInterval) throws -> ResponseType {
+    func transmitPublisher(command: CommandType, writeTimeout: TimeInterval,
+                           readTimeout: TimeInterval) throws -> ResponseType {
         Logger.healthCardControl.debug(">> \(command.bytes.hexString())")
         // we only log the header bytes to prevent logging user's PIN
         CommandLogger.commands.append(
             Command(message: ">> \(command.bytes.prefix(4).hexString())", type: .sendSecureChannel)
         )
         let encryptedCommand = try session.encrypt(command: command)
-        let encryptedResponse = try channel.transmit(command: encryptedCommand,
-                                                     writeTimeout: writeTimeout,
-                                                     readTimeout: readTimeout)
+        let encryptedResponse = try channel.transmitPublisher(command: encryptedCommand,
+                                                              writeTimeout: writeTimeout,
+                                                              readTimeout: readTimeout)
         let decryptedAPDU = try session.decrypt(response: encryptedResponse)
         Logger.healthCardControl
             .debug("<< \(decryptedAPDU.sw.hexString()) | [\(decryptedAPDU.data?.hexString() ?? "")]")
@@ -100,9 +101,9 @@ internal class SecureCardChannel: CardChannelType {
         return decryptedAPDU
     }
 
-    func close() throws {
+    func closePublisher() throws {
         session.invalidate()
-        try channel.close()
+        try channel.closePublisher()
     }
 
     func closeAsync() async throws {

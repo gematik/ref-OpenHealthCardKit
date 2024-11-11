@@ -29,7 +29,7 @@ extension HealthCardType {
     /// - Parameter challenge: the data to sign
     /// - Returns: Published Aut certificate combined with its signature method and DSA signed challenge data
     @available(*, deprecated, message: "Use structured concurrency version instead")
-    public func authenticate(challenge: Data) -> AnyPublisher<AuthenticationResult, Error> {
+    public func authenticatePublisher(challenge: Data) -> AnyPublisher<AuthenticationResult, Error> {
         readAutCertificate()
             .tryMap { try $0.certificateInfo() }
             .flatMap { info in
@@ -45,6 +45,21 @@ extension HealthCardType {
                     }
             }
             .eraseToAnyPublisher()
+    }
+
+    /// Authenticate a challenge on HealthCardType
+    ///
+    /// - Note: the HealthCard needs to be in a unlocked (e.g. mrPinHome verified) state.
+    ///
+    /// - Parameter challenge: the data to sign
+    /// - Returns: Published Aut certificate combined with its signature method and DSA signed challenge data
+    @available(
+        *,
+        deprecated,
+        renamed: "authenticatePublisher(challenge:)"
+    )
+    public func authenticate(challenge: Data) -> AnyPublisher<AuthenticationResult, Error> {
+        authenticatePublisher(challenge: challenge)
     }
 
     /// Authenticate a challenge on HealthCardType

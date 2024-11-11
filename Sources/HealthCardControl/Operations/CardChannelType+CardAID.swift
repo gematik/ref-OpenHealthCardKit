@@ -36,7 +36,7 @@ extension CardChannelType {
     ///   - readTimeout: time in seconds. Default: 30
     /// - Returns: Publisher that emits the ApplicationIdentifier of the initial application of this card.
     @available(*, deprecated, message: "Use structured concurrency version instead")
-    func determineCardAid(writeTimeout _: TimeInterval = 30.0, readTimeout _: TimeInterval = 30.0)
+    func determineCardAidPublisher(writeTimeout _: TimeInterval = 30.0, readTimeout _: TimeInterval = 30.0)
         -> AnyPublisher<CardAid, Error> {
         let channel = self
         return Just(channel)
@@ -83,6 +83,20 @@ extension CardChannelType {
     /// - Parameters:
     ///   - writeTimeout: time in seconds. Default: 30
     ///   - readTimeout: time in seconds. Default: 30
+    /// - Returns: Publisher that emits the ApplicationIdentifier of the initial application of this card.
+    @available(*, deprecated, renamed: "determineCardAidPublisher(writeTimeout:readTimeout:)")
+    func determineCardAid(writeTimeout: TimeInterval = 30.0, readTimeout: TimeInterval = 30.0)
+        -> AnyPublisher<CardAid, Error> {
+        determineCardAidPublisher(writeTimeout: writeTimeout, readTimeout: readTimeout)
+    }
+
+    /// Determines the `CardAid` of the card either by
+    /// using the NFCISO7816Tag.initialSelectedAID when this card is connected via NFC or
+    /// selecting the MF.root application and requesting its application identifier.
+    ///
+    /// - Parameters:
+    ///   - writeTimeout: time in seconds. Default: 30
+    ///   - readTimeout: time in seconds. Default: 30
     /// - Returns: CardAID
     func determineCardAidAsync(
         writeTimeout: TimeInterval = 30.0,
@@ -96,7 +110,7 @@ extension CardChannelType {
         } else {
             let expectedLength = expectedLengthWildcard
             let selectCommand = try HealthCardCommand.Select.selectRootRequestingFcp(expectedLength: expectedLength)
-            let selectResponse = try await selectCommand.transmitAsync(
+            let selectResponse = try await selectCommand.transmit(
                 on: self,
                 writeTimeout: writeTimeout,
                 readTimeout: readTimeout

@@ -29,9 +29,9 @@ final class SelectWithFCPOnSecureChannelIntegrationTest: CardSimulationTerminalT
     func testSelectEsignCChAutE256WithFCP_publisher() throws {
         let can = try CAN.from(Data("123123".utf8))
 
-        let response = try Self.card.openSecureSession(can: can, writeTimeout: 0, readTimeout: 0)
+        let response = try Self.card.openSecureSessionPublisher(can: can, writeTimeout: 0, readTimeout: 0)
             .flatMap { secureCard in
-                secureCard.selectDedicated(
+                secureCard.selectDedicatedPublisher(
                     file: DedicatedFile(aid: EgkFileSystem.DF.ESIGN.aid, fid: EgkFileSystem.EF.esignCChAutE256.fid),
                     fcp: true
                 )

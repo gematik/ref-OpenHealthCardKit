@@ -114,7 +114,7 @@ extension HealthCardType {
             dfSpecific: dfSpecific,
             puk: puk
         )
-        let response = try await command.transmitAsync(to: self, writeTimeout: writeTimeout, readTimeout: readTimeout)
+        let response = try await command.transmit(to: self, writeTimeout: writeTimeout, readTimeout: readTimeout)
         let responseStatus = response.responseStatus
         if ResponseStatus.wrongSecretWarnings.contains(responseStatus) {
             return .wrongSecretWarning(retryCount: responseStatus.retryCount)
@@ -258,7 +258,7 @@ extension HealthCardType {
             puk: puk,
             newPin: newPin
         )
-        let response = try await command.transmitAsync(to: self)
+        let response = try await command.transmit(to: self)
         let responseStatus = response.responseStatus
         if ResponseStatus.wrongSecretWarnings.contains(responseStatus) {
             return .wrongSecretWarning(retryCount: responseStatus.retryCount)
@@ -282,7 +282,7 @@ extension HealthCardType {
     ///   - affectedPassWord: convenience `ResetRetryCounterAffectedPassword` selector
     /// - Returns: Publisher that tries to reset the password's retry counter
     @available(*, deprecated, message: "Use structured concurrency version instead")
-    public func resetRetryCounterAndSetNewPin(
+    public func resetRetryCounterAndSetNewPinPublisher(
         puk: String,
         newPin: String,
         affectedPassWord: ResetRetryCounterAffectedPassword
@@ -303,6 +303,22 @@ extension HealthCardType {
             dfSpecific = false
         }
         return resetRetryCounterAndSetNewPin(puk: parsedPuk, newPin: parsedPin, type: type, dfSpecific: dfSpecific)
+    }
+
+    /// Reset the retry counter of a password object to its start value while assigning a new secret.
+    ///
+    /// - Parameters:
+    ///   - puk: Secret which authorizes the action
+    ///   - newPin: The new secret of the password object
+    ///   - affectedPassWord: convenience `ResetRetryCounterAffectedPassword` selector
+    /// - Returns: Publisher that tries to reset the password's retry counter
+    @available(*, deprecated, renamed: "resetRetryCounterAndSetNewPinPublisher(puk:newPin:affectedPassWord:)")
+    public func resetRetryCounterAndSetNewPin(
+        puk: String,
+        newPin: String,
+        affectedPassWord: ResetRetryCounterAffectedPassword
+    ) -> AnyPublisher<ResetRetryCounterResponse, Error> {
+        resetRetryCounterAndSetNewPinPublisher(puk: puk, newPin: newPin, affectedPassWord: affectedPassWord)
     }
 
     /// Reset the retry counter of a password object to its start value while assigning a new secret.

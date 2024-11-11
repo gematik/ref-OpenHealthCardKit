@@ -60,7 +60,7 @@ final class PublisherIntegrationTest: CardSimulationTerminalTestCase {
         // end::createCommand[]
 
         // tag::evaluateResponseStatus[]
-        let healthCardResponse = try await selectEsignCommand.transmitAsync(to: Self.healthCard)
+        let healthCardResponse = try await selectEsignCommand.transmit(to: Self.healthCard)
         guard healthCardResponse.responseStatus == ResponseStatus.success else {
             throw HealthCard.Error.operational // TO-DO: handle this or throw a meaningful Error
         }

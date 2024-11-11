@@ -44,7 +44,7 @@ final class ReadAutCertificateE256Test: CardSimulationTerminalTestCase {
         var autCertificateResponse: AutCertificateResponse?
         expect {
             autCertificateResponse = try Self.healthCard
-                .readAutCertificate()
+                .readAutCertificatePublisher()
                 .test()
         }.toNot(throwError())
         expect(autCertificateResponse?.info) == .efAutE256

@@ -45,7 +45,7 @@ extension CardChannelType {
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
         } else {
-            cardAidPublisher = channel.determineCardAid()
+            cardAidPublisher = channel.determineCardAidPublisher()
         }
         return cardAidPublisher
             .flatMap { (cardAid: CardAid) in
@@ -87,7 +87,7 @@ extension CardChannelType {
         }
 
         let selectCommand = HealthCardCommand.Select.selectFile(with: determinedCardAid.rawValue)
-        let selectResponse = try await selectCommand.transmitAsync(
+        let selectResponse = try await selectCommand.transmit(
             on: channel,
             writeTimeout: writeTimeout,
             readTimeout: readTimeout
@@ -100,7 +100,7 @@ extension CardChannelType {
             with: determinedCardAid.efCardAccess,
             ne: APDU.expectedLengthWildcardShort
         )
-        let readResponse = try await readCommand.transmitAsync(
+        let readResponse = try await readCommand.transmit(
             on: channel,
             writeTimeout: writeTimeout,
             readTimeout: readTimeout

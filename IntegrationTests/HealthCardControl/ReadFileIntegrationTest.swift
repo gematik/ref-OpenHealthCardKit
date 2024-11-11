@@ -58,13 +58,13 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
 
     func testReadFileTillEOF_publisher() {
         expect {
-            let (responseStatus, _) = try Self.healthCard.selectDedicated(file: self.dedicatedFile)
+            let (responseStatus, _) = try Self.healthCard.selectDedicatedPublisher(file: self.dedicatedFile)
                 .test()
             return responseStatus
         } == ResponseStatus.success
 
         expect {
-            try Self.healthCard.readSelectedFile(expected: nil, failOnEndOfFileWarning: false)
+            try Self.healthCard.readSelectedFilePublisher(expected: nil, failOnEndOfFileWarning: false)
                 .test()
         } == expectedCertificate
     }
@@ -79,13 +79,13 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
 
     func testReadFileFailOnEOF_publisher() {
         expect {
-            let (responseStatus, _) = try Self.healthCard.selectDedicated(file: self.dedicatedFile)
+            let (responseStatus, _) = try Self.healthCard.selectDedicatedPublisher(file: self.dedicatedFile)
                 .test()
             return responseStatus
         } == ResponseStatus.success
 
         expect {
-            try Self.healthCard.readSelectedFile(expected: 2000)
+            try Self.healthCard.readSelectedFilePublisher(expected: 2000)
                 .test()
         }.to(throwError(ReadError.unexpectedResponse(state: ResponseStatus.endOfFileWarning)))
     }
@@ -96,13 +96,13 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
 
         // todo-nimble update
         expect {
-            try Self.healthCard.readSelectedFile(expected: 2000)
+            try Self.healthCard.readSelectedFilePublisher(expected: 2000)
                 .test()
         }.to(throwError(ReadError.unexpectedResponse(state: ResponseStatus.endOfFileWarning)))
     }
 
     func testReadFile_publisher() {
-        guard let (responseStatus, fcp) = try? Self.healthCard.selectDedicated(file: dedicatedFile, fcp: true)
+        guard let (responseStatus, fcp) = try? Self.healthCard.selectDedicatedPublisher(file: dedicatedFile, fcp: true)
             .test() else {
             Nimble.fail("Failed to select and read FCP [Preparing test-case]")
             return
@@ -112,8 +112,8 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
 
         expect {
             // swiftlint:disable:next force_unwrapping
-            try Self.healthCard.readSelectedFile(expected: Int(fcp!.readSize!),
-                                                 failOnEndOfFileWarning: true)
+            try Self.healthCard.readSelectedFilePublisher(expected: Int(fcp!.readSize!),
+                                                          failOnEndOfFileWarning: true)
                 .test()
         } == expectedCertificate
     }
@@ -142,7 +142,7 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
             return
         }
 
-        guard let (responseStatus, fcp) = try? healthCard.selectDedicated(file: dedicatedFile, fcp: true)
+        guard let (responseStatus, fcp) = try? healthCard.selectDedicatedPublisher(file: dedicatedFile, fcp: true)
             .test() else {
             Nimble.fail("Failed to select and read FCP [Preparing test-case]")
             return
@@ -152,7 +152,7 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
 
         expect {
             // swiftlint:disable:next force_unwrapping
-            try healthCard.readSelectedFile(expected: Int(fcp!.readSize!), failOnEndOfFileWarning: true)
+            try healthCard.readSelectedFilePublisher(expected: Int(fcp!.readSize!), failOnEndOfFileWarning: true)
                 .test()
         } == expectedCertificate
     }
@@ -190,7 +190,7 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
             return
         }
 
-        guard let (responseStatus, fcp) = try? healthCard.selectDedicated(file: dedicatedFile, fcp: true)
+        guard let (responseStatus, fcp) = try? healthCard.selectDedicatedPublisher(file: dedicatedFile, fcp: true)
             .test() else {
             Nimble.fail("Failed to select and read FCP [Preparing test-case]")
             return
@@ -199,7 +199,7 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
         expect(fcp).toNot(beNil())
 
         expect {
-            try healthCard.readSelectedFile(expected: nil, failOnEndOfFileWarning: false)
+            try healthCard.readSelectedFilePublisher(expected: nil, failOnEndOfFileWarning: false)
                 .test()
         } == expectedCertificate
     }
@@ -235,13 +235,13 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
         }
 
         expect {
-            let (responseStatus, _) = try healthCard.selectDedicated(file: self.dedicatedFile)
+            let (responseStatus, _) = try healthCard.selectDedicatedPublisher(file: self.dedicatedFile)
                 .test()
             return responseStatus
         } == ResponseStatus.success
 
         expect {
-            try healthCard.readSelectedFile(expected: 2000, failOnEndOfFileWarning: true)
+            try healthCard.readSelectedFilePublisher(expected: 2000, failOnEndOfFileWarning: true)
                 .test()
         }.to(throwError(ReadError.unexpectedResponse(state: ResponseStatus.endOfFileWarning)))
     }
@@ -262,7 +262,7 @@ final class ReadFileIntegrationTest: CardSimulationTerminalTestCase {
 
         // todo-nimble update
         expect {
-            try healthCard.readSelectedFile(expected: 2000, failOnEndOfFileWarning: true)
+            try healthCard.readSelectedFilePublisher(expected: 2000, failOnEndOfFileWarning: true)
                 .test()
         }.to(throwError(ReadError.unexpectedResponse(state: ResponseStatus.endOfFileWarning)))
     }

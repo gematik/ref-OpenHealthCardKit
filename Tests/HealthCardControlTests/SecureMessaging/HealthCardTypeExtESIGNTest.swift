@@ -41,7 +41,7 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
             handler = messageHandler
         }
 
-        func transmit(
+        func transmitPublisher(
             command: CommandType,
             writeTimeout: TimeInterval,
             readTimeout: TimeInterval
@@ -57,7 +57,7 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
             try handler(command, self, writeTimeout, readTimeout)
         }
 
-        func close() throws {}
+        func closePublisher() throws {}
 
         func closeAsync() async throws {}
     }
@@ -114,7 +114,7 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
         var autCertificateResponse: AutCertificateResponse?
         expect {
             autCertificateResponse = try card
-                .readAutCertificate()
+                .readAutCertificatePublisher()
                 .test()
         }.toNot(throwError())
         expect(autCertificateResponse?.info) == .efAutE256
@@ -170,7 +170,7 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
         let card = MockHealthCard(status: egkCardStatus, currentCardChannel: channel)
 
         expect {
-            try card.readAutCertificate().test()
+            try card.readAutCertificatePublisher().test()
         }.to(throwError(HealthCard.Error.unsupportedCardType))
     }
 
@@ -183,7 +183,7 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
 
         // todo-nimble update
         expect {
-            try card.readAutCertificate().test()
+            try card.readAutCertificatePublisher().test()
         }.to(throwError(HealthCard.Error.unsupportedCardType))
     }
 }

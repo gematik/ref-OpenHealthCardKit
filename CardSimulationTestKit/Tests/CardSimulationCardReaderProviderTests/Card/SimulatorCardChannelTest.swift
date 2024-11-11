@@ -128,14 +128,14 @@ final class SimulatorCardChannelTest: XCTestCase {
         let commandData = Data([0x1, 0x2, 0x3, 0x4])
         let command: CommandType = MockCommand(bytes: commandData)
         do {
-            let response = try cardChannel.transmit(command: command, writeTimeout: 0, readTimeout: 0)
+            let response = try cardChannel.transmitPublisher(command: command, writeTimeout: 0, readTimeout: 0)
             // Verify response has been decoded
             expect(response.sw).to(equal(APDU.Response.OK.sw))
             // Verify command has been ber TLV encoded and written to output stream
             let berTlvData = try commandData.berTlvEncoded()
             expect(berTlvData).to(equal(stream.bytesWritten))
             // Close channel
-            try cardChannel.close()
+            try cardChannel.closePublisher()
             expect(stream.closedInputStream).to(beTrue())
             expect(stream.closedOutputStream).to(beTrue())
         } catch {
@@ -154,7 +154,7 @@ final class SimulatorCardChannelTest: XCTestCase {
         let commandData = Data([UInt8](repeating: 0x8, count: 11))
         let command: CommandType = MockCommand(bytes: commandData)
         expect {
-            try cardChannel.transmit(command: command, writeTimeout: 0, readTimeout: 0)
+            try cardChannel.transmitPublisher(command: command, writeTimeout: 0, readTimeout: 0)
         }.to(throwError(SimulatorCardChannel.SimulatorError.commandSizeTooLarge(maxSize: 10, length: 11).illegalState))
     }
 
@@ -175,7 +175,7 @@ final class SimulatorCardChannelTest: XCTestCase {
         let commandData = Data([0x0, 0x2])
         let command: CommandType = MockCommand(bytes: commandData)
         expect {
-            try cardChannel.transmit(command: command, writeTimeout: 0, readTimeout: 0)
+            try cardChannel.transmitPublisher(command: command, writeTimeout: 0, readTimeout: 0)
         }.to(throwError(
             SimulatorCardChannel.SimulatorError.responseSizeTooLarge(maxSize: 10, length: responseData.count)
                 .illegalState
@@ -194,7 +194,7 @@ final class SimulatorCardChannelTest: XCTestCase {
         let commandData = Data([0x0, 0x2])
         let command: CommandType = MockCommand(bytes: commandData)
         expect {
-            try cardChannel.transmit(command: command, writeTimeout: 0, readTimeout: 0.5)
+            try cardChannel.transmitPublisher(command: command, writeTimeout: 0, readTimeout: 0.5)
         }.to(throwError(SimulatorCardChannel.SimulatorError.noResponse.connectionError))
     }
 
@@ -211,7 +211,7 @@ final class SimulatorCardChannelTest: XCTestCase {
         let commandData = Data([0x0, 0x2])
         let command: CommandType = MockCommand(bytes: commandData)
         expect {
-            try cardChannel.transmit(command: command, writeTimeout: 0, readTimeout: 0.5)
+            try cardChannel.transmitPublisher(command: command, writeTimeout: 0, readTimeout: 0.5)
         }.to(throwError(SimulatorCardChannel.SimulatorError.noResponse.connectionError))
     }
 
