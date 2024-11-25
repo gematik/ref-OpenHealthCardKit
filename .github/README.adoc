@@ -134,7 +134,7 @@ In the next example we use a `HealthCard` object representing an eGK (elektronis
 as one kind of a `HealthCardType` implementing the `CardType` protocol and then send the command to the card (or card's channel):
 [source,swift]
 ----
-let healthCardResponse = try await selectEsignCommand.transmitAsync(to: Self.healthCard)
+let healthCardResponse = try await selectEsignCommand.transmit(to: Self.healthCard)
 guard healthCardResponse.responseStatus == ResponseStatus.success else {
     throw HealthCard.Error.operational // TO-DO: handle this or throw a meaningful Error
 }
@@ -234,7 +234,7 @@ Take the necessary preparatory steps for signing a challenge on the Health Card,
 ----
 let challenge = Data([0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8])
 let format2Pin = try Format2Pin(pincode: "123456")
-_ = try await Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
+_ = try await Self.healthCard.verifyAsync(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
 let signResponse = try await Self.healthCard.signAsync(data: challenge)
 expect(signResponse.responseStatus) == ResponseStatus.success
 ----
@@ -277,11 +277,11 @@ guard let nfcHealthCardSession = NFCHealthCardSession(messages: messages, can: c
         type: EgkFileSystem.Pin.mrpinHome
     )
     if case let VerifyPinResponse.wrongSecretWarning(retryCount: count) = verifyPinResponse {
-        throw NFCLoginController.Error.wrongPin(retryCount: count)
+        throw NFCSigningFunctionController.Error.wrongPin(retryCount: count)
     } else if case VerifyPinResponse.passwordBlocked = verifyPinResponse {
-        throw NFCLoginController.Error.passwordBlocked
+        throw NFCSigningFunctionController.Error.passwordBlocked
     } else if VerifyPinResponse.success != verifyPinResponse {
-        throw NFCLoginController.Error.verifyPinResponse
+        throw NFCSigningFunctionController.Error.verifyPinResponse
     }
 
     session.updateAlert(message: NSLocalizedString("nfc_txt_msg_signing", comment: ""))
