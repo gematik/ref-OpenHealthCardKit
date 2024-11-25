@@ -55,7 +55,7 @@ extension HealthCardType {
     ///   - dfSpecific: is Password reference dfSpecific
     /// - Returns: Publisher that tries to set the password's new value
     @available(*, deprecated, message: "Use structured concurrency version instead")
-    public func changeReferenceDataSetNewPin(
+    public func changeReferenceDataSetNewPinPublisher(
         old: Format2Pin,
         new: Format2Pin,
         type: EgkFileSystem.Pin = EgkFileSystem.Pin.mrpinHome,
@@ -97,6 +97,24 @@ extension HealthCardType {
     ///   - new: The new secret of the password object
     ///   - type: Password reference
     ///   - dfSpecific: is Password reference dfSpecific
+    /// - Returns: Publisher that tries to set the password's new value
+    @available(*, deprecated, renamed: "changeReferenceDataSetNewPinPublisher(old:new:type:dfSpecific:)")
+    public func changeReferenceDataSetNewPin(
+        old: Format2Pin,
+        new: Format2Pin,
+        type: EgkFileSystem.Pin = EgkFileSystem.Pin.mrpinHome,
+        dfSpecific: Bool = false
+    ) -> AnyPublisher<ChangeReferenceDataResponse, Error> {
+        changeReferenceDataSetNewPinPublisher(old: old, new: new, type: type, dfSpecific: dfSpecific)
+    }
+
+    ///  Assign a new secret (value) to a password.
+    ///
+    /// - Parameters:
+    ///   - old: The old secret of the password object
+    ///   - new: The new secret of the password object
+    ///   - type: Password reference
+    ///   - dfSpecific: is Password reference dfSpecific
     /// - Returns: `ChangeReferenceDataResponse` after trying to set the password's new value
     public func changeReferenceDataSetNewPin(
         old: Format2Pin,
@@ -107,7 +125,7 @@ extension HealthCardType {
         CommandLogger.commands.append(Command(message: "Change Reference Data: Set New PIN", type: .description))
         let parameters = (password: type.rawValue, dfSpecific: dfSpecific, old: old, new: new)
         let changeReferenceDataCommand = try HealthCardCommand.ChangeReferenceData.change(password: parameters)
-        let changeReferenceDataResponse = try await changeReferenceDataCommand.transmitAsync(to: self)
+        let changeReferenceDataResponse = try await changeReferenceDataCommand.transmit(to: self)
 
         let responseStatus = changeReferenceDataResponse.responseStatus
         if ResponseStatus.wrongSecretWarnings.contains(responseStatus) {

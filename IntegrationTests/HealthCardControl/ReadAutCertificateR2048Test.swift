@@ -40,7 +40,7 @@ final class ReadAutCertificateR2048Test: CardSimulationTerminalTestCase {
         var autCertificateResponse: AutCertificateResponse?
         expect {
             autCertificateResponse = try CardSimulationTerminalTestCase.healthCard
-                .readAutCertificate()
+                .readAutCertificatePublisher()
                 .test()
         }.toNot(throwError())
         expect(autCertificateResponse?.info) == .efAutR2048

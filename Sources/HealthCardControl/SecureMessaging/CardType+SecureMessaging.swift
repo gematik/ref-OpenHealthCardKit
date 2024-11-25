@@ -34,7 +34,7 @@ extension CardType {
     ///     - readTimeout: time in seconds. Default 30
     /// - Returns: Publisher that negotiates a secure session when scheduled to run.
     @available(*, deprecated, message: "Use structured concurrency version instead")
-    public func openSecureSession(can: CAN, writeTimeout: TimeInterval = 30, readTimeout: TimeInterval = 30)
+    public func openSecureSessionPublisher(can: CAN, writeTimeout: TimeInterval = 30, readTimeout: TimeInterval = 30)
         -> AnyPublisher<HealthCardType, Error> {
         CommandLogger.commands.append(Command(message: "Open secure Session", type: .description))
         return Deferred { () -> AnyPublisher<CardChannelType, Error> in
@@ -46,20 +46,20 @@ extension CardType {
         }
         .flatMap { channel in
             // Read/Determine ApplicationIdentifier of the card's initial application
-            channel.determineCardAid()
+            channel.determineCardAidPublisher()
                 .flatMap { cardAid in
                     // Read EF.CardAccess and determine algorithm for key agreement (e.g. PACE)
                     channel.readKeyAgreementAlgorithm(cardAid: cardAid)
                         .flatMap { keyAgreementAlgorithm in
                             // Read EF.Version2 and determine HealthCardPropertyType
-                            channel.readCardType(cardAid: cardAid,
-                                                 writeTimeout: writeTimeout,
-                                                 readTimeout: readTimeout)
+                            channel.readCardTypePublisher(cardAid: cardAid,
+                                                          writeTimeout: writeTimeout,
+                                                          readTimeout: readTimeout)
                                 .tryMap { type in
                                     try HealthCard(card: self, status: .valid(cardType: type))
                                 }
                                 .flatMap { healthCard in
-                                    keyAgreementAlgorithm.negotiateSessionKey(
+                                    keyAgreementAlgorithm.negotiateSessionKeyPublisher(
                                         card: healthCard,
                                         can: can,
                                         writeTimeout: writeTimeout,
@@ -73,6 +73,23 @@ extension CardType {
                 }
         }
         .eraseToAnyPublisher()
+    }
+
+    /// Open a secure session with a Card for further scheduling/attaching Publisher commands
+    ///
+    /// - Note: The healthCard provided by the Combine operation chain should be used for the commands
+    ///   to be executed on the secure channel.
+    ///   After the chain has completed the session should be invalidated/closed.
+    ///
+    /// - Parameters:
+    ///     - can: The Channel access number for the session
+    ///     - writeTimeout: time in seconds. Default: 30
+    ///     - readTimeout: time in seconds. Default 30
+    /// - Returns: Publisher that negotiates a secure session when scheduled to run.
+    @available(*, deprecated, renamed: "openSecureSessionPublisher(can:writeTimeout:readTimeout:)")
+    public func openSecureSession(can: CAN, writeTimeout: TimeInterval = 30, readTimeout: TimeInterval = 30)
+        -> AnyPublisher<HealthCardType, Error> {
+        openSecureSessionPublisher(can: can, writeTimeout: writeTimeout, readTimeout: readTimeout)
     }
 
     /// Open a secure session with a Card for further scheduling/attaching Publisher commands
@@ -125,7 +142,7 @@ extension CardType {
     ///     - readTimeout: time in seconds. Default 30
     /// - Returns: Publisher that negotiates a secure session when scheduled to run.
     @available(*, deprecated, message: "Use structured concurrency version instead")
-    public func openSecureSession(can: String, writeTimeout: TimeInterval = 30, readTimeout: TimeInterval = 30)
+    public func openSecureSessionPublisher(can: String, writeTimeout: TimeInterval = 30, readTimeout: TimeInterval = 30)
         -> AnyPublisher<HealthCardType, Error> {
         let parsedCan: CAN
         do {
@@ -133,7 +150,24 @@ extension CardType {
         } catch {
             return Fail(error: error).eraseToAnyPublisher()
         }
-        return openSecureSession(can: parsedCan, writeTimeout: writeTimeout, readTimeout: readTimeout)
+        return openSecureSessionPublisher(can: parsedCan, writeTimeout: writeTimeout, readTimeout: readTimeout)
+    }
+
+    /// Open a secure session with a Card for further scheduling/attaching Publisher commands
+    ///
+    /// - Note: The healthCard provided by the Combine operation chain should be used for the commands
+    ///   to be executed on the secure channel.
+    ///   After the chain has completed the session should be invalidated/closed.
+    ///
+    /// - Parameters:
+    ///     - can: The Channel access number for the session
+    ///     - writeTimeout: time in seconds. Default: 30
+    ///     - readTimeout: time in seconds. Default 30
+    /// - Returns: Publisher that negotiates a secure session when scheduled to run.
+    @available(*, deprecated, renamed: "openSecureSessionPublisher(can:writeTimeout:readTimeout:)")
+    public func openSecureSession(can: String, writeTimeout: TimeInterval = 30, readTimeout: TimeInterval = 30)
+        -> AnyPublisher<HealthCardType, Error> {
+        openSecureSessionPublisher(can: can, writeTimeout: writeTimeout, readTimeout: readTimeout)
     }
 
     /// Open a secure session with a Card for further scheduling/attaching Publisher commands

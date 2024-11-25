@@ -74,7 +74,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
         ///     - readTimeout: timeout in seconds. time <= 0 is no timeout
         /// - Returns: Publisher that when successful emits PaceKey both this application and the card agreed on.
         @available(*, deprecated, message: "Use structured concurrency version instead")
-        public func negotiateSessionKey(
+        public func negotiateSessionKeyPublisher(
             card: HealthCardType,
             can: CAN,
             writeTimeout: TimeInterval = 10,
@@ -142,6 +142,28 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
                 }
                 .eraseToAnyPublisher()
             }
+        }
+
+        /// Negotiate a common key with a `HealthCard` given its `CardAccessNumber`
+        ///
+        /// - Parameters:
+        ///     - card: the card to negotiate a session key with
+        ///     - can: the `CardAccessNumber` of the `HealthCard`
+        ///     - writeTimeout: timeout in seconds. time <= 0 is no timeout
+        ///     - readTimeout: timeout in seconds. time <= 0 is no timeout
+        /// - Returns: Publisher that when successful emits PaceKey both this application and the card agreed on.
+        @available(
+            *,
+            deprecated,
+            renamed: "negotiateSessionKeyPublisher(card:can:writeTimeout:readTimeout:)"
+        )
+        public func negotiateSessionKey(
+            card: HealthCardType,
+            can: CAN,
+            writeTimeout: TimeInterval = 10,
+            readTimeout: TimeInterval = 10
+        ) -> AnyPublisher<SecureMessaging, Swift.Error> {
+            negotiateSessionKeyPublisher(card: card, can: can, writeTimeout: writeTimeout, readTimeout: readTimeout)
         }
 
         /// Negotiate a common key with a `HealthCard` given its `CardAccessNumber`
@@ -248,7 +270,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
             dfSpecific: false,
             oid: oid
         )
-        let selectPaceResponse = try await selectPaceCommand.transmitAsync(
+        let selectPaceResponse = try await selectPaceCommand.transmit(
             to: card,
             writeTimeout: writeTimeout,
             readTimeout: readTimeout
@@ -290,7 +312,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
         readTimeout: TimeInterval
     ) async throws -> Data {
         let paceStep1aCommand = HealthCardCommand.PACE.step1a()
-        let paceStep1aResponse = try await paceStep1aCommand.transmitAsync(
+        let paceStep1aResponse = try await paceStep1aCommand.transmit(
             to: card,
             writeTimeout: writeTimeout,
             readTimeout: readTimeout
@@ -358,7 +380,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
 
         let paceStep2aCommand = try HealthCardCommand.PACE.step2a(publicKey: keyPair1.publicKey.x962Value())
 
-        let pk1PiccResponse = try await paceStep2aCommand.transmitAsync(
+        let pk1PiccResponse = try await paceStep2aCommand.transmit(
             to: card,
             writeTimeout: writeTimeout,
             readTimeout: readTimeout
@@ -412,7 +434,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
         readTimeout: TimeInterval
     ) async throws -> (BrainpoolP256r1.KeyExchange.PublicKey, AES128PaceKey) {
         let paceStep3Command = try HealthCardCommand.PACE.step3a(publicKey: pk2Pcd.x962Value())
-        let pk2PiccResponse = try await paceStep3Command.transmitAsync(
+        let pk2PiccResponse = try await paceStep3Command.transmit(
             to: card,
             writeTimeout: writeTimeout,
             readTimeout: readTimeout
@@ -484,7 +506,7 @@ public enum KeyAgreement { // swiftlint:disable:this type_body_length
         )
         let macPcdToken = macPcd.prefix(algorithm.macTokenPrefixSize)
         let paceStep4aCommand = try HealthCardCommand.PACE.step4a(token: macPcdToken)
-        let macPiccResponse = try await paceStep4aCommand.transmitAsync(
+        let macPiccResponse = try await paceStep4aCommand.transmit(
             to: card,
             writeTimeout: writeTimeout,
             readTimeout: readTimeout

@@ -59,7 +59,7 @@ public class NFCCard: CardType {
         let responseSuccess = 0x9000
 
         let response = try openBasicChannel()
-            .transmit(command: manageChannelCommandOpen, writeTimeout: 0, readTimeout: 0)
+            .transmitPublisher(command: manageChannelCommandOpen, writeTimeout: 0, readTimeout: 0)
         guard response.sw == responseSuccess else {
             throw NFCCardError.transferException(
                 name: String(format: "openLogicalChannel failed, response code: 0x%04x", response.sw)

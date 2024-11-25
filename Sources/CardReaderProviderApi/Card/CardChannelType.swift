@@ -49,9 +49,9 @@ public protocol CardChannelType {
 
          - Returns: the Command APDU Response or CardError on failure
      */
-    @_disfavoredOverload
     @available(*, deprecated, message: "Use structured concurrency version instead")
-    func transmit(command: CommandType, writeTimeout: TimeInterval, readTimeout: TimeInterval) throws -> ResponseType
+    func transmitPublisher(command: CommandType, writeTimeout: TimeInterval, readTimeout: TimeInterval) throws
+        -> ResponseType
 
     /**
          Transceive a (APDU) command
@@ -75,8 +75,8 @@ public protocol CardChannelType {
 
         - Throws `CardError`
      */
-    @_disfavoredOverload
-    func close() throws
+    @available(*, deprecated, message: "Use structured concurrency version instead")
+    func closePublisher() throws
 
     /**
         Close the channel for subsequent actions.
@@ -84,4 +84,29 @@ public protocol CardChannelType {
         - Throws `CardError`
      */
     func closeAsync() async throws
+}
+
+extension CardChannelType {
+    @available(
+        *,
+        deprecated,
+        renamed: "transmitPublisher(command:writeTimeout:readTimeout:)"
+    )
+    func transmit(command: CommandType, writeTimeout: TimeInterval, readTimeout: TimeInterval) throws -> ResponseType {
+        try transmitPublisher(command: command, writeTimeout: writeTimeout, readTimeout: readTimeout)
+    }
+
+    /**
+        Close the channel for subsequent actions.
+
+        - Throws `CardError`
+     */
+    @available(
+        *,
+        deprecated,
+        renamed: "closePublisher()"
+    )
+    func close() throws {
+        try closePublisher()
+    }
 }

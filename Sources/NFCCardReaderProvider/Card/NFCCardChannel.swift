@@ -43,7 +43,7 @@ public class NFCCardChannel: CardChannelType {
     }
 
     @available(*, deprecated, message: "Use structured concurrency version instead")
-    public func transmit( // swiftlint:disable:this function_body_length
+    public func transmitPublisher( // swiftlint:disable:this function_body_length
         command: CommandType,
         writeTimeout _: TimeInterval,
         readTimeout: TimeInterval
@@ -148,7 +148,7 @@ public class NFCCardChannel: CardChannelType {
         return try APDU.Response(body: data, sw1: sw1, sw2: sw2)
     }
 
-    public func close() throws {
+    public func closePublisher() throws {
         defer {
             tag = nil
         }
@@ -164,7 +164,7 @@ public class NFCCardChannel: CardChannelType {
             .toLogicalChannel(channelNo: UInt8(channelNumber))
         let responseSuccess = 0x9000
 
-        let response = try transmit(command: manageChannelCommandClose, writeTimeout: 0, readTimeout: 0)
+        let response = try transmitPublisher(command: manageChannelCommandClose, writeTimeout: 0, readTimeout: 0)
         if response.sw != responseSuccess {
             throw NFCCardError.transferException(name:
                 String(format: "closing logical channel %d failed, response: 0x%04x", channelNumber, response.sw))

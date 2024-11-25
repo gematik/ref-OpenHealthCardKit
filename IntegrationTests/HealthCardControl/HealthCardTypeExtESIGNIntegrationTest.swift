@@ -33,9 +33,9 @@ final class HealthCardTypeExtESIGNIntegrationTest: CardSimulationTerminalTestCas
         expect {
             let challenge = Data([0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8])
             let format2Pin = try Format2Pin(pincode: "123456")
-            return try Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
+            return try Self.healthCard.verifyPublisher(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
                 .flatMap { _ in
-                    Self.healthCard.sign(data: challenge)
+                    Self.healthCard.signPublisher(data: challenge)
                 }
                 .eraseToAnyPublisher()
                 .test()

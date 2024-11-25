@@ -28,7 +28,7 @@ final class CardChannelTypeExtVersionIntegrationTest: CardSimulationTerminalTest
 
     func testReadCardTypeFromVersion_publisher() {
         expect {
-            try Self.healthCard.currentCardChannel.readCardType()
+            try Self.healthCard.currentCardChannel.readCardTypePublisher()
                 .test()
         } == HealthCardPropertyType.egk(generation: .g2_1)
     }
@@ -40,9 +40,9 @@ final class CardChannelTypeExtVersionIntegrationTest: CardSimulationTerminalTest
 
     func testDetermineCardAidThenReadCardTypeFromVersion_publisher() {
         expect {
-            try Self.healthCard.currentCardChannel.determineCardAid()
+            try Self.healthCard.currentCardChannel.determineCardAidPublisher()
                 .flatMap { cardAid in
-                    Self.healthCard.currentCardChannel.readCardType(cardAid: cardAid)
+                    Self.healthCard.currentCardChannel.readCardTypePublisher(cardAid: cardAid)
                 }
                 .eraseToAnyPublisher()
                 .test()
@@ -58,7 +58,7 @@ final class CardChannelTypeExtVersionIntegrationTest: CardSimulationTerminalTest
     func testReadCardTypeFromVersionWithKnownCardAid_publisher() {
         let cardAid = CardAid.egk
         expect {
-            try Self.healthCard.currentCardChannel.readCardType(cardAid: cardAid)
+            try Self.healthCard.currentCardChannel.readCardTypePublisher(cardAid: cardAid)
                 .test()
         } == HealthCardPropertyType.egk(generation: .g2_1)
     }

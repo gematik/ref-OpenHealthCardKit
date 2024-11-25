@@ -32,7 +32,7 @@ final class HealthCardTypeExtVerifyPinTest: CardSimulationTerminalTestCase {
         let pinCode = "123456"
         expect {
             let format2Pin = try Format2Pin(pincode: pinCode)
-            return try Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
+            return try Self.healthCard.verifyPublisher(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
                 .test()
         } == VerifyPinResponse.success
     }
@@ -48,7 +48,7 @@ final class HealthCardTypeExtVerifyPinTest: CardSimulationTerminalTestCase {
         let pinCode = "654321"
         expect {
             let format2Pin = try Format2Pin(pincode: pinCode)
-            return try Self.healthCard.verify(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
+            return try Self.healthCard.verifyPublisher(pin: format2Pin, type: EgkFileSystem.Pin.mrpinHome)
                 .test()
         } == VerifyPinResponse.wrongSecretWarning(retryCount: 2)
     }

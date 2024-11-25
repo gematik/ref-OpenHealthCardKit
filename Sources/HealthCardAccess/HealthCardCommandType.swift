@@ -56,12 +56,17 @@ extension HealthCardCommandType {
     ///     - writeTimeout: the time in seconds to allow for the write to begin. time <= 0 no timeout
     ///     - readTimeout: the time in seconds to allow for the receiving to begin. time <= 0 no timeout
     /// - Returns: HealthCardResponseType decoded from the answer received via channel.
+    @available(
+        *,
+        deprecated,
+        renamed: "transmit(to:writeTimeout:readTimeout:)"
+    )
     public func transmitAsync(
         to card: HealthCardType,
         writeTimeout: TimeInterval = 0,
         readTimeout: TimeInterval = 0
     ) async throws -> HealthCardResponseType {
-        try await transmitAsync(on: card.currentCardChannel, writeTimeout: writeTimeout, readTimeout: readTimeout)
+        try await transmit(on: card.currentCardChannel, writeTimeout: writeTimeout, readTimeout: readTimeout)
     }
 
     /// Execute the command on a given channel
@@ -76,7 +81,7 @@ extension HealthCardCommandType {
         -> AnyPublisher<HealthCardResponseType, Swift.Error> {
         Combine.Future<ResponseType, Swift.Error> { promise in
             do {
-                let res = try channel.transmit(
+                let res = try channel.transmitPublisher(
                     command: self,
                     writeTimeout: writeTimeout,
                     readTimeout: readTimeout
@@ -98,7 +103,47 @@ extension HealthCardCommandType {
     ///     - writeTimeout: the time in seconds to allow for the write to begin. time <= 0 no timeout
     ///     - readTimeout: the time in seconds to allow for the receiving to begin. time <= 0 no timeout
     /// - Returns: HealthCardResponseType decoded from the answer received via channel.
+    @available(
+        *,
+        deprecated,
+        renamed: "transmit(on:writeTimeout:readTimeout:)"
+    )
     public func transmitAsync(
+        on channel: CardChannelType,
+        writeTimeout: TimeInterval = 0,
+        readTimeout: TimeInterval = 0
+    ) async throws -> HealthCardResponseType {
+        let response = try await channel.transmitAsync(
+            command: self,
+            writeTimeout: writeTimeout,
+            readTimeout: readTimeout
+        )
+        return HealthCardResponse.from(response: response, for: self)
+    }
+}
+
+extension HealthCardCommandType {
+    /// Execute the command on a given card
+    /// - Parameters:
+    ///     - to: the card to use for executing `self` on
+    ///     - writeTimeout: the time in seconds to allow for the write to begin. time <= 0 no timeout
+    ///     - readTimeout: the time in seconds to allow for the receiving to begin. time <= 0 no timeout
+    /// - Returns: HealthCardResponseType decoded from the answer received via channel.
+    public func transmit(
+        to card: HealthCardType,
+        writeTimeout: TimeInterval = 0,
+        readTimeout: TimeInterval = 0
+    ) async throws -> HealthCardResponseType {
+        try await transmit(on: card.currentCardChannel, writeTimeout: writeTimeout, readTimeout: readTimeout)
+    }
+
+    /// Execute the command on a given channel
+    /// - Parameters:
+    ///     - channel: the channel to use for executing `self` on
+    ///     - writeTimeout: the time in seconds to allow for the write to begin. time <= 0 no timeout
+    ///     - readTimeout: the time in seconds to allow for the receiving to begin. time <= 0 no timeout
+    /// - Returns: HealthCardResponseType decoded from the answer received via channel.
+    public func transmit(
         on channel: CardChannelType,
         writeTimeout: TimeInterval = 0,
         readTimeout: TimeInterval = 0

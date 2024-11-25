@@ -27,7 +27,7 @@ final class DetermineCardAidIntegrationTest: CardSimulationTerminalTestCase {
 
     func testDetermineCardAid_publisher() {
         expect {
-            try Self.healthCard.currentCardChannel.determineCardAid()
+            try Self.healthCard.currentCardChannel.determineCardAidPublisher()
                 .test()
         } == CardAid.egk
     }

@@ -51,7 +51,7 @@ extension HealthCardType {
     ///
     /// - Returns: Publisher that reads the current selected file
     @available(*, deprecated, message: "Use structured concurrency version instead")
-    public func readSelectedFile(expected size: Int?, failOnEndOfFileWarning: Bool = true, offset: Int = 0)
+    public func readSelectedFilePublisher(expected size: Int?, failOnEndOfFileWarning: Bool = true, offset: Int = 0)
         -> AnyPublisher<Data, Error> {
         let maxResponseLength = currentCardChannel.maxResponseLength - 2 // allow for 2 status bytes sw1, sw2
         let expectedResponseLength = size ?? 0x10000
@@ -80,7 +80,7 @@ extension HealthCardType {
                     .flatMap { readAgain, responseData -> AnyPublisher<Data, Error> in
                         if readAgain {
                             // Continue reading
-                            return self.readSelectedFile(
+                            return self.readSelectedFilePublisher(
                                 expected: size != nil ?
                                     (expectedResponseLength - responseData.count) : nil,
                                 failOnEndOfFileWarning: failOnEndOfFileWarning,
@@ -114,6 +114,28 @@ extension HealthCardType {
     ///
     /// - Throws: Emits `ReadError` on the Publisher in case of failure.
     ///
+    /// - Returns: Publisher that reads the current selected file
+    @available(*, deprecated, renamed: "readSelectedFile(expected:failOnEndOfFileWarning:offset:)")
+    public func readSelectedFile(expected size: Int?, failOnEndOfFileWarning: Bool = true, offset: Int = 0)
+        -> AnyPublisher<Data, Error> {
+        readSelectedFilePublisher(expected: size, failOnEndOfFileWarning: failOnEndOfFileWarning, offset: offset)
+    }
+
+    /// Read the current selected DF/EF File
+    ///
+    /// - Parameters:
+    ///     - size: The expected file size. must be greater than 0 or nil.
+    ///             Note that failOnEndOfFileWarning must be `false` for this operation to succeed when `size` = nil.
+    ///     - failOnEndOfFileWarning: whether the operation must execute 'clean' or till the end-of-file warning.
+    ///             [default: true]
+    ///
+    /// - Note: This Publisher keeps reading till the received number of bytes is `size`
+    ///   or the channel returns 0x6282: endOfFileWarning.
+    ///   When the current channel `maxResponseLength` is less than the expected `size`,
+    ///   the file is read in chunks and returned as a whole.
+    ///
+    /// - Throws: Emits `ReadError` on the Publisher in case of failure.
+    ///
     /// - Returns: `Data` that was read form the currently selected file
     public func readSelectedFileAsync(
         expected size: Int?,
@@ -124,7 +146,7 @@ extension HealthCardType {
         let expectedResponseLength = size ?? 0x10000
         let responseLength = min(maxResponseLength, expectedResponseLength)
         let readFileCommand = try HealthCardCommand.Read.readFileCommand(ne: responseLength, offset: offset)
-        let readFileResponse = try await readFileCommand.transmitAsync(to: self)
+        let readFileResponse = try await readFileCommand.transmit(to: self)
         guard readFileResponse.responseStatus == .success ||
             (!failOnEndOfFileWarning && readFileResponse.responseStatus == .endOfFileWarning)
         else {
@@ -165,7 +187,7 @@ extension HealthCardType {
     ///
     /// - Returns: Publisher chain that selects the given file when executed
     @available(*, deprecated, message: "Use structured concurrency version instead")
-    public func selectDedicated(file: DedicatedFile, fcp: Bool = false, length: Int = 256)
+    public func selectDedicatedPublisher(file: DedicatedFile, fcp: Bool = false, length: Int = 256)
         -> AnyPublisher<(ResponseStatus, FileControlParameter?), Error> {
         let channel = self
         return HealthCardCommand.Select.selectFile(with: file.aid)
@@ -218,6 +240,22 @@ extension HealthCardType {
     ///     - fcp: whether to request the File Control Parameter
     ///     - length: expected fcp length - only applicable when fcp = true
     ///
+    /// - Throws: emits `SelectError` (or `ReadError` is case no FCP data could be read and fcp = true)
+    ///
+    /// - Returns: Publisher chain that selects the given file when executed
+    @available(*, deprecated, renamed: "interceptPublisher(file:fcp:length:)")
+    public func selectDedicated(file: DedicatedFile, fcp: Bool = false, length: Int = 256)
+        -> AnyPublisher<(ResponseStatus, FileControlParameter?), Error> {
+        selectDedicatedPublisher(file: file, fcp: fcp, length: length)
+    }
+
+    /// Select a dedicated file with or without requesting the FileIdentifier's File Control Parameter.
+    ///
+    /// - Parameters:
+    ///     - file: file to select
+    ///     - fcp: whether to request the File Control Parameter
+    ///     - length: expected fcp length - only applicable when fcp = true
+    ///
     /// - Throws: `SelectError` (or `ReadError` is case no FCP data could be read and fcp = true)
     ///
     /// - Returns: `(ResponseStatus, FileControlParameter?)` after trying to select the given file
@@ -227,7 +265,7 @@ extension HealthCardType {
         length: Int = 256
     ) async throws -> (ResponseStatus, FileControlParameter?) {
         let selectFileCommand = HealthCardCommand.Select.selectFile(with: file.aid)
-        let selectFileResponse = try await selectFileCommand.transmitAsync(to: self)
+        let selectFileResponse = try await selectFileCommand.transmit(to: self)
 
         guard selectFileResponse.responseStatus == .success
         else {
@@ -241,7 +279,7 @@ extension HealthCardType {
         let selectEfCommand = fcp ?
             try HealthCardCommand.Select.selectEfRequestingFcp(with: fid, expectedLength: length) :
             HealthCardCommand.Select.selectEf(with: fid)
-        let selectEfResponse = try await selectEfCommand.transmitAsync(to: self)
+        let selectEfResponse = try await selectEfCommand.transmit(to: self)
 
         guard selectEfResponse.responseStatus == .success
         else {

@@ -25,9 +25,9 @@ final class AuthenticateChallengeR2048Test: CardSimulationTerminalTestCase {
     func testSignChallenge_publisher() throws {
         let challenge = "1234567890".data(using: .utf8)!
         let authenticatedResult = try Self.healthCard
-            .verify(pin: "123456", type: .mrpinHome)
+            .verifyPublisher(pin: "123456", type: .mrpinHome)
             .flatMap { _ in
-                Self.healthCard.authenticate(challenge: challenge)
+                Self.healthCard.authenticatePublisher(challenge: challenge)
             }
             .eraseToAnyPublisher()
             .test()

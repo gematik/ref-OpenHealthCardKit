@@ -88,7 +88,7 @@ public class SimulatorCardChannel: CardChannelType {
     /// - throws:
     ///     - SimulatorError.outputStreamUnavailable.illegalState when the stream has no space available to write
     /// - Returns: the berTlv decoded response APDU
-    public func transmit(command: CommandType, writeTimeout _: TimeInterval, readTimeout: TimeInterval) throws
+    public func transmitPublisher(command: CommandType, writeTimeout _: TimeInterval, readTimeout: TimeInterval) throws
         -> ResponseType {
         guard outputStream.hasSpaceAvailable else {
             throw SimulatorError.outputStreamUnavailable.illegalState
@@ -199,7 +199,7 @@ public class SimulatorCardChannel: CardChannelType {
         return try APDU.Response(apdu: extractedResponseData)
     }
 
-    public func close() throws {
+    public func closePublisher() throws {
         try tcpClient.close()
     }
 

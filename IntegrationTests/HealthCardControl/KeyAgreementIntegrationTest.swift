@@ -29,7 +29,7 @@ final class KeyAgreementIntegrationTest: CardSimulationTerminalTestCase {
         let can = try! CAN.from(Data("123123".utf8)) // swiftlint:disable:this force_try
         expect { () -> SecureMessaging? in
             // tag::negotiateSessionKey_publisher[]
-            try KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128.negotiateSessionKey(
+            try KeyAgreement.Algorithm.idPaceEcdhGmAesCbcCmac128.negotiateSessionKeyPublisher(
                 card: CardSimulationTerminalTestCase.healthCard,
                 can: can,
                 writeTimeout: 0,

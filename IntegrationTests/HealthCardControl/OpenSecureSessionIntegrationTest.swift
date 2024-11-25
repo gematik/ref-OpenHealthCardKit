@@ -30,7 +30,7 @@ final class OpenSecureSessionIntegrationTest: CardSimulationTerminalTestCase {
         let can = try! CAN.from(Data("123123".utf8)) // swiftlint:disable:this force_try
 
         expect {
-            try Self.card.openSecureSession(can: can, writeTimeout: 0, readTimeout: 0)
+            try Self.card.openSecureSessionPublisher(can: can, writeTimeout: 0, readTimeout: 0)
                 .test()
                 .status.type
         } == .egk(generation: .g2)

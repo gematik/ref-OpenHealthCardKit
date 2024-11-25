@@ -27,7 +27,7 @@ public class SimulatorCard: CardType {
     let connectTimeout: Int
     var basicChannel: SimulatorCardChannel? {
         didSet {
-            try? oldValue?.close()
+            try? oldValue?.closePublisher()
         }
     }
 
@@ -68,7 +68,7 @@ public class SimulatorCard: CardType {
 
     public func disconnect(reset _: Bool) throws {
         do {
-            try basicChannel?.close()
+            try basicChannel?.closePublisher()
         } catch {
             Logger.cardSimulationCardReaderProvider.fault("Error while closing basicChannel: [\(error)]")
         }
