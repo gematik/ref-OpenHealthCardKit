@@ -65,7 +65,7 @@ struct RegisterPINView: View {
                              showStartNFCView = false
                          }, content: {
                              NavigationView {
-                                 StartNFCView(can: can, puk: "", oldPin: "", pin: storedPin, useCase: .login)
+                                 StartNFCView(can: can, puk: "", oldPin: "", pin: storedPin, useCase: .signingFunction)
                              }
                          })
     }

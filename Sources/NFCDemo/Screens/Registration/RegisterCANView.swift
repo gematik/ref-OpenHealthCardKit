@@ -69,8 +69,8 @@ struct RegisterCANView: View {
                         .disabled(!buttonEnabled)
 
                         NavigationLink(destination: RegisterPINView(can: storedCan)) {
-                            GTextButton(label: "can_btn_next_login_test", enabled: buttonEnabled)
-                                .accessibility(identifier: "can_btn_next_login_test")
+                            GTextButton(label: "can_btn_next_signing_function", enabled: buttonEnabled)
+                                .accessibility(identifier: "can_btn_next_signing_function")
                         }
                         .disabled(!buttonEnabled)
 

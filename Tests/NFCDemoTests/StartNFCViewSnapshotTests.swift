@@ -22,7 +22,7 @@ import XCTest
 class StartNFCViewSnapshotTests: ERPSnapshotTestCase {
     func testStartNFCViewSnapshotTests() throws {
         let sut = NavigationView {
-            StartNFCView(can: "123456", puk: "12345678", oldPin: "123456", pin: "654321", useCase: .login)
+            StartNFCView(can: "123456", puk: "12345678", oldPin: "123456", pin: "654321", useCase: .signingFunction)
         }
         .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
         assertSnapshots(of: sut, as: snapshotModi())

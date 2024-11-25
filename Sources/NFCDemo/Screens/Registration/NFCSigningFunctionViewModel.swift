@@ -20,15 +20,15 @@ import Helper
 import NFCCardReaderProvider
 import SwiftUI
 
-protocol LoginController {
+protocol SigningFunctionController {
     var state: Published<ViewState<Bool, Error>>.Publisher { get }
 
-    func login(can: String, pin: String, checkBrainpoolAlgorithm: Bool) async
+    func signingFunction(can: String, pin: String, checkBrainpoolAlgorithm: Bool) async
     func dismissError() async
 }
 
-class NFCLoginViewModel: ObservableObject {
-    @Environment(\.loginController) var loginController: LoginController
+class NFCSigningFunctionViewModel: ObservableObject {
+    @Environment(\.signingFunctionController) var signingFunctionController: SigningFunctionController
     @Published var state: ViewState<Bool, Error> = .idle
     @Published var results: [ReadingResult] = []
 
@@ -37,7 +37,7 @@ class NFCLoginViewModel: ObservableObject {
     init(state: ViewState<Bool, Error> = .idle, results: [ReadingResult] = []) {
         self.state = state
         self.results = results
-        loginController.state
+        signingFunctionController.state
             .dropFirst()
             .sink { [weak self] viewState in
                 self?.state = viewState
@@ -52,12 +52,16 @@ class NFCLoginViewModel: ObservableObject {
             .store(in: &disposables)
     }
 
-    func login(can: String, pin: String, checkBrainpoolAlgorithm: Bool) async {
-        await loginController.login(can: can, pin: pin, checkBrainpoolAlgorithm: checkBrainpoolAlgorithm)
+    func signingFunction(can: String, pin: String, checkBrainpoolAlgorithm: Bool) async {
+        await signingFunctionController.signingFunction(
+            can: can,
+            pin: pin,
+            checkBrainpoolAlgorithm: checkBrainpoolAlgorithm
+        )
     }
 
     func dismissError() async {
-        await loginController.dismissError()
+        await signingFunctionController.dismissError()
     }
 }
 

@@ -38,7 +38,7 @@ class ReadingResultsViewSnapshotTests: ERPSnapshotTestCase {
                     ),
                     ReadingResult(
                         timestamp: "2021-05-26T10:59:39+00:00".date!,
-                        result: .error(NFCLoginController.Error.invalidCanOrPinFormat),
+                        result: .error(NFCSigningFunctionController.Error.invalidCanOrPinFormat),
                         commands: []
                     ),
                 ]
@@ -53,7 +53,7 @@ class ReadingResultsViewSnapshotTests: ERPSnapshotTestCase {
             ReadingResultsView.DetailView(
                 result: ReadingResult(
                     timestamp: "2021-05-26T10:59:37+00:00".date!,
-                    result: .error(NFCLoginController.Error.invalidCanOrPinFormat),
+                    result: .error(NFCSigningFunctionController.Error.invalidCanOrPinFormat),
                     commands: [
                         Command(message: "Establish secure connection", type: .description),
                         Command(message: "00A4040CD2760001448000|ne:-1]", type: .send),

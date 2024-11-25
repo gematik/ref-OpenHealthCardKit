@@ -9,7 +9,7 @@
 "can_txt_title" = "Zugangsnummer";
 "can_txt_can_intro" = "Bitte geben Sie Ihre Zugangsnummer (CAN) ein.";
 "can_edt_can_enter_can" = "CAN";
-"can_btn_next_login_test" = "Login-Test";
+"can_btn_next_signing_function" = "Signierfunktion";
 "can_btn_next_reset_pin" = "Karte entsperren";
 "can_btn_next_reset_pin_with_new_pin" = "Wunsch-PIN vergeben";
 "can_btn_next_read_personal_data" = "Persönliche Daten lesen";
