@@ -1,3 +1,9 @@
+# 5.11.0
+
+- Add "Read personal data" use case to DemoApp
+- Change label of Signing function button in DemoApp
+- Soft deprecate public API using Combine.Publisher in favour of async/await
+
 # 5.10.1
 
 - Increase Package.swift iOS version
