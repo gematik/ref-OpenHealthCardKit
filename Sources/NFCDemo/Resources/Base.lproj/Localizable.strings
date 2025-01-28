@@ -15,6 +15,7 @@
 "can_btn_next_read_personal_data" = "Read personal data";
 "can_txt_help_title" = "Where can I find my CAN?";
 "can_txt_help_explanation" = "Don't see a CAN printed on your card?\nThen you need a new health insurance card. You can request one from your statutory health insurer.";
+"can_txt_next_foss" = "Open source licences";
 
 /*
   PIN

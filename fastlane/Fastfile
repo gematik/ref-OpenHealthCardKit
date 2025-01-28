@@ -346,3 +346,187 @@ lane :publish do |options|
 
   sh "cd .. && mkdir -p artifacts/appstorebuild_pu/ && rm -rf artifacts/appstorebuild_pu/* && mv distribution artifacts/appstorebuild_pu/; cd - "
 end
+
+desc "Refresh FOSS.html with data from Package.resolved"
+desc ""
+desc "###Hint:"
+desc "Generate a GitHub access token (Access public repositories) and call"
+desc "```\nGITHUB_API_TOKEN=token_goes_here fastlane xcodegen_generate_xcodeproj\n```"
+desc ""
+lane :compile_foss do
+  dependencies_yaml = YAML.load_file("../dependencies.yml")
+  # dependencies_yaml = {}
+
+  # Dependencies from /eRp-App.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+  dependencies_package_resolved = dependencies_package_resolved()
+  exclude_identities_from_package_resolved = dependencies_yaml["exclude_identities_from_package_resolved"]
+  dependencies_package_resolved = dependencies_package_resolved.filter { |dependency| 
+    not exclude_identities_from_package_resolved.include? dependency[:identity]
+  }
+
+  # Merge all dependency arrays before proceeding
+  dependencies = dependencies_package_resolved
+
+  # Load license texts from respective repo URIs
+  dependencies.each { |entry|
+    UI.message("Load license text for #{entry[:name]}")
+    license = ""
+
+    unless entry[:license_uri].nil? 
+      URI.open(entry[:license_uri]).read().each_line{|line| license += "#{line.strip}\n" }
+      license = license.gsub(/\R{2}/, 'PARAGRAPH_BREAK')
+      license = license.gsub(/\R{1}/, ' ')
+      license = license.gsub(/PARAGRAPH_BREAK/, "</p>\n\n<p>")
+    else
+      UI.important("IMPORTANT: No license URI available for #{entry[:name]}")
+    end
+
+    entry[:license] = "<p>#{license}</p>"
+
+    if dependencies_yaml["purpose"]["specific"][entry[:name]]
+      entry[:purpose] = dependencies_yaml["purpose"]["specific"][entry[:name]]
+    else
+      entry[:purpose] = dependencies_yaml["purpose"]["generic"]
+    end
+
+    entry 
+  }
+  
+  erb_path = File.join(File.dirname(__FILE__), '..', 'Templates', 'ERB', 'FOSS.html.erb')
+  erb_out_path = erb_path.sub('.erb','').sub('/Templates/ERB','/Sources/NFCDemo/Resources')
+  erb = ERB.new(File.read(erb_path))
+
+
+  File.open(erb_out_path, 'w+') do |file|
+    file.write(erb.result(binding))
+  end
+
+end
+
+def dependencies_package_resolved
+  require 'open-uri' 
+  require 'json'
+
+  file = File.read('../OpenHealthCardKit.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved')
+  data_hash = JSON.parse(file)
+
+  github_api_token = ENV['GITHUB_API_TOKEN']
+  github_api_token = prompt(text: "GITHUB_API_TOKEN not set, please specify") unless github_api_token
+
+  dependencies = data_hash['pins'].map do |pin|
+    UI.message("#{pin}")
+    identity = pin['identity']
+    location = pin['location']
+    version = pin['state']['version']
+    revision = pin['state']['revision']
+
+    dependency = {}
+    dependency[:name] = identity # TODO: better use repo_name here, it's often prettier than identity
+    dependency[:identity] = identity
+    dependency[:url] = location
+
+    # API curls for the license URI
+    license_uri = curl_license_url_from_github(location, github_api_token) if location.include? "github.com"
+    dependency[:license_uri] = license_uri
+    dependency[:version] = version||revision
+    if location.include? "github.com"
+      most_recent_version = curl_most_recent_tag(location)
+      if most_recent_version != dependency[:version]
+        UI.important("Version mismatch for package #{identity}, NEW: '#{most_recent_version}' OLD: '#{dependency[:version]}'")
+      end
+    end
+
+    dependency
+  end
+
+  dependencies
+end
+
+require 'net/http'
+require 'uri'
+
+def curl_license_url_from_github(repo_url, github_api_token)
+
+  repo_url = repo_url.gsub(".git", "")
+  repo_owner, repo_name = repo_url.split("/").last(2)
+
+  download_url = ""
+  repo_url = "https://api.github.com/repos/#{repo_owner}/#{repo_name}/license"
+  uri = URI.parse(repo_url)
+
+  req = Net::HTTP::Get.new(uri)
+  req['Authorization'] = "Bearer #{github_api_token}"
+  response = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) { |http|
+    http.request(req)
+  }
+  UI.error("Bad credentials or authorisation") if response.body.include? "Bad credentials"
+
+  data_hash = JSON.parse(response.body)
+  download_url = data_hash['download_url']
+  download_url
+end
+
+def curl_most_recent_tag(repo_url)
+  # Function to validate semver format
+  def valid_semver?(version)
+    version.match?(/^v?\d+\.\d+\.\d+$/)
+  end
+  # Function to compare semantic versions
+  def compare_versions(v1, v2)
+    segments1 = v1.split('.').map(&:to_i)
+    segments2 = v2.split('.').map(&:to_i)
+
+    segments1 <=> segments2
+  end
+
+  repo_url = repo_url.gsub(".git", "")
+  repo_owner, repo_name = repo_url.split("/").last(2)
+
+  download_url = ""
+  repo_url = "https://api.github.com/repos/#{repo_owner}/#{repo_name}/releases"
+  uri = URI.parse(repo_url)
+
+  req = Net::HTTP::Get.new(uri)
+  req['Authorization'] = "Bearer #{ENV['GITHUB_API_TOKEN']}" if ENV['GITHUB_API_TOKEN']
+  response = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) { |http|
+    http.request(req)
+  }
+  UI.error("Bad credentials or authorisation") if response.body.include? "Bad credentials"
+
+  puts("Parsing versions for #{repo_url}")
+  data_hash = JSON.parse(response.body)
+
+  return data_hash['message'] if data_hash.is_a?(Hash)
+
+  # Extract names and sort them as semantic versions
+  versions = data_hash.map { |item| item['tag_name'] }
+
+  if versions.length == 0
+    puts("Repository contains no releases, trying tags instead")
+    repo_url = "https://api.github.com/repos/#{repo_owner}/#{repo_name}/tags"
+    uri = URI.parse(repo_url)
+
+    req = Net::HTTP::Get.new(uri)
+    req['Authorization'] = "Bearer #{ENV['GITHUB_API_TOKEN']}" if ENV['GITHUB_API_TOKEN']
+    response = Net::HTTP.start(uri.hostname, uri.port, :use_ssl => true) { |http|
+      http.request(req)
+    }
+    data_hash = JSON.parse(response.body)
+    return data_hash['message'] if data_hash.is_a?(Hash)
+
+    # Extract names and sort them as semantic versions
+    versions = data_hash.map { |item| item['name'] }
+  end
+
+  semantic_versions = versions.select { |name| valid_semver?(name) }.map { |name| name.sub(/^v/, '') }
+  sorted_versions = semantic_versions.sort { |a, b| compare_versions(b, a) }
+  sorted_versions.first
+  # download_url = data_hash['download_url']
+  # download_url
+
+  # curl -L \                                    
+  # -H "Accept: application/vnd.github+json" \
+  # -H "Authorization: Bearer $GITHUB_API_TOKEN" \
+  # -H "X-GitHub-Api-Version: 2022-11-28" \
+  # https://api.github.com/repos/AliSoftware/OHHTTPStubs/tags | jq ".[].name" | sort -Vr | head -n 1
+end

@@ -15,6 +15,7 @@
 "can_btn_next_read_personal_data" = "Persönliche Daten lesen";
 "can_txt_help_title" = "Wo kann ich meine CAN finden?";
 "can_txt_help_explanation" = "Falls sie auf Ihrer Karte keine Zugangsnummer (CAN) sehen, benötigen Sie eine neue Gesundheitskarte mit NFC-Chip.";
+"can_txt_next_foss" = "Open Source Lizenzen";
 
 /*
   PIN
