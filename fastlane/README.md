@@ -169,6 +169,26 @@ fastlane cibuild
 
 
 
+### compile_foss
+
+```sh
+[bundle exec] fastlane compile_foss
+```
+
+Refresh FOSS.html with data from Package.resolved
+
+
+
+###Hint:
+
+Generate a GitHub access token (Access public repositories) and call
+
+```
+GITHUB_API_TOKEN=token_goes_here fastlane xcodegen_generate_xcodeproj
+```
+
+
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

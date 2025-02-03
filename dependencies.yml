@@ -1,0 +1,16 @@
+---
+purpose:
+  generic: >
+    This library contains convenience functions for creating the application ui.
+  specific:
+    openssl-swift: >
+      OpenSSL is used for all cryptographics that cannot be achieved with iOS standard crypto libraries (e.g. Brainpool ECC, PKCS#7).
+    asn1kit: >
+      This library contains convenience functions for handling asn1 data structures.
+exclude_identities_from_package_resolved:
+  - cwlcatchexception
+  - cwlpreconditiontesting
+  - nimble
+  - ohhttpstubs
+  - plcrashreporter
+  - commandant

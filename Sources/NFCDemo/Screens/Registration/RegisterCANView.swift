@@ -94,6 +94,18 @@ struct RegisterCANView: View {
                     Text("can_txt_help_explanation")
                         .font(.footnote)
                         .accessibility(identifier: "can_txt_help_explanation")
+                        .padding(.bottom, 20)
+
+                    HStack {
+                        Spacer()
+
+                        NavigationLink(destination: FOSSView()) {
+                            Text("can_txt_next_foss")
+                                .accessibilityIdentifier("can_txt_next_foss")
+                        }
+
+                        Spacer()
+                    }
 
                     Spacer()
                 }
