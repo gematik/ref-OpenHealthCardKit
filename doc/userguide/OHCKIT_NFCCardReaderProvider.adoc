@@ -12,14 +12,14 @@ The initializer takes some NFC-Display messages, the CAN (card access number) an
 
 [source,swift]
 ----
-include::{sourcedir}/NFCDemo/NFC/NFCLoginController.swift[tags=nfcHealthCardSession_init,indent=0]
+include::{sourcedir}/NFCDemo/NFC/NFCSigningFunctionController.swift[tags=nfcHealthCardSession_init,indent=0]
 ----
 
 Execute the operation on the NFC HealthCard. The secure channel (PACE) is established initially before executing the operation.
 
 [source,swift]
 ----
-include::{sourcedir}/NFCDemo/NFC/NFCLoginController.swift[tags=nfcHealthCardSession_execute,indent=0]
+include::{sourcedir}/NFCDemo/NFC/NFCSigningFunctionController.swift[tags=nfcHealthCardSession_execute,indent=0]
 ----
 
 The thrown error will be of type `NFCHealthCardSessionError`.
@@ -27,5 +27,5 @@ The `NFCHealthCardSession` also gives you an endpoint to invalidate the underlyi
 
 [source,swift]
 ----
-include::{sourcedir}/NFCDemo/NFC/NFCLoginController.swift[tags=nfcHealthCardSession_errorHandling,indent=0]
+include::{sourcedir}/NFCDemo/NFC/NFCSigningFunctionController.swift[tags=nfcHealthCardSession_errorHandling,indent=0]
 ----
