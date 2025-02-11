@@ -19,7 +19,6 @@ import Combine
 import HealthCardAccess
 @testable import HealthCardControl
 import Nimble
-import Util
 import XCTest
 
 final class HealthCardTypeExtESIGNTest: XCTestCase {
@@ -77,16 +76,13 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
     }
 
     func testReadAutCertificate_publisher() {
-        let fcpResourcesPath =
-            URL(fileURLWithPath: #file)
-                .deletingLastPathComponent()
-                .deletingLastPathComponent()
-                .appendingPathComponent("Resources.bundle")
-                .appendingPathComponent("FCP")
-                .appendingPathComponent("fcp_A000000167455349474E.dat")
-
+        let fcpResources = ResourceLoader.loadResourceAsData(
+            resource: "fcp_A000000167455349474E",
+            withExtension: "dat",
+            directory: "FCP"
+        )
         // swiftlint:disable:next force_try
-        let fcp = try! FileControlParameter.parse(data: fcpResourcesPath.readFileContents())
+        let fcp = try! FileControlParameter.parse(data: fcpResources)
         let certSize = Int(fcp.size)
         let mockCertificate = Data([UInt8](repeating: 0x55, count: certSize))
 
@@ -102,7 +98,7 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
             if command == selectCommand {
                 return try APDU.Response(body: Data(), sw1: 0x90, sw2: 0x0)
             } else if command == selectEfCommand {
-                return try APDU.Response(body: fcpResourcesPath.readFileContents(), sw1: 0x90, sw2: 0x0)
+                return try APDU.Response(body: fcpResources, sw1: 0x90, sw2: 0x0)
             } else if command == readCommand {
                 return try APDU.Response(body: mockCertificate, sw1: 0x90, sw2: 0x0)
             }
@@ -122,16 +118,13 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
     }
 
     func testReadAutCertificate() async throws {
-        let fcpResourcesPath =
-            URL(fileURLWithPath: #file)
-                .deletingLastPathComponent()
-                .deletingLastPathComponent()
-                .appendingPathComponent("Resources.bundle")
-                .appendingPathComponent("FCP")
-                .appendingPathComponent("fcp_A000000167455349474E.dat")
-
+        let fcpResources = ResourceLoader.loadResourceAsData(
+            resource: "fcp_A000000167455349474E",
+            withExtension: "dat",
+            directory: "FCP"
+        )
         // swiftlint:disable:next force_try
-        let fcp = try! FileControlParameter.parse(data: fcpResourcesPath.readFileContents())
+        let fcp = try! FileControlParameter.parse(data: fcpResources)
         let certSize = Int(fcp.size)
         let mockCertificate = Data([UInt8](repeating: 0x55, count: certSize))
 
@@ -147,7 +140,7 @@ final class HealthCardTypeExtESIGNTest: XCTestCase {
             if command == selectCommand {
                 return try APDU.Response(body: Data(), sw1: 0x90, sw2: 0x0)
             } else if command == selectEfCommand {
-                return try APDU.Response(body: fcpResourcesPath.readFileContents(), sw1: 0x90, sw2: 0x0)
+                return try APDU.Response(body: fcpResources, sw1: 0x90, sw2: 0x0)
             } else if command == readCommand {
                 return try APDU.Response(body: mockCertificate, sw1: 0x90, sw2: 0x0)
             }

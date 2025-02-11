@@ -30,12 +30,15 @@ targets:
     sources:
       - path: IntegrationTests
     dependencies:
-      - target: CardReaderAccess_macOS
-      - target: CardReaderProviderApi_macOS
-      - target: HealthCardAccess_macOS
-      - target: HealthCardControl_macOS
-      - target: Util_macOS
-      - framework: Carthage/Build/Nimble.xcframework
+      - package: Openhealthcardkit
+        product: CardReaderAccess
+      - package: Openhealthcardkit
+        product: CardReaderProviderApi 
+      - package: Openhealthcardkit
+        product: HealthCardAccess
+      - package: Openhealthcardkit
+        product: HealthCardControl
+      - package: Nimble
       - target: CardSimulationCardReaderProvider
       - target: CardSimulationLoader
       - package: AEXML
@@ -123,8 +126,10 @@ targets:
     dependencies:
       - target: CardSimulationLoader
       - package: ASN1Kit
-      - target: CardReaderProviderApi_macOS
-      - target: CardReaderAccess_macOS
+      - package: Openhealthcardkit
+        product: CardReaderProviderApi 
+      - package: Openhealthcardkit
+        product: CardReaderAccess
       - framework: Carthage/Build/SwiftSocket.xcframework
     transitivelyLinkDependencies: true
   CardSimulationLoaderTests:
@@ -140,18 +145,21 @@ targets:
       - package: AEXML
       - target: AEXMLExt
       - target: CardSimulationLoader
-      - framework: Carthage/Build/Nimble.xcframework
+      - package: Nimble
     gatherCoverageData: true
   AEXMLExtTests:
     type: bundle.unit-test
     platform: macOS
     bundleIdPrefix: de.gematik.ti.openhealthcard.cardsimulation
+    settings:
+      base:
+        OTHER_SWIFT_FLAGS: -no-verify-emitted-module-interface
     sources:
       - CardSimulationTestKit/Tests/AEXMLExtTests
     dependencies:
       - target: AEXMLExt
       - package: AEXML
-      - framework: Carthage/Build/Nimble.xcframework
+      - package: Nimble
     gatherCoverageData: true
   CardSimulationCardReaderProviderTests:
     type: bundle.unit-test
@@ -165,5 +173,7 @@ targets:
     dependencies:
       - target: CardSimulationCardReaderProvider
       - target: AEXMLExt
-      - framework: Carthage/Build/Nimble.xcframework
+      - package: Openhealthcardkit
+        product: CardReaderAccess
+      - package: Nimble
     gatherCoverageData: true
