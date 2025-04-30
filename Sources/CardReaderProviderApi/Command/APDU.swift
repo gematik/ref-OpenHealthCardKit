@@ -115,6 +115,66 @@ public class APDU {
 
 extension APDU.Command {
     /**
+         Construct an APDU Command from the raw APDU data.
+
+         - Parameters:
+             - apduData: the raw APDU data
+     */
+    // swiftlint:disable:next cyclomatic_complexity
+    public init(apduData: Data) throws {
+        guard apduData.count > 3 else {
+            throw APDU.Error
+                .commandBodyDataTooLarge // TODO: error saying: header is incorrect // swiftlint:disable:this todo
+        }
+        let cla: UInt8 = apduData[0]
+        let ins: UInt8 = apduData[1]
+        let p1: UInt8 = apduData[2]
+        let p2: UInt8 = apduData[3]
+
+        guard apduData.count > 4 else {
+            try self.init(cla: cla, ins: ins, p1: p1, p2: p2, ne: nil)
+            return
+        }
+        let length = apduData[4]
+
+        var expectedBytes: UInt16?
+        var body: Data?
+        switch apduData.count {
+        case 4:
+            // case 1:  |CLA|INS|P1 |P2 |                                 len = 4
+            break
+        case 5:
+            // case 2s: |CLA|INS|P1 |P2 |LE |                             len = 5
+            expectedBytes = UInt16(length)
+        case 7 where length == 0:
+            // case 2e: |CLA|INS|P1 |P2 |00 |LE1|LE2|                     len = 7
+            expectedBytes = (UInt16(apduData[5]) << 8) | UInt16(apduData[6])
+        case 261:
+            // case 4s: |CLA|INS|P1 |P2 |LC |...BODY...|LE |              len = 7..261
+            expectedBytes = UInt16(apduData[261 - 1])
+            body = apduData.subdata(in: 5 ..< apduData.count - 1)
+        case 6 ... 260:
+            // Case 3s: |CLA|INS|P1 |P2 |LC |...BODY...|                  len = 6..260
+            body = apduData.subdata(in: 5 ..< apduData.count)
+        case 8 ... 65542 where length == 0 && !(apduData[5] == 0 && apduData[6] == 0):
+            // case 3e: |CLA|INS|P1 |P2 |00 |LC1|LC2|...BODY...|          len = 8..65542
+            body = apduData.subdata(in: 7 ..< apduData.count)
+        case 65544 where length == 0 && !(apduData[5] == 0 && apduData[6] == 0):
+            // case 4e: |CLA|INS|P1 |P2 |00 |LC1|LC2|...BODY...|LE1|LE2|  len =10..65544
+            body = apduData.subdata(in: 7 ..< apduData.count - 2)
+            expectedBytes = (UInt16(apduData[apduData.count - 2]) << 8) | UInt16(apduData[apduData.count - 1])
+        default:
+            throw APDU.Error.commandBodyDataTooLarge
+        }
+
+        if let expectedBytes = expectedBytes {
+            try self.init(cla: cla, ins: ins, p1: p1, p2: p2, data: body, ne: Int(expectedBytes))
+        } else {
+            try self.init(cla: cla, ins: ins, p1: p1, p2: p2, data: body, ne: nil)
+        }
+    }
+
+    /**
          Constructs a CommandAPDU from the four header bytes.
          This is **case 1** in ISO 7816, no command body.
 
