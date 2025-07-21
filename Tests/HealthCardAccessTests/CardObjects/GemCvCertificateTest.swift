@@ -50,12 +50,11 @@ final class GemCvCertificateTest: XCTestCase {
     }()
 
     func testGemCvCertificateDecodingFromASN1() {
-        let filename = "CVC/EF.C.HPC.AUTR_CVC.E256.der"
-        let bundle = Bundle(for: GemCvCertificateTest.self)
-        let certPath = bundle.testResourceFilePath(in: "Resources", for: filename)
-        guard let certData = try? certPath.readFileContents() else {
-            fatalError("Could not read: [\(filename)]")
-        }
+        let certData = ResourceLoader.loadResourceAsData(
+            resource: "EF.C.HPC.AUTR_CVC.E256",
+            withExtension: "der",
+            directory: "CVC"
+        )
 
         expect {
             try GemCvCertificate.from(data: certData)
@@ -63,12 +62,11 @@ final class GemCvCertificateTest: XCTestCase {
     }
 
     func testGemCvCertificateEncodingToASN1() {
-        let filename = "CVC/EF.C.HPC.AUTR_CVC.E256.der"
-        let bundle = Bundle(for: GemCvCertificateTest.self)
-        let certPath = bundle.testResourceFilePath(in: "Resources", for: filename)
-        guard let certData = try? certPath.readFileContents() else {
-            fatalError("Could not read: [\(filename)]")
-        }
+        let certData = ResourceLoader.loadResourceAsData(
+            resource: "EF.C.HPC.AUTR_CVC.E256",
+            withExtension: "der",
+            directory: "CVC"
+        )
 
         expect {
             try self.gemCvCertificate.asn1encode()

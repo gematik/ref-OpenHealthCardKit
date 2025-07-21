@@ -266,8 +266,6 @@ extension NFCTagReaderSession.Publisher {
     }
 }
 
-#endif
-
 @propertyWrapper
 struct Synchronized<T> {
     private let backing: SynchronizedVar<T>
@@ -333,3 +331,4 @@ class SynchronizedVar<T> {
         mutex.unlock()
     }
 }
+#endif

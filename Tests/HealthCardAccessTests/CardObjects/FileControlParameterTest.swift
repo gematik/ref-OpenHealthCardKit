@@ -69,10 +69,11 @@ final class FileControlParameterTest: XCTestCase {
         // totalLength == 0xFFFFFFFF
         // fileIdentifier == 0x3F00
 
-        let filePath = bundle.testResourceFilePath(in: "Resources", for: "FCP/fcp_df_A000000167455349474E_apdu.dat")
-        guard let responseData = try? filePath.readFileContents() else {
-            fatalError("FCP/fcp_df_A000000167455349474E_apdu.dat could not be read")
-        }
+        let responseData = ResourceLoader.loadResourceAsData(
+            resource: "fcp_df_A000000167455349474E_apdu",
+            withExtension: "dat",
+            directory: "FCP"
+        )
 
         guard let fcp = try? FileControlParameter.parse(data: responseData) else {
             Nimble.fail("Could not parse FCP")
@@ -96,10 +97,12 @@ final class FileControlParameterTest: XCTestCase {
         // totalLength == 0xFFFFFFFF
         // fileIdentifier == NULL
 
-        let filePath = bundle.testResourceFilePath(in: "Resources", for: "FCP/fcp_adf_A000000167455349474E_apdu.dat")
-        guard let responseData = try? filePath.readFileContents() else {
-            fatalError("FCP/fcp_adf_A000000167455349474E_apdu.dat could not be read")
-        }
+        let responseData = ResourceLoader.loadResourceAsData(
+            resource: "fcp_adf_A000000167455349474E_apdu",
+            withExtension: "dat",
+            directory: "FCP"
+        )
+
         guard let fcp = try? FileControlParameter.parse(data: responseData) else {
             Nimble.fail("Could not parse FCP")
             return
@@ -120,10 +123,11 @@ final class FileControlParameterTest: XCTestCase {
         // totalLength == 0xFFFFFFFF
         // fileIdentifier == 0x2F02
 
-        let filePath = bundle.testResourceFilePath(in: "Resources", for: "FCP/fcp_nett_length_apdu.dat")
-        guard let responseData = try? filePath.readFileContents() else {
-            fatalError("FCP/fcp_nett_length_apdu.dat could not be read")
-        }
+        let responseData = ResourceLoader.loadResourceAsData(
+            resource: "fcp_nett_length_apdu",
+            withExtension: "dat",
+            directory: "FCP"
+        )
 
         guard let fcp = try? FileControlParameter.parse(data: responseData) else {
             Nimble.fail("Could not parse FCP")

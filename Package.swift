@@ -9,26 +9,19 @@ let package = Package(
         .macOS(.v12)
     ],
     products: [
-        .library(
-            name: "HealthCardControl",
-            targets: ["HealthCardControl"]),
-        .library(
-            name: "NFCCardReaderProvider",
-            targets: ["NFCCardReaderProvider"]),
-        .library(
-            name: "HealthCardAccess",
-            targets: ["HealthCardAccess"]),
-        .library(
-            name: "CardReaderProviderApi",
-            targets: ["CardReaderProviderApi"]),
-        .library(
-            name: "Helper",
-            targets: ["Helper"]),    
+        .library(name: "HealthCardControl", targets: ["HealthCardControl"]),
+        .library(name: "NFCCardReaderProvider", targets: ["NFCCardReaderProvider"]),
+        .library(name: "HealthCardAccess", targets: ["HealthCardAccess"]),
+        .library(name: "CardReaderProviderApi", targets: ["CardReaderProviderApi"]),
+        .library(name: "Helper", targets: ["Helper"]),    
+        // TODO: Remove this (and the .target) at a later time. For now it's only needed for the CardSimulationTests
+        .library(name: "CardReaderAccess", targets: ["CardReaderAccess"]),
     ],
     dependencies: [
         .package(url: "https://github.com/gematik/ASN1Kit.git", from: "1.2.0"),
         .package(url: "https://github.com/gematik/OpenSSL-Swift", from: "4.2.0"),
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.3.0"),
+        .package(url: "https://github.com/Quick/Nimble", from: "12.0.0"),
     ],
     targets: [
         .target(
@@ -49,7 +42,7 @@ let package = Package(
         ),
         .target(
             name: "HealthCardAccess",
-            dependencies: ["CardReaderAccess", "CardReaderProviderApi", "ASN1Kit"]
+            dependencies: ["CardReaderProviderApi", "ASN1Kit"]
         ),
         .target(
             name: "CardReaderAccess",
@@ -61,6 +54,28 @@ let package = Package(
         ),   
         .target(
             name: "Helper"
+        ),
+        .testTarget(
+            name: "HealthCardControlTests",
+            dependencies: ["HealthCardControl", "Nimble"],
+            resources: [
+                .process("Resources.bundle")
+            ]
+        ),
+        .testTarget(
+            name: "HealthCardAccessTests",
+            dependencies: ["HealthCardAccess", "Nimble"],
+            resources: [
+                .process("Resources.bundle")
+            ]
+        ),
+        .testTarget(
+            name: "CardReaderAccessTests",
+            dependencies: ["CardReaderAccess", "Nimble"]
+        ),
+        .testTarget(
+            name: "CardReaderProviderApiTests",
+            dependencies: ["CardReaderProviderApi", "Nimble"]
         ),
     ]
 )

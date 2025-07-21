@@ -18,7 +18,6 @@ import Foundation
 import HealthCardAccess
 @testable import HealthCardControl
 import Nimble
-import Util
 import XCTest
 
 // Note: This continuation of `HealthCardTypeExtResetRetryCounterIntegrationTest` exists to separate the count dependent

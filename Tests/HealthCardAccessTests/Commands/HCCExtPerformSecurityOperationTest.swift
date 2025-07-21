@@ -121,7 +121,11 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
 
     func testPsoEncipher_usingTransmittedRsaKey() throws {
         let dataToBeEnciphered = Data([0x66])
-        let pubKeyData = "rsa_pub_key.der".loadAsResource(at: "PSO", bundle: bundle)
+        let pubKeyData = ResourceLoader.loadResourceAsData(
+            resource: "rsa_pub_key",
+            withExtension: "der",
+            directory: "PSO"
+        )
         var createError: Unmanaged<CFError>?
         guard let publicKey = SecKeyCreateWithData(pubKeyData as NSData,
                                                    [kSecAttrKeyType: kSecAttrKeyTypeRSA,
@@ -131,7 +135,11 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
             return
         }
 
-        let apduEncipherRsaPkcs1v15 = "apduEncipherRsaPkcs1v15.dat".loadAsResource(at: "PSO", bundle: bundle)
+        let apduEncipherRsaPkcs1v15 = ResourceLoader.loadResourceAsData(
+            resource: "apduEncipherRsaPkcs1v15",
+            withExtension: "dat",
+            directory: "PSO"
+        )
         expect {
             try HealthCardCommand.PsoEncipher
                 .encipherUsingTransmittedRsaKeyPkcs1_v1_5(rsaPublicKey: publicKey,
@@ -140,7 +148,11 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
         } == apduEncipherRsaPkcs1v15
 
         // using transmitted RSA Oaep key
-        let apduEncipherRsaOaep = "apduEncipherRsaOaep.dat".loadAsResource(at: "PSO", bundle: bundle)
+        let apduEncipherRsaOaep = ResourceLoader.loadResourceAsData(
+            resource: "apduEncipherRsaOaep",
+            withExtension: "dat",
+            directory: "PSO"
+        )
         expect {
             try HealthCardCommand.PsoEncipher
                 .encipherUsingTransmittedRsaKeyOaep(rsaPublicKey: publicKey,
@@ -158,7 +170,11 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
 
     func testPsoEncipher_usingTransmittedElcKey() {
         let dataToBeEnciphered = Data([0x66])
-        let pubKeyData = "elc_pub_key.der".loadAsResource(at: "PSO", bundle: bundle)
+        let pubKeyData = ResourceLoader.loadResourceAsData(
+            resource: "elc_pub_key",
+            withExtension: "der",
+            directory: "PSO"
+        )
         var createError: Unmanaged<CFError>?
         guard let publicKey = SecKeyCreateWithData(pubKeyData as NSData,
                                                    [kSecAttrKeyType: kSecAttrKeyTypeEC,
@@ -168,7 +184,11 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
             return
         }
 
-        let apduEncipherElc = "apduEncipherElc.dat".loadAsResource(at: "PSO", bundle: bundle)
+        let apduEncipherElc = ResourceLoader.loadResourceAsData(
+            resource: "apduEncipherElc",
+            withExtension: "dat",
+            directory: "PSO"
+        )
 
         expect {
             try HealthCardCommand.PsoEncipher
@@ -210,12 +230,11 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
     }
 
     func testPsoVerifyGemCvCertificate() throws {
-        let filename = "CVC/GemCVC.der"
-        let certPath = bundle.testResourceFilePath(in: "Resources", for: filename)
-        guard let certData = try? certPath.readFileContents() else {
-            Nimble.fail("Could not read: [\(filename)]")
-            return
-        }
+        let certData = ResourceLoader.loadResourceAsData(
+            resource: "GemCVC",
+            withExtension: "der",
+            directory: "CVC"
+        )
 
         let expectedAPDU = Data([0x0, 0x2A, 0x0, 0xBE, 0xDC] + certData)
         expect {
@@ -266,13 +285,13 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
     typealias DSATestParameter = (test: String, hash: String, normalized: String, key: String, expected: String,
                                   pass: Bool, throw: Bool)
     let dsaVerifyTests: [DSATestParameter] = [
-        (test: "ansix9p256r1", hash: "ansix9p256r1_hash.dat", normalized: "ansix9p256r1_signature_normalized.dat",
-         key: "ansix9p256r1_ecpubkey.dat", expected: "ansix9p256r1_expected_apdu.dat", pass: true, throw: false),
-        (test: "ansix9p384r1", hash: "ansix9p384r1_hash.dat", normalized: "ansix9p384r1_signature_normalized.dat",
-         key: "ansix9p384r1_ecpubkey.dat", expected: "ansix9p384r1_expected_apdu.dat", pass: true, throw: false),
-        (test: "brainpoolP512r1", hash: "brainpoolP512r1_hash.dat",
-         normalized: "brainpoolP512r1_signature_normalized.dat", key: "brainpoolP512r1_ecpubkey.dat",
-         expected: "brainpoolP512r1_expected_apdu.dat", pass: false, throw: true),
+        (test: "ansix9p256r1", hash: "ansix9p256r1_hash", normalized: "ansix9p256r1_signature_normalized",
+         key: "ansix9p256r1_ecpubkey", expected: "ansix9p256r1_expected_apdu", pass: true, throw: false),
+        (test: "ansix9p384r1", hash: "ansix9p384r1_hash", normalized: "ansix9p384r1_signature_normalized",
+         key: "ansix9p384r1_ecpubkey", expected: "ansix9p384r1_expected_apdu", pass: true, throw: false),
+        (test: "brainpoolP512r1", hash: "brainpoolP512r1_hash",
+         normalized: "brainpoolP512r1_signature_normalized", key: "brainpoolP512r1_ecpubkey",
+         expected: "brainpoolP512r1_expected_apdu", pass: false, throw: true),
     ]
 
     func testPsoVerifyDSA_parameterized() {
@@ -290,6 +309,7 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     func dasVerificationTest(_ testCase: DSATestParameter) {
         let hash = testCase.hash
         let signature = testCase.normalized
@@ -299,11 +319,27 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
         let `throw` = testCase.throw
 
         let path = "DSA"
-        let hashData = hash.loadAsResource(at: path, bundle: bundle)
-        let normalizedSignature = signature.loadAsResource(at: path, bundle: bundle)
-        let publicKeyData = publicKey.loadAsResource(at: path, bundle: bundle)
+        let hashData = ResourceLoader.loadResourceAsData(
+            resource: hash,
+            withExtension: "dat",
+            directory: "DSA"
+        )
+        let normalizedSignature = ResourceLoader.loadResourceAsData(
+            resource: signature,
+            withExtension: "dat",
+            directory: "DSA"
+        )
+        let publicKeyData = ResourceLoader.loadResourceAsData(
+            resource: publicKey,
+            withExtension: "dat",
+            directory: "DSA"
+        )
 
-        let expectedAPDU = expected.loadAsResource(at: path, bundle: bundle)
+        let expectedAPDU = ResourceLoader.loadResourceAsData(
+            resource: expected,
+            withExtension: "dat",
+            directory: "DSA"
+        )
         let expectation = expect { () throws -> Data in
             var error: Unmanaged<CFError>?
             guard let publicKey = SecKeyCreateWithData(
@@ -405,8 +441,11 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
     }
 
     func testPsoVerifyDSA_wrong_hashsize() {
-        let filename = "ansix9p256r1_ecpubkey.dat"
-        let ecKeyData = filename.loadAsResource(at: "DSA", bundle: bundle)
+        let ecKeyData = ResourceLoader.loadResourceAsData(
+            resource: "ansix9p256r1_ecpubkey",
+            withExtension: "dat",
+            directory: "DSA"
+        )
 
         let signature = Data([UInt8](repeating: 0xF0, count: 64))
         let hash = Data([UInt8](repeating: 0xEF, count: 30))
@@ -430,8 +469,11 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
     }
 
     func testPsoVerifyDSA_wrong_signaturesize() {
-        let filename = "ansix9p256r1_ecpubkey.dat"
-        let ecKeyData = filename.loadAsResource(at: "DSA", bundle: bundle)
+        let ecKeyData = ResourceLoader.loadResourceAsData(
+            resource: "ansix9p256r1_ecpubkey",
+            withExtension: "dat",
+            directory: "DSA"
+        )
 
         let signature = Data([UInt8](repeating: 0xF0, count: 66))
         let hash = Data([UInt8](repeating: 0xEF, count: 32))
@@ -477,4 +519,5 @@ func throwError<T>() -> Nimble.Predicate<T> {
     }
 }
 
-extension String: Error {}
+// swiftlint:disable:next file_length
+extension String: @retroactive Error {}
