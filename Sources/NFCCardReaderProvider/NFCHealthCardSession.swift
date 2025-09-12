@@ -111,6 +111,7 @@ import OSLog
 public class NFCHealthCardSession<Output>: NSObject, NFCTagReaderSessionDelegate {
     private typealias OperationCheckedContinuation = CheckedContinuation<Output, Error>
     private var operationContinuation: OperationCheckedContinuation?
+    private let continuationLock = NSLock()
 
     private let messages: Messages
     private let can: String
@@ -171,19 +172,38 @@ public class NFCHealthCardSession<Output>: NSObject, NFCTagReaderSessionDelegate
         else {
             throw NFCHealthCardSessionError.couldNotInitializeSession
         }
-        session.alertMessage = messages.discoveryMessage
-        Logger.nfcCardReaderProvider.debug("Starting session: \(String(describing: self.session))")
-        session.begin()
 
+        // Important: set the continuation BEFORE calling `session.begin()`.
+        // CoreNFC may synchronously invoke delegate callbacks (e.g. immediate invalidation)
+        // once `begin()` is called. If we registered the continuation afterwards, those
+        // callbacks would miss it and the awaiting task would hang indefinitely.
         let outcome = try await withCheckedThrowingContinuation { continuation in
-            self.operationContinuation = continuation
+            continuationLock.lock(); defer { continuationLock.unlock() }
+            precondition(operationContinuation == nil, "executeOperation() must be called only once")
+            operationContinuation = continuation
+            session.alertMessage = messages.discoveryMessage
+            Logger.nfcCardReaderProvider.debug("Starting session: \(String(describing: self.session))")
+            session.begin()
         }
         return outcome
     }
 
     deinit {
         Logger.nfcCardReaderProvider.debug("Deinit MyNFCSession")
+        // If still alive and not yet invalidated explicitly, invalidate now.
         session?.invalidate()
+        session = nil
+    }
+
+    /// Safely resumes the operation continuation, ensuring it's only resumed once
+    private func safeResumeContinuation(with result: Result<Output, Error>) {
+        continuationLock.lock(); defer { continuationLock.unlock() }
+        guard let cont = operationContinuation else { return }
+        operationContinuation = nil
+        switch result {
+        case let .success(value): cont.resume(returning: value)
+        case let .failure(error): cont.resume(throwing: error)
+        }
     }
 
     /// Invalidates the current NFC session. Optionally, an error message can be provided
@@ -196,6 +216,7 @@ public class NFCHealthCardSession<Output>: NSObject, NFCTagReaderSessionDelegate
         } else {
             session?.invalidate()
         }
+        session = nil
     }
 
     // MARK: - NFCTagReaderSessionDelegate
@@ -207,8 +228,8 @@ public class NFCHealthCardSession<Output>: NSObject, NFCTagReaderSessionDelegate
     public func tagReaderSession(_: NFCTagReaderSession, didInvalidateWithError error: Swift.Error) {
         Logger.nfcCardReaderProvider.debug("NFC reader session was invalidated: \(error)")
         let coreNFCError = error.asCoreNFCError()
-        operationContinuation?.resume(throwing: NFCHealthCardSessionError.coreNFC(coreNFCError))
-        operationContinuation = nil
+        safeResumeContinuation(with: .failure(NFCHealthCardSessionError.coreNFC(coreNFCError)))
+        session = nil
     }
 
     // swiftlint:disable:next function_body_length
@@ -231,8 +252,7 @@ public class NFCHealthCardSession<Output>: NSObject, NFCTagReaderSessionDelegate
         }
         guard case let .iso7816(iso7816NfcTag) = tag else {
             session.invalidate(errorMessage: messages.unsupportedCardMessage)
-            operationContinuation?.resume(throwing: NFCHealthCardSessionError.unsupportedTag)
-            operationContinuation = nil
+            safeResumeContinuation(with: .failure(NFCHealthCardSessionError.unsupportedTag))
             return
         }
 
@@ -242,11 +262,10 @@ public class NFCHealthCardSession<Output>: NSObject, NFCTagReaderSessionDelegate
             do {
                 try await session.connect(to: tag)
             } catch {
-                operationContinuation?.resume(throwing: NFCHealthCardSessionError.coreNFC(error.asCoreNFCError()))
-                operationContinuation = nil
+                safeResumeContinuation(with: .failure(NFCHealthCardSessionError.coreNFC(error.asCoreNFCError())))
+                session.invalidate(errorMessage: error.localizedDescription)
                 return
             }
-
             session.alertMessage = messages.secureChannelMessage
             let card = NFCCard(isoTag: iso7816NfcTag)
 
@@ -254,16 +273,16 @@ public class NFCHealthCardSession<Output>: NSObject, NFCTagReaderSessionDelegate
             do {
                 secureHealthCard = try await card.openSecureSessionAsync(can: can)
             } catch let error as CoreNFCError {
-                operationContinuation?.resume(throwing: NFCHealthCardSessionError.coreNFC(error))
-                operationContinuation = nil
+                safeResumeContinuation(with: .failure(NFCHealthCardSessionError.coreNFC(error)))
+                session.invalidate(errorMessage: error.localizedDescription)
                 return
             } catch HealthCardControl.KeyAgreement.Error.macPcdVerificationFailedOnCard {
-                operationContinuation?.resume(throwing: NFCHealthCardSessionError.wrongCAN)
-                operationContinuation = nil
+                safeResumeContinuation(with: .failure(NFCHealthCardSessionError.wrongCAN))
+                session.invalidate(errorMessage: messages.noCardMessage)
                 return
             } catch {
-                operationContinuation?.resume(throwing: NFCHealthCardSessionError.establishingSecureChannel(error))
-                operationContinuation = nil
+                safeResumeContinuation(with: .failure(NFCHealthCardSessionError.establishingSecureChannel(error)))
+                session.invalidate(errorMessage: error.localizedDescription)
                 return
             }
 
@@ -274,15 +293,14 @@ public class NFCHealthCardSession<Output>: NSObject, NFCTagReaderSessionDelegate
 
             do {
                 let outcome = try await operation(myNFCCardSession)
-                operationContinuation?.resume(returning: outcome)
-                operationContinuation = nil
+                safeResumeContinuation(with: .success(outcome))
             } catch let error as CoreNFCError {
-                operationContinuation?.resume(throwing: NFCHealthCardSessionError.coreNFC(error))
-                operationContinuation = nil
+                safeResumeContinuation(with: .failure(NFCHealthCardSessionError.coreNFC(error)))
+                session.invalidate(errorMessage: error.localizedDescription)
                 return
             } catch {
-                operationContinuation?.resume(throwing: NFCHealthCardSessionError.operation(error))
-                operationContinuation = nil
+                safeResumeContinuation(with: .failure(NFCHealthCardSessionError.operation(error)))
+                session.invalidate(errorMessage: error.localizedDescription)
                 return
             }
         }
