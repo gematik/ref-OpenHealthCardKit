@@ -1,3 +1,7 @@
+# 5.11.1
+
+- Harden NFCHealthCardSession concurrency bridging
+
 # 5.11.0
 
 - Add "Read personal data" use case to DemoApp
