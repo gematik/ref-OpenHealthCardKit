@@ -1,9 +1,7 @@
 ////
 Execute `make readme` after editing <project_root>/README.adoc
 ////
-:toc-title: Table of Contents
-:toc:
-:toclevels: 2
+:doctype: book
 :source-highlighter: prettify
 
 :testdir: ../../Tests
@@ -12,15 +10,80 @@ Execute `make readme` after editing <project_root>/README.adoc
 
 = OpenHealthCardKit
 
+++++
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+       <ul>
+        <li><a href="#release-notes">Release Notes</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
+++++
+
+== About The Project
+
 Controlling/Use-case framework for accessing smart cards of the telematic infrastructure.
 
 include::doc/userguide/OHCKIT_Introduction.adoc[]
 
-include::doc/userguide/OHCKIT_API.adoc[]
-
-include::doc/userguide/OHCKIT_GettingStarted.adoc[]
-
 include::doc/userguide/OHCKIT_Overview.adoc[]
+
+=== Release Notes
+See `link:../ReleaseNotes.md[ReleaseNotes]` for all information regarding the (newest) releases.
+
+== Getting Started
+
+OpenHealthCardKit requires Swift 5.6.
+
+=== Prerequisites
+
+- Swift 5.6 or later
+- Xcode (for iOS development)
+- Swift Package Manager, Carthage, or manual integration
+
+=== Installation
+
+==== Swift Package Manager
+
+Put this in your `Package.swift`:
+
+[source,swift]
+----
+.package(url: "https://github.com/gematik/ref-OpenHealthCardKit", from: "5.6.0"),
+----
+
+==== Carthage
+
+Put this in your `Cartfile`:
+
+----
+github "gematik/ref-openHealthCardKit" ~> 5.0
+----
+
+==== Setup for Development
+
+Run `$ make setup` to start developing locally. This will make sure all the dependencies are put in place and the Xcode-project will be generated and/or overwritten.
+
+Dependencies are a mix of SPM (Swift Package Manager) and Carthage right now. The Xcode-project is generated using `xcodegen`.
+The more complex build configuration(s) is done with the help of Fastlane. See the `./fastlane` directory for full setup.
+
+== Usage
+
+include::doc/userguide/OHCKIT_API.adoc[]
 
 include::doc/userguide/OHCKIT_CardReaderProviderApi.adoc[]
 
@@ -29,6 +92,30 @@ include::doc/userguide/OHCKIT_HealthCardAccess.adoc[]
 include::doc/userguide/OHCKIT_HealthCardControl.adoc[]
 
 include::doc/userguide/OHCKIT_NFCCardReaderProvider.adoc[]
+
 include::doc/userguide/OHCKIT_NFCDemo.adoc[]
 
-include::doc/userguide/OHCKIT_License.adoc[]
+For more examples or in-depth documentation, please refer to the included user guide sections above.
+
+== License
+
+Copyright 2020-2025 gematik GmbH
+
+Apache License, Version 2.0
+
+See the `link:../LICENSE[LICENSE]` for the specific language governing permissions and limitations under the License
+
+== Additional Notes and Disclaimer from gematik GmbH
+
+. Copyright notice: Each published work result is accompanied by an explicit statement of the license conditions for use. These are regularly typical conditions in connection with open source or free software. Programs described/provided/linked here are free software, unless otherwise stated. 
+. Permission notice: Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+.. The copyright notice (Item 1) and the permission notice (Item 2) shall be included in all copies or substantial portions of the Software.
+.. The software is provided "as is" without warranty of any kind, either express or implied, including, but not limited to, the warranties of fitness for a particular purpose, merchantability, and/or non-infringement. The authors or copyright holders shall not be liable in any manner whatsoever for any damages or other claims arising from, out of or in connection with the software or the use or other dealings with the software, whether in an action of contract, tort, or otherwise.
+.. The software is the result of research and development activities, therefore not necessarily quality assured and without the character of a liable product. For this reason, gematik does not provide any support or other user assistance (unless otherwise stated in individual cases and without justification of a legal obligation). Furthermore, there is no claim to further development and adaptation of the results to a more current state of the art.
+. Gematik may remove published results temporarily or permanently from the place of publication at any time without prior notice or justification.
+. Please note: Parts of this code may have been generated using AI-supported technology. Please take this into account, especially when troubleshooting, for security analyses and possible adjustments.
+
+== Contact
+
+This software is currently being tested to ensure its technical quality and legal compliance. Your feedback is highly valued. 
+If you find any issues or have any suggestions or comments, or if you see any other ways in which we can improve, please reach out to: ospo@gematik.de
