@@ -81,6 +81,7 @@
 "nfc_txt_multipleCardsMessage" = "Es wurden mehrere Karten gefunden";
 "nfc_txt_unsupportedCardMessage" = "Karte wird nicht unterstützt";
 "nfc_txt_connectionErrorMessage" = "NFC Kommunikationsfehler";
+"nfc_txt_wrongCANMessage" = "Falsche Zugangsnummer. Bitte versuchen Sie es erneut.";
 "nfc_txt_msg_secure_channel" = "Sichere Verbindung aufbauen...";
 "nfc_txt_msg_verify_pin" = "PIN verifizieren...";
 "nfc_txt_msg_reading_auth_cert"= "Zertifikat lesen...";
