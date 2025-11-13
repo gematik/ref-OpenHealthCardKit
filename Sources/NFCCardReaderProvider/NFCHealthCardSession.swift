@@ -278,7 +278,7 @@ public class NFCHealthCardSession<Output>: NSObject, NFCTagReaderSessionDelegate
                 return
             } catch HealthCardControl.KeyAgreement.Error.macPcdVerificationFailedOnCard {
                 safeResumeContinuation(with: .failure(NFCHealthCardSessionError.wrongCAN))
-                session.invalidate(errorMessage: messages.noCardMessage)
+                session.invalidate(errorMessage: messages.wrongCardAccessNumberMessage ?? messages.noCardMessage)
                 return
             } catch {
                 safeResumeContinuation(with: .failure(NFCHealthCardSessionError.establishingSecureChannel(error)))
@@ -377,6 +377,10 @@ extension NFCHealthCardSession {
         public let connectMessage: String
         /// The message during establishing a secure card channel after the connect
         public let secureChannelMessage: String
+        /// The message when an incorrect Card Access Number (CAN) was entered.
+        /// Falls back to `noCardMessage` if not provided.
+        // TO-DO: Make non-optional (String) in next breaking change (major version bump)
+        public let wrongCardAccessNumberMessage: String?
         /// The message when 'something else' as a card is found, but not a card
         public let noCardMessage: String
         /// The message to display when multiple NFC Cards were detected
@@ -392,6 +396,8 @@ extension NFCHealthCardSession {
         ///   - discoveryMessage: The message that is being displayed when polling for a NFC Card
         ///   - connectMessage: The message when the card is being initialized for downstream usage
         ///   - secureChannelMessage: The message during establishing a secure card channel after the connect
+        ///   - wrongCardAccessNumberMessage: The message when an incorrect Card Access Number (CAN) was entered.
+        ///         Optional; defaults to nil (will use `noCardMessage` as fallback).
         ///   - noCardMessage: The message when 'something else' as a card is found, but not a card
         ///   - multipleCardsMessage: The message to display when multiple NFC Cards were detected
         ///   - unsupportedCardMessage:  The message when the card type is unsupported
@@ -400,6 +406,7 @@ extension NFCHealthCardSession {
             discoveryMessage: String,
             connectMessage: String,
             secureChannelMessage: String,
+            wrongCardAccessNumberMessage: String? = nil,
             noCardMessage: String,
             multipleCardsMessage: String,
             unsupportedCardMessage: String,
@@ -408,6 +415,7 @@ extension NFCHealthCardSession {
             self.discoveryMessage = discoveryMessage
             self.connectMessage = connectMessage
             self.secureChannelMessage = secureChannelMessage
+            self.wrongCardAccessNumberMessage = wrongCardAccessNumberMessage
             self.noCardMessage = noCardMessage
             self.multipleCardsMessage = multipleCardsMessage
             self.unsupportedCardMessage = unsupportedCardMessage

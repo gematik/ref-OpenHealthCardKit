@@ -68,6 +68,7 @@ public class NFCChangeReferenceDataController: ChangeReferenceData {
         discoveryMessage: NSLocalizedString("nfc_txt_discoveryMessage", comment: ""),
         connectMessage: NSLocalizedString("nfc_txt_connectMessage", comment: ""),
         secureChannelMessage: NSLocalizedString("nfc_txt_secureChannel", comment: ""),
+        wrongCardAccessNumberMessage: NSLocalizedString("nfc_txt_wrongCANMessage", comment: ""),
         noCardMessage: NSLocalizedString("nfc_txt_noCardMessage", comment: ""),
         multipleCardsMessage: NSLocalizedString("nfc_txt_multipleCardsMessage", comment: ""),
         unsupportedCardMessage: NSLocalizedString("nfc_txt_unsupportedCardMessage", comment: ""),
