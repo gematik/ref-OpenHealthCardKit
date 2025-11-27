@@ -72,5 +72,5 @@ custom_rules:
 file_header:
   required_pattern: |
     \/\/
-    \/\/  Copyright \(c\) \d{4} gematik GmbH
+    \/\/ Copyright \(Change Date see Readme\), gematik GmbH
     \/\/
