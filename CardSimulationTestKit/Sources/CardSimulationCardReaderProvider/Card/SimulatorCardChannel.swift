@@ -21,7 +21,6 @@
 import CardReaderProviderApi
 import Foundation
 import OSLog
-import SwiftSocket
 
 protocol TCPClientType: InputStreaming, OutputStreaming {
     func close() throws

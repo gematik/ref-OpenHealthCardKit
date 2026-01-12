@@ -20,13 +20,12 @@
 
 @testable import CardSimulationCardReaderProvider
 import Nimble
-import SwiftSocket
 import XCTest
 
 final class TCPClientExtStreamingTest: XCTestCase {
     var serverSocket: TCPServer!
-    var listenPort: Int32 {
-        serverSocket.port
+    var listenPort: Int {
+        Int(serverSocket.port)
     }
 
     var client: TCPClient!
@@ -38,12 +37,12 @@ final class TCPClientExtStreamingTest: XCTestCase {
         if case let .failure(error) = serverSocket.listen() {
             Nimble.fail("Failed to setup TCP socket: [\(error)]")
         }
-        client = TCPClient(address: "localhost", port: listenPort)
+        client = TCPClient(host: "localhost", port: listenPort)
     }
 
     override func tearDown() {
         serverSocket.close()
-        client.close()
+        try? client.close()
         super.tearDown()
     }
 
@@ -91,7 +90,7 @@ final class TCPClientExtStreamingTest: XCTestCase {
         expect(serverRead).to(equal(message))
         expect(outputStream.hasSpaceAvailable).to(beTrue())
 
-        server.close()
+        try? server.close()
     }
 
     static var allTests = [

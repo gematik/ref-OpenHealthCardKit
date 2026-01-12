@@ -20,7 +20,6 @@
 
 import Foundation
 import OSLog
-import SwiftSocket
 
 extension TCPClient: TCPClientType {
     var hasBytesAvailable: Bool {
@@ -45,7 +44,7 @@ extension TCPClient: TCPClientType {
     }
 
     var hasSpaceAvailable: Bool {
-        fd != nil
+        isConnected
     }
 
     func write(_ buffer: UnsafeRawBufferPointer, maxLength len: Int) -> Int {

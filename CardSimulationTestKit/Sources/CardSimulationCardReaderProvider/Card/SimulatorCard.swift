@@ -21,13 +21,12 @@
 import CardReaderProviderApi
 import Foundation
 import OSLog
-import SwiftSocket
 
 public class SimulatorCard: CardType {
     public private(set) var atr: ATR
     public private(set) var `protocol`: CardProtocol
     let host: String
-    let port: Int32
+    let port: Int
     let connectTimeout: Int
     var basicChannel: SimulatorCardChannel? {
         didSet {
@@ -38,7 +37,7 @@ public class SimulatorCard: CardType {
     public var maxMessageLength: Int = 4096
     public var maxResponseLength: Int = 4096
 
-    required init(host: String, port: Int32, channel protocol: CardProtocol = .t1, timeout: Int = 10) {
+    required init(host: String, port: Int, channel protocol: CardProtocol = .t1, timeout: Int = 10) {
         self.protocol = `protocol`
         atr = Data()
         self.host = host
@@ -47,7 +46,7 @@ public class SimulatorCard: CardType {
     }
 
     public func openBasicChannel() throws -> CardChannelType {
-        let client = TCPClient(address: host, port: port)
+        let client = TCPClient(host: host, port: port)
         switch client.connect(timeout: connectTimeout) {
         case .success:
             basicChannel = SimulatorCardChannel(

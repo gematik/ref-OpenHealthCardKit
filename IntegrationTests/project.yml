@@ -17,6 +17,10 @@ schemes:
         - CardSimulationLoaderTests
         - AEXMLExtTests
         - IntegrationTests
+packages:
+  NIO:
+    url: https://github.com/apple/swift-nio.git
+    majorVersion: 2.0.0
 targets:
   IntegrationTests:
     name: IntegrationTests
@@ -44,7 +48,7 @@ targets:
       - package: AEXML
       - target: AEXMLExt
       - package: StreamReader
-      - framework: Carthage/Build/SwiftSocket.xcframework
+      - package: NIO
 
 
   # CardSimulationTestKit
@@ -130,7 +134,7 @@ targets:
         product: CardReaderProviderApi 
       - package: Openhealthcardkit
         product: CardReaderAccess
-      - framework: Carthage/Build/SwiftSocket.xcframework
+      - package: NIO
     transitivelyLinkDependencies: true
   CardSimulationLoaderTests:
     type: bundle.unit-test

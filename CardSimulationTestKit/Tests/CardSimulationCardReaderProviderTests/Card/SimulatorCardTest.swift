@@ -20,13 +20,12 @@
 
 @testable import CardSimulationCardReaderProvider
 import Nimble
-import SwiftSocket
 import XCTest
 
 final class SimulatorCardTest: XCTestCase {
     var serverSocket: TCPServer!
-    var listenPort: Int32 {
-        serverSocket.port
+    var listenPort: Int {
+        Int(serverSocket.port)
     }
 
     override func setUp() {

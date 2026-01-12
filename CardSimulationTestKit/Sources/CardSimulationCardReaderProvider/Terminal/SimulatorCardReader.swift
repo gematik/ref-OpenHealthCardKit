@@ -67,7 +67,7 @@ public class SimulatorCardReader: CardReaderType {
         guard let port = simulationRunner.mode.tlvPort else {
             throw CardReaderError.simulatorNotRunning
         }
-        return SimulatorCard(host: _host, port: port, channel: `protocol`)
+        return SimulatorCard(host: _host, port: Int(port), channel: `protocol`)
     }
 
     internal func checkRunnerModeDidChange() {
