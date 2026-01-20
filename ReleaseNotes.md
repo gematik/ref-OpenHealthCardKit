@@ -1,3 +1,7 @@
+# Next
+
+- Upgrade Xcode version to 26.2 
+
 # 5.11.1
 
 - Harden NFCHealthCardSession concurrency bridging
