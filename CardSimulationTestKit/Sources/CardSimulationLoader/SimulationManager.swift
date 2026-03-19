@@ -122,7 +122,7 @@ public class SimulationManager {
     }()
 
     /// The default G2-Kartensimulation version
-    public static let defaultVersion = "2.8.4-436"
+    public static let defaultVersion = "2.8.6-447"
 
     private var _delegates = WeakArray<SimulationManagerDelegate>()
 

@@ -1,6 +1,9 @@
 # Next
 
-- Upgrade Xcode version to 26.2 
+- Upgrade dependencies
+- Upgrade Xcode version to 26.4 
+- Update build environment
+- Update G2-Kartensimulation to 2.8.6-447 (2.8.4-436 no longer available)
 
 # 5.11.1
 

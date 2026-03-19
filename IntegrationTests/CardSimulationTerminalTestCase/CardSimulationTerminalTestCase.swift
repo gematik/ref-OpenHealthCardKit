@@ -74,7 +74,7 @@ class CardSimulationTerminalTestCase: XCTestCase {
         let manipulators = [cardImagePath, channelContextPath]
         return CardSimulationTerminalResource(url: config,
                                               configManipulators: manipulators,
-                                              simulatorVersion: "2.8.4-436")
+                                              simulatorVersion: SimulationManager.defaultVersion)
     }
     #endif
 
