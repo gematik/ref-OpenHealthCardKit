@@ -62,12 +62,6 @@ packages:
   SnapshotTesting:
     url: https://github.com/pointfreeco/swift-snapshot-testing
     majorVersion: 1.10.0
-  AEXML:
-    url: https://github.com/tadija/AEXML
-    majorVersion: 4.6.0  
-  StreamReader:
-    url: https://github.com/hectr/swift-stream-reader/
-    majorVersion: 0.3.0   
   Gzip:
     url: https://github.com/1024jp/GzipSwift
     majorVersion: 6.0.0
@@ -76,7 +70,7 @@ packages:
     majorVersion: 5.6.0
   Nimble:
     url: https://github.com/Quick/Nimble
-    majorVersion: 12.0.0
+    majorVersion: 14.0.0
 settings:
   base:
     DEVELOPMENT_TEAM: A9FL89PFFL

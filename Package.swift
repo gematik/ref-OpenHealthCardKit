@@ -40,7 +40,7 @@ let package = Package(
         .package(url: "https://github.com/gematik/ASN1Kit.git", from: "1.2.0"),
         .package(url: "https://github.com/gematik/OpenSSL-Swift", from: "4.2.0"),
         .package(url: "https://github.com/apple/swift-docc-plugin", from: "1.3.0"),
-        .package(url: "https://github.com/Quick/Nimble", from: "12.0.0"),
+        .package(url: "https://github.com/Quick/Nimble", from: "14.0.0"),
     ],
     targets: [
         .target(

@@ -498,8 +498,8 @@ final class HCCExtPerformSecurityOperationTest: XCTestCase {
     }
 }
 
-func throwError<T>() -> Nimble.Predicate<T> {
-    Nimble.Predicate { actualExpression in
+func throwError<T>() -> Nimble.Matcher<T> {
+    Nimble.Matcher { actualExpression in
         var actualError: Error?
         do {
             _ = try actualExpression.evaluate()
@@ -508,13 +508,13 @@ func throwError<T>() -> Nimble.Predicate<T> {
         }
 
         if let actualError = actualError {
-            return PredicateResult(bool: true,
+            return MatcherResult(bool: true,
                                    message: ExpectationMessage.expectedCustomValueTo(
                                        "throw any error",
                                        actual: "<\(actualError)>"
                                    ))
         } else {
-            return PredicateResult(bool: false,
+            return MatcherResult(bool: false,
                                    message: ExpectationMessage.expectedCustomValueTo(
                                        "throw any error",
                                        actual: "no error"

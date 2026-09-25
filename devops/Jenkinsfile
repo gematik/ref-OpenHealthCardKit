@@ -17,6 +17,12 @@ pipeline {
         MATCH_PASSWORD    = credentials('MATCH_PASSWORD')
         APP_STORE_CONNECT = credentials('APPSTORE-CONNECT_API-KEY')
         NEXUS_CREDENTIALS = credentials('Nexus')
+        // Nexus creds for CardSimulation tests. Tests run mvn (runMaven.sh) to fetch the G2 simulator;
+        // node's ~/.m2/settings.xml reads ${env.NEXUS_CREDENTIALS_USR/_PSW}. xcodebuild doesn't pass
+        // pipeline env to test processes, only TEST_RUNNER_* vars (prefix stripped, see `man xcodebuild`).
+        // Without these: 401 on fresh nodes (empty ~/.m2).
+        TEST_RUNNER_NEXUS_CREDENTIALS_USR = "${NEXUS_CREDENTIALS_USR}"
+        TEST_RUNNER_NEXUS_CREDENTIALS_PSW = "${NEXUS_CREDENTIALS_PSW}"
 
         APP_STORE_CONNECT_API_KEY_KEY_ID = "${APP_STORE_CONNECT_USR}"
         APP_STORE_CONNECT_API_KEY_KEY    = "${APP_STORE_CONNECT_PSW}"

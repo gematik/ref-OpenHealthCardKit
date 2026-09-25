@@ -21,6 +21,12 @@ packages:
   NIO:
     url: https://github.com/apple/swift-nio.git
     majorVersion: 2.0.0
+  StreamReader:
+    url: https://github.com/hectr/swift-stream-reader/
+    majorVersion: 0.3.0
+  AEXML:
+    url: https://github.com/tadija/AEXML
+    majorVersion: 4.7.0
 targets:
   IntegrationTests:
     name: IntegrationTests

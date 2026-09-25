@@ -43,15 +43,15 @@ final class URLExtConfigurationFileProcessorTest: XCTestCase {
         expect {
             try xmlResult.get()
         }.to(satisfyAllOf(
-            Predicate { expr in
+            Matcher { expr in
                 let configElement = try? expr.evaluate()?
                     .root["general"]["attribute"]
                     .all(withAttributes: ["id": "cardImageFile"])?[0]
                 let condition = configElement?.value == "changed_../images/HBAG2_80276883110000017289_gema5.xml"
-                return PredicateResult(bool: condition, message: .expectedTo("Have changed the cardImageFile"))
+                return MatcherResult(bool: condition, message: .expectedTo("Have changed the cardImageFile"))
             },
-            Predicate { expr in
-                PredicateResult(bool: try expr.evaluate()?.root["ioConfiguration"]["port"].value == "0",
+            Matcher { expr in
+                MatcherResult(bool: try expr.evaluate()?.root["ioConfiguration"]["port"].value == "0",
                                 message: .expectedTo("Have 0 as ioConfiguration/port"))
             }
         ))

@@ -46,7 +46,7 @@ final class TCPClientExtStreamingTest: XCTestCase {
         super.tearDown()
     }
 
-    func testTCPClient_input_streaming() {
+    func testTCPClient_input_streaming() async {
         if case let .failure(error) = client.connect(timeout: 1) {
             Nimble.fail("Could not connect client socket: \(error)")
         }
@@ -60,7 +60,7 @@ final class TCPClientExtStreamingTest: XCTestCase {
         let message = Data([0x1, 0x2, 0x3, 0x4])
         _ = server.send(data: message)
 
-        expect(inputStream.hasBytesAvailable).toEventually(beTrue())
+        await expect(inputStream.hasBytesAvailable).toEventually(beTrue())
         var receivedMessage = [UInt8](repeating: 0x0, count: 100)
         let readBytes = inputStream.read(&receivedMessage, maxLength: receivedMessage.count)
 
